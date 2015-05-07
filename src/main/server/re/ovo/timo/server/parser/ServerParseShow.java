@@ -36,8 +36,8 @@ public final class ServerParseShow {
                 case '#':
                     i = ParseUtil.comment(stmt, i);
                     continue;
-                case 'C':
-                case 'c':
+                case 'T':
+                case 't':
                     return timoCheck(stmt, i);
                 case 'D':
                 case 'd':
@@ -49,16 +49,15 @@ public final class ServerParseShow {
         return OTHER;
     }
 
-    // SHOW Timo_
+    // SHOW TIMO_
     static int timoCheck(String stmt, int offset) {
-        if (stmt.length() > offset + "obar_?".length()) {
+        if (stmt.length() > offset + "imo_?".length()) {
             char c1 = stmt.charAt(++offset);
             char c2 = stmt.charAt(++offset);
             char c3 = stmt.charAt(++offset);
             char c4 = stmt.charAt(++offset);
-            char c5 = stmt.charAt(++offset);
-            if ((c1 == 'O' || c1 == 'o') && (c2 == 'B' || c2 == 'b') && (c3 == 'A' || c3 == 'a')
-                    && (c4 == 'R' || c4 == 'r') && (c5 == '_')) {
+            if ((c1 == 'I' || c1 == 'i') && (c2 == 'M' || c2 == 'm') && (c3 == 'O' || c3 == 'o')
+                    && (c4 == '_')) {
                 switch (stmt.charAt(++offset)) {
                     case 'S':
                     case 's':
@@ -74,7 +73,7 @@ public final class ServerParseShow {
         return OTHER;
     }
 
-    // SHOW Timo_STATUS
+    // SHOW TIMO_STATUS
     static int showTimoStatus(String stmt, int offset) {
         if (stmt.length() > offset + "tatus".length()) {
             char c1 = stmt.charAt(++offset);
