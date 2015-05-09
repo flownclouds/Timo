@@ -14,11 +14,12 @@
 package re.ovo.timo.net.factory;
 
 import java.io.IOException;
-import java.net.Socket;
+import java.net.StandardSocketOptions;
 import java.nio.channels.SocketChannel;
 
-import re.ovo.timo.net.FrontendConnection;
-import re.ovo.timo.net.buffer.BufferQueue;
+import re.ovo.timo.net.NIOProcessor;
+import re.ovo.timo.net.connection.FrontendConnection;
+import re.ovo.timo.net.connection.Variables;
 
 /**
  * @author xianmao.hexm
@@ -27,26 +28,26 @@ public abstract class FrontendConnectionFactory {
 
     protected int socketRecvBuffer = 8 * 1024;
     protected int socketSendBuffer = 16 * 1024;
-    protected int packetHeaderSize = 4;
-    protected int maxPacketSize = 16 * 1024 * 1024;
     protected int writeQueueCapcity = 16;
     protected long idleTimeout = 8 * 3600 * 1000L;
-    protected String charset = "utf8";
+    protected final Variables variables;
 
-    protected abstract FrontendConnection getConnection(SocketChannel channel);
+    public FrontendConnectionFactory(Variables variables) {
+        this.variables = variables;
+    }
 
-    public FrontendConnection make(SocketChannel channel) throws IOException {
-        Socket socket = channel.socket();
-        socket.setReceiveBufferSize(socketRecvBuffer);
-        socket.setSendBufferSize(socketSendBuffer);
-        socket.setTcpNoDelay(true);
-        socket.setKeepAlive(true);
-        FrontendConnection c = getConnection(channel);
-        c.setPacketHeaderSize(packetHeaderSize);
-        c.setMaxPacketSize(maxPacketSize);
-        c.setWriteQueue(new BufferQueue(writeQueueCapcity));
+    protected abstract FrontendConnection getConnection(SocketChannel channel,
+            NIOProcessor processor);
+
+    public FrontendConnection make(SocketChannel channel, NIOProcessor processor)
+            throws IOException {
+        channel.setOption(StandardSocketOptions.SO_RCVBUF, socketRecvBuffer);
+        channel.setOption(StandardSocketOptions.SO_SNDBUF, socketSendBuffer);
+        channel.setOption(StandardSocketOptions.TCP_NODELAY, true);
+        channel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
+
+        FrontendConnection c = getConnection(channel, processor);
         c.setIdleTimeout(idleTimeout);
-        c.setCharset(charset);
         return c;
     }
 
@@ -66,22 +67,6 @@ public abstract class FrontendConnectionFactory {
         this.socketSendBuffer = socketSendBuffer;
     }
 
-    public int getPacketHeaderSize() {
-        return packetHeaderSize;
-    }
-
-    public void setPacketHeaderSize(int packetHeaderSize) {
-        this.packetHeaderSize = packetHeaderSize;
-    }
-
-    public int getMaxPacketSize() {
-        return maxPacketSize;
-    }
-
-    public void setMaxPacketSize(int maxPacketSize) {
-        this.maxPacketSize = maxPacketSize;
-    }
-
     public int getWriteQueueCapcity() {
         return writeQueueCapcity;
     }
@@ -96,14 +81,6 @@ public abstract class FrontendConnectionFactory {
 
     public void setIdleTimeout(long idleTimeout) {
         this.idleTimeout = idleTimeout;
-    }
-
-    public String getCharset() {
-        return charset;
-    }
-
-    public void setCharset(String charset) {
-        this.charset = charset;
     }
 
 }

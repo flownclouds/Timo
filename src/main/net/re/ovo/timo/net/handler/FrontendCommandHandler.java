@@ -14,9 +14,9 @@
 package re.ovo.timo.net.handler;
 
 import re.ovo.timo.config.ErrorCode;
-import re.ovo.timo.net.FrontendConnection;
 import re.ovo.timo.net.NIOHandler;
-import re.ovo.timo.net.mysql.MySQLPacket;
+import re.ovo.timo.net.connection.FrontendConnection;
+import re.ovo.timo.net.mysql.CommandPacket;
 import re.ovo.timo.statistic.CommandCount;
 
 /**
@@ -37,39 +37,39 @@ public class FrontendCommandHandler implements NIOHandler {
     @Override
     public void handle(byte[] data) {
         switch (data[4]) {
-            case MySQLPacket.COM_INIT_DB:
+            case CommandPacket.COM_INIT_DB:
                 commands.doInitDB();
                 source.initDB(data);
                 break;
-            case MySQLPacket.COM_QUERY:
+            case CommandPacket.COM_QUERY:
                 commands.doQuery();
                 source.query(data);
                 break;
-            case MySQLPacket.COM_PING:
+            case CommandPacket.COM_PING:
                 commands.doPing();
                 source.ping();
                 break;
-            case MySQLPacket.COM_QUIT:
+            case CommandPacket.COM_QUIT:
                 commands.doQuit();
                 source.close();
                 break;
-            case MySQLPacket.COM_PROCESS_KILL:
+            case CommandPacket.COM_PROCESS_KILL:
                 commands.doKill();
                 source.kill(data);
                 break;
-            case MySQLPacket.COM_STMT_PREPARE:
+            case CommandPacket.COM_STMT_PREPARE:
                 commands.doStmtPrepare();
                 source.stmtPrepare(data);
                 break;
-            case MySQLPacket.COM_STMT_EXECUTE:
+            case CommandPacket.COM_STMT_EXECUTE:
                 commands.doStmtExecute();
                 source.stmtExecute(data);
                 break;
-            case MySQLPacket.COM_STMT_CLOSE:
+            case CommandPacket.COM_STMT_CLOSE:
                 commands.doStmtClose();
                 source.stmtClose(data);
                 break;
-            case MySQLPacket.COM_HEARTBEAT:
+            case CommandPacket.COM_HEARTBEAT:
                 commands.doHeartbeat();
                 source.heartbeat(data);
                 break;

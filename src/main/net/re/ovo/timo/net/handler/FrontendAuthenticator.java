@@ -21,10 +21,10 @@ import org.apache.log4j.Logger;
 
 import re.ovo.timo.config.ErrorCode;
 import re.ovo.timo.mysql.SecurityUtil;
-import re.ovo.timo.net.FrontendConnection;
 import re.ovo.timo.net.NIOHandler;
+import re.ovo.timo.net.connection.FrontendConnection;
 import re.ovo.timo.net.mysql.AuthPacket;
-import re.ovo.timo.net.mysql.MySQLPacket;
+import re.ovo.timo.net.mysql.CommandPacket;
 import re.ovo.timo.net.mysql.QuitPacket;
 
 /**
@@ -45,7 +45,7 @@ public class FrontendAuthenticator implements NIOHandler {
     @Override
     public void handle(byte[] data) {
         // check quit packet
-        if (data.length == QuitPacket.QUIT.length && data[4] == MySQLPacket.COM_QUIT) {
+        if (data.length == QuitPacket.QUIT.length && data[4] == CommandPacket.COM_QUIT) {
             source.close();
             return;
         }

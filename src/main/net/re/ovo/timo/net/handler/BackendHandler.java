@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2012 Alibaba Group.
+ * Copyright 2015 Liu Huanting.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,7 +13,6 @@
  */
 package re.ovo.timo.net.handler;
 
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -21,16 +20,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import re.ovo.timo.net.NIOHandler;
 
 /**
- * @author xianmao.hexm 2012-7-13
+ * @author Liu Huanting
+ * 2015年5月9日
  */
-public abstract class BackendAsyncHandler implements NIOHandler {
-
-    protected final BlockingQueue<byte[]> dataQueue = new LinkedBlockingQueue<byte[]>();
+public abstract class BackendHandler implements NIOHandler{
+    protected final LinkedBlockingQueue<byte[]> dataQueue = new LinkedBlockingQueue<byte[]>();
     protected final AtomicBoolean isHandling = new AtomicBoolean(false);
 
     protected void offerData(byte[] data, Executor executor) {
         if (dataQueue.offer(data)) {
-            handleQueue(executor);
+            handleQueue();
         } else {
             offerDataError();
         }
@@ -42,28 +41,23 @@ public abstract class BackendAsyncHandler implements NIOHandler {
 
     protected abstract void handleDataError(Throwable t);
 
-    protected void handleQueue(final Executor executor) {
+    protected void handleQueue() {
         if (isHandling.compareAndSet(false, true)) {
-            // 异步处理后端数据
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        byte[] data = null;
-                        while ((data = dataQueue.poll()) != null) {
-                            handleData(data);
-                        }
-                    } catch (Throwable t) {
-                        handleDataError(t);
-                    } finally {
-                        isHandling.set(false);
-                        if (dataQueue.size() > 0) {
-                            handleQueue(executor);
-                        }
-                    }
+            try {
+                byte[] data = null;
+                while ((data = dataQueue.poll()) != null) {
+                    handleData(data);
                 }
-            });
+            } catch (Throwable t) {
+                handleDataError(t);
+            } finally {
+                isHandling.set(false);
+                if (!dataQueue.isEmpty()) {
+                    handleQueue();
+                }
+            }
         }
+
     }
 
 }
