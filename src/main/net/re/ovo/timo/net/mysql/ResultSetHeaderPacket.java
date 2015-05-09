@@ -1,15 +1,25 @@
 /*
- * Copyright 1999-2012 Alibaba Group.
+ * Copyright (c) 2013, OpenCloudDB/HotDB and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software;Designed and Developed mainly by many Chinese 
+ * opensource volunteers. you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License version 2 only, as published by the
+ * Free Software Foundation.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ * Any questions about this component can be directed to it's project Web address 
+ * https://code.google.com/p/opencloudb/.
+ *
  */
 package re.ovo.timo.net.mysql;
 
@@ -17,12 +27,12 @@ import java.nio.ByteBuffer;
 
 import re.ovo.timo.mysql.BufferUtil;
 import re.ovo.timo.mysql.MySQLMessage;
-import re.ovo.timo.net.FrontendConnection;
 
 /**
- * From server to client after command, if no error and result set -- that is, if the command was a
- * query which returned a result set. The Result Set Header Packet is the first of several, possibly
- * many, packets that the server sends for result sets. The order of packets for a result set is:
+ * From server to client after command, if no error and result set -- that is,
+ * if the command was a query which returned a result set. The Result Set Header
+ * Packet is the first of several, possibly many, packets that the server sends
+ * for result sets. The order of packets for a result set is:
  * 
  * <pre>
  * (Result Set Header Packet)   the number of columns
@@ -39,48 +49,41 @@ import re.ovo.timo.net.FrontendConnection;
  * @see http://forge.mysql.com/wiki/MySQL_Internals_ClientServer_Protocol#Result_Set_Header_Packet
  * </pre>
  * 
- * @author xianmao.hexm 2010-7-22 下午05:59:55
+ * @author hotdb
  */
-public class ResultSetHeaderPacket extends MySQLPacket {
+public class ResultSetHeaderPacket extends ResultSetPacket {
 
-    public int fieldCount;
-    public long extra;
+	public int fieldCount;
+	public long extra;
 
-    public void read(byte[] data) {
-        MySQLMessage mm = new MySQLMessage(data);
-        this.packetLength = mm.readUB3();
-        this.packetId = mm.read();
-        this.fieldCount = (int) mm.readLength();
-        if (mm.hasRemaining()) {
-            this.extra = mm.readLength();
-        }
-    }
+	@Override
+	protected void readBody(MySQLMessage mm){
+		this.fieldCount = (int) mm.readLength();
+		if (mm.hasRemaining()) {
+			this.extra = mm.readLength();
+		}
+	}
 
-    @Override
-    public ByteBuffer write(ByteBuffer buffer, FrontendConnection c) {
-        int size = calcPacketSize();
-        buffer = c.checkWriteBuffer(buffer, c.getPacketHeaderSize() + size);
-        BufferUtil.writeUB3(buffer, size);
-        buffer.put(packetId);
-        BufferUtil.writeLength(buffer, fieldCount);
-        if (extra > 0) {
-            BufferUtil.writeLength(buffer, extra);
-        }
-        return buffer;
-    }
+	@Override
+	public int calcPacketSize() {
+		int size = BufferUtil.getLength(fieldCount);
+		if (extra > 0) {
+			size += BufferUtil.getLength(extra);
+		}
+		return size;
+	}
 
-    @Override
-    public int calcPacketSize() {
-        int size = BufferUtil.getLength(fieldCount);
-        if (extra > 0) {
-            size += BufferUtil.getLength(extra);
-        }
-        return size;
-    }
+	@Override
+	protected String getPacketInfo() {
+		return "MySQL ResultSetHeader Packet";
+	}
 
-    @Override
-    protected String getPacketInfo() {
-        return "MySQL ResultSetHeader Packet";
-    }
+	@Override
+	protected void writeBody(ByteBuffer buffer) {
+		BufferUtil.writeLength(buffer, fieldCount);
+		if (extra > 0) {
+			BufferUtil.writeLength(buffer, extra);
+		}
+	}
 
 }

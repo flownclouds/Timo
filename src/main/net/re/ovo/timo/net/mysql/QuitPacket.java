@@ -13,6 +13,10 @@
  */
 package re.ovo.timo.net.mysql;
 
+import java.nio.ByteBuffer;
+
+import re.ovo.timo.mysql.MySQLMessage;
+
 /**
  * @author xianmao.hexm
  */
@@ -27,6 +31,18 @@ public class QuitPacket extends MySQLPacket {
     @Override
     protected String getPacketInfo() {
         return "MySQL Quit Packet";
+    }
+
+    @Override
+    protected void readBody(MySQLMessage mm) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    protected void writeBody(ByteBuffer buffer) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

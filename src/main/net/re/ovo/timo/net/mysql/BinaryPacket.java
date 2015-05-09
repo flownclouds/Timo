@@ -13,13 +13,9 @@
  */
 package re.ovo.timo.net.mysql;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-import re.ovo.timo.mysql.BufferUtil;
-import re.ovo.timo.mysql.StreamUtil;
-import re.ovo.timo.net.FrontendConnection;
+import re.ovo.timo.mysql.MySQLMessage;
 
 /**
  * @author xianmao.hexm 2011-5-6 上午10:58:33
@@ -35,23 +31,6 @@ public class BinaryPacket extends MySQLPacket {
 
     public byte[] data;
 
-    public void read(InputStream in) throws IOException {
-        packetLength = StreamUtil.readUB3(in);
-        packetId = StreamUtil.read(in);
-        byte[] ab = new byte[packetLength];
-        StreamUtil.read(in, ab, 0, ab.length);
-        data = ab;
-    }
-
-    @Override
-    public ByteBuffer write(ByteBuffer buffer, FrontendConnection c) {
-        buffer = c.checkWriteBuffer(buffer, c.getPacketHeaderSize());
-        BufferUtil.writeUB3(buffer, calcPacketSize());
-        buffer.put(packetId);
-        buffer = c.writeToBuffer(data, buffer);
-        return buffer;
-    }
-
     @Override
     public int calcPacketSize() {
         return data == null ? 0 : data.length;
@@ -61,5 +40,11 @@ public class BinaryPacket extends MySQLPacket {
     protected String getPacketInfo() {
         return "MySQL Binary Packet";
     }
+
+    @Override
+    protected void readBody(MySQLMessage mm) {}
+
+    @Override
+    protected void writeBody(ByteBuffer buffer) {}
 
 }

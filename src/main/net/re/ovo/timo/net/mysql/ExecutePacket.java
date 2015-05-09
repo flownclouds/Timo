@@ -1,19 +1,30 @@
 /*
- * Copyright 1999-2012 Alibaba Group.
+ * Copyright (c) 2013, OpenCloudDB/HotDB and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software;Designed and Developed mainly by many Chinese 
+ * opensource volunteers. you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License version 2 only, as published by the
+ * Free Software Foundation.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ * Any questions about this component can be directed to it's project Web address 
+ * https://code.google.com/p/opencloudb/.
+ *
  */
 package re.ovo.timo.net.mysql;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 
 import re.ovo.timo.mysql.BindValue;
 import re.ovo.timo.mysql.BindValueUtil;
@@ -69,71 +80,81 @@ import re.ovo.timo.mysql.PreparedStatement;
  * @see http://dev.mysql.com/doc/internals/en/execute-packet.html
  * </pre>
  * 
- * @author xianmao.hexm 2012-8-28
+ * @author hotdb
  */
 public class ExecutePacket extends MySQLPacket {
 
-    public byte code;
-    public long statementId;
-    public byte flags;
-    public long iterationCount;
-    public byte[] nullBitMap;
-    public byte newParameterBoundFlag;
-    public BindValue[] values;
-    protected PreparedStatement pstmt;
+	public byte code;
+	public long statementId;
+	public byte flags;
+	public long iterationCount;
+	public byte[] nullBitMap;
+	public byte newParameterBoundFlag;
+	public BindValue[] values;
+	protected PreparedStatement pstmt;
 
-    public ExecutePacket(PreparedStatement pstmt) {
-        this.pstmt = pstmt;
-        this.values = new BindValue[pstmt.getParametersNumber()];
-    }
+	public ExecutePacket(PreparedStatement pstmt) {
+		this.pstmt = pstmt;
+		this.values = new BindValue[pstmt.getParametersNumber()];
+	}
 
-    public void read(byte[] data, String charset) throws UnsupportedEncodingException {
-        MySQLMessage mm = new MySQLMessage(data);
-        packetLength = mm.readUB3();
-        packetId = mm.read();
-        code = mm.read();
-        statementId = mm.readUB4();
-        flags = mm.read();
-        iterationCount = mm.readUB4();
+	public void read(byte[] data, String charset)
+			throws UnsupportedEncodingException {
+		MySQLMessage mm = new MySQLMessage(data);
+		packetLength = mm.readUB3();
+		packetId = mm.read();
+		code = mm.read();
+		statementId = mm.readUB4();
+		flags = mm.read();
+		iterationCount = mm.readUB4();
 
-        // 读取NULL指示器数据
-        int parameterCount = values.length;
-        nullBitMap = new byte[(parameterCount + 7) / 8];
-        for (int i = 0; i < nullBitMap.length; i++) {
-            nullBitMap[i] = mm.read();
-        }
+		// 读取NULL指示器数据
+		int parameterCount = values.length;
+		nullBitMap = new byte[(parameterCount + 7) / 8];
+		for (int i = 0; i < nullBitMap.length; i++) {
+			nullBitMap[i] = mm.read();
+		}
 
-        // 当newParameterBoundFlag==1时，更新参数类型。
-        newParameterBoundFlag = mm.read();
-        if (newParameterBoundFlag == (byte) 1) {
-            for (int i = 0; i < parameterCount; i++) {
-                pstmt.getParametersType()[i] = mm.readUB2();
-            }
-        }
+		// 当newParameterBoundFlag==1时，更新参数类型。
+		newParameterBoundFlag = mm.read();
+		if (newParameterBoundFlag == (byte) 1) {
+			for (int i = 0; i < parameterCount; i++) {
+				pstmt.getParametersType()[i] = mm.readUB2();
+			}
+		}
 
-        // 设置参数类型和读取参数值
-        byte[] nullBitMap = this.nullBitMap;
-        for (int i = 0; i < parameterCount; i++) {
-            BindValue bv = new BindValue();
-            bv.type = pstmt.getParametersType()[i];
-            if ((nullBitMap[i / 8] & (1 << (i & 7))) != 0) {
-                bv.isNull = true;
-            } else {
-                BindValueUtil.read(mm, bv, charset);
-            }
-            values[i] = bv;
-        }
-    }
+		// 设置参数类型和读取参数值
+		byte[] nullBitMap = this.nullBitMap;
+		for (int i = 0; i < parameterCount; i++) {
+			BindValue bv = new BindValue();
+			bv.type = pstmt.getParametersType()[i];
+			if ((nullBitMap[i / 8] & (1 << (i & 7))) != 0) {
+				bv.isNull = true;
+			} else {
+				BindValueUtil.read(mm, bv, charset);
+			}
+			values[i] = bv;
+		}
+	}
 
-    @Override
-    public int calcPacketSize() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+	@Override
+	public int calcPacketSize() {
+		throw new RuntimeException("calcPacketSize for ExecutePacket not implement!");
+	}
 
-    @Override
-    protected String getPacketInfo() {
-        return "MySQL Execute Packet";
-    }
+	@Override
+	protected String getPacketInfo() {
+		return "MySQL Execute Packet";
+	}
+
+	@Override
+	protected void writeBody(ByteBuffer buffer) {
+		throw new RuntimeException("writeBody for ExecutePacket not implement!");
+	}
+
+	@Override
+	protected void readBody(MySQLMessage mm) {
+		throw new RuntimeException("readBody for ExecutePacket not implement!");
+	}
 
 }

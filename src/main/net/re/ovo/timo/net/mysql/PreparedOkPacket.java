@@ -1,22 +1,32 @@
 /*
- * Copyright 1999-2012 Alibaba Group.
+ * Copyright (c) 2013, OpenCloudDB/HotDB and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software;Designed and Developed mainly by many Chinese 
+ * opensource volunteers. you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License version 2 only, as published by the
+ * Free Software Foundation.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ * Any questions about this component can be directed to it's project Web address 
+ * https://code.google.com/p/opencloudb/.
+ *
  */
 package re.ovo.timo.net.mysql;
 
 import java.nio.ByteBuffer;
 
 import re.ovo.timo.mysql.BufferUtil;
-import re.ovo.timo.net.FrontendConnection;
+import re.ovo.timo.mysql.MySQLMessage;
 
 /**
  * <pre>
@@ -41,48 +51,48 @@ import re.ovo.timo.net.FrontendConnection;
  *  1                  filler (always 0)
  *  2                  warning count
  *  
- *  @see http://dev.mysql.com/doc/internals/en/prepared-statement-initialization-packet.html
+ *  @see http://dev.mysql.com/doc/internals/en/com-stmt-prepare-response.html
  * </pre>
  * 
- * @author xianmao.hexm 2012-8-28
+ * @author hotdb
  */
-public class PreparedOkPacket extends MySQLPacket {
+public class PreparedOkPacket extends ResultSetPacket {
 
-    public byte flag;
-    public long statementId;
-    public int columnsNumber;
-    public int parametersNumber;
-    public byte filler;
-    public int warningCount;
+	public byte flag;
+	public long statementId;
+	public int columnsNumber;
+	public int parametersNumber;
+	public byte filler;
+	public int warningCount;
 
-    public PreparedOkPacket() {
-        this.flag = 0;
-        this.filler = 0;
-    }
+	public PreparedOkPacket() {
+		this.flag = 0;
+		this.filler = 0;
+	}
 
-    @Override
-    public ByteBuffer write(ByteBuffer buffer, FrontendConnection c) {
-        int size = calcPacketSize();
-        buffer = c.checkWriteBuffer(buffer, c.getPacketHeaderSize() + size);
-        BufferUtil.writeUB3(buffer, size);
-        buffer.put(packetId);
-        buffer.put(flag);
-        BufferUtil.writeUB4(buffer, statementId);
-        BufferUtil.writeUB2(buffer, columnsNumber);
-        BufferUtil.writeUB2(buffer, parametersNumber);
-        buffer.put(filler);
-        BufferUtil.writeUB2(buffer, warningCount);
-        return buffer;
-    }
+	@Override
+	public int calcPacketSize() {
+		return 12;
+	}
 
-    @Override
-    public int calcPacketSize() {
-        return 12;
-    }
+	@Override
+	protected String getPacketInfo() {
+		return "MySQL PreparedOk Packet";
+	}
 
-    @Override
-    protected String getPacketInfo() {
-        return "MySQL PreparedOk Packet";
-    }
+	@Override
+	protected void writeBody(ByteBuffer buffer) {
+		buffer.put(flag);
+		BufferUtil.writeUB4(buffer, statementId);
+		BufferUtil.writeUB2(buffer, columnsNumber);
+		BufferUtil.writeUB2(buffer, parametersNumber);
+		buffer.put(filler);
+		BufferUtil.writeUB2(buffer, warningCount);	
+	}
+
+	@Override
+	protected void readBody(MySQLMessage mm) {
+		throw new RuntimeException("readBody for Reply323Packet not implement!");	
+	}
 
 }

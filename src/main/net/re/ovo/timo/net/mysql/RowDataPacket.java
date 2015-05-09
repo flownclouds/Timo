@@ -1,15 +1,25 @@
 /*
- * Copyright 1999-2012 Alibaba Group.
+ * Copyright (c) 2013, OpenCloudDB/HotDB and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software;Designed and Developed mainly by many Chinese 
+ * opensource volunteers. you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License version 2 only, as published by the
+ * Free Software Foundation.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ * Any questions about this component can be directed to it's project Web address 
+ * https://code.google.com/p/opencloudb/.
+ *
  */
 package re.ovo.timo.net.mysql;
 
@@ -19,7 +29,6 @@ import java.util.List;
 
 import re.ovo.timo.mysql.BufferUtil;
 import re.ovo.timo.mysql.MySQLMessage;
-import re.ovo.timo.net.FrontendConnection;
 
 /**
  * From server to client. One packet for each row in the result set.
@@ -41,64 +50,60 @@ import re.ovo.timo.net.FrontendConnection;
  * @see http://forge.mysql.com/wiki/MySQL_Internals_ClientServer_Protocol#Row_Data_Packet
  * </pre>
  * 
- * @author xianmao.hexm 2010-7-23 上午01:05:55
+ * @author hotdb
  */
-public class RowDataPacket extends MySQLPacket {
-    private static final byte NULL_MARK = (byte) 251;
+public class RowDataPacket extends ResultSetPacket {
+	private static final byte NULL_MARK = (byte) 251;
 
-    public final int fieldCount;
-    public final List<byte[]> fieldValues;
+	public final int fieldCount;
+	public final List<byte[]> fieldValues;
 
-    public RowDataPacket(int fieldCount) {
-        this.fieldCount = fieldCount;
-        this.fieldValues = new ArrayList<byte[]>(fieldCount);
-    }
+	public RowDataPacket(int fieldCount) {
+		this.fieldCount = fieldCount;
+		this.fieldValues = new ArrayList<byte[]>(fieldCount);
+	}
+	
+	public RowDataPacket(int fieldCount,ArrayList<byte[]> fieldValues){
+		this.fieldCount = fieldCount;
+		this.fieldValues = fieldValues;
+	}
 
-    public void add(byte[] value) {
-        fieldValues.add(value);
-    }
+	public void add(byte[] value) {
+		fieldValues.add(value);
+	}
 
-    public void read(byte[] data) {
-        MySQLMessage mm = new MySQLMessage(data);
-        packetLength = mm.readUB3();
-        packetId = mm.read();
-        for (int i = 0; i < fieldCount; i++) {
-            fieldValues.add(mm.readBytesWithLength());
-        }
-    }
+	@Override
+	protected void readBody(MySQLMessage mm){
+		for (int i = 0; i < fieldCount; i++) {
+			fieldValues.add(mm.readBytesWithLength());
+		}
+	}
+	
+	@Override
+	public int calcPacketSize() {
+		int size = 0;
+		for (int i = 0; i < fieldCount; i++) {
+			byte[] v = fieldValues.get(i);
+			size += (v == null || v.length == 0) ? 1 : BufferUtil.getLength(v);
+		}
+		return size;
+	}
 
-    @Override
-    public ByteBuffer write(ByteBuffer bb, FrontendConnection c) {
-        bb = c.checkWriteBuffer(bb, c.getPacketHeaderSize());
-        BufferUtil.writeUB3(bb, calcPacketSize());
-        bb.put(packetId);
-        for (int i = 0; i < fieldCount; i++) {
-            byte[] fv = fieldValues.get(i);
-            if (fv == null || fv.length == 0) {
-                bb = c.checkWriteBuffer(bb, 1);
-                bb.put(RowDataPacket.NULL_MARK);
-            } else {
-                bb = c.checkWriteBuffer(bb, BufferUtil.getLength(fv.length));
-                BufferUtil.writeLength(bb, fv.length);
-                bb = c.writeToBuffer(fv, bb);
-            }
-        }
-        return bb;
-    }
+	@Override
+	protected String getPacketInfo() {
+		return "MySQL RowData Packet";
+	}
 
-    @Override
-    public int calcPacketSize() {
-        int size = 0;
-        for (int i = 0; i < fieldCount; i++) {
-            byte[] v = fieldValues.get(i);
-            size += (v == null || v.length == 0) ? 1 : BufferUtil.getLength(v);
-        }
-        return size;
-    }
-
-    @Override
-    protected String getPacketInfo() {
-        return "MySQL RowData Packet";
-    }
+	@Override
+	final protected void writeBody(ByteBuffer buffer) {
+		for (int i = 0; i < fieldCount; i++) {
+			byte[] fv = fieldValues.get(i);
+			if (fv == null || fv.length == 0) {
+				buffer.put(RowDataPacket.NULL_MARK);
+			} else {
+				BufferUtil.writeWithLength(buffer, fv);
+			}
+		}
+	}
 
 }

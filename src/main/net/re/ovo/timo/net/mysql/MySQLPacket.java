@@ -1,208 +1,99 @@
 /*
- * Copyright 1999-2012 Alibaba Group.
+ * Copyright (c) 2013, OpenCloudDB/HotDB and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software;Designed and Developed mainly by many Chinese 
+ * opensource volunteers. you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License version 2 only, as published by the
+ * Free Software Foundation.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ * Any questions about this component can be directed to it's project Web address 
+ * https://code.google.com/p/opencloudb/.
+ *
  */
 package re.ovo.timo.net.mysql;
 
 import java.nio.ByteBuffer;
 
-import re.ovo.timo.net.BackendConnection;
-import re.ovo.timo.net.FrontendConnection;
+import re.ovo.timo.mysql.BufferUtil;
+import re.ovo.timo.mysql.MySQLMessage;
 
 /**
- * @author xianmao.hexm
+ * @author hotdb
  */
 public abstract class MySQLPacket {
-    /**
-     * none, this is an internal thread state
-     */
-    public static final byte COM_SLEEP = 0;
 
-    /**
-     * mysql_close
-     */
-    public static final byte COM_QUIT = 1;
+	//
+	public static final int PACKET_HEADER_SIZE = 4;// 固定值
+	public static final int MAX_PACKET_SIZE = 16 * 1024 * 1024;// 固定值2^24,3个字节的最大值
 
-    /**
-     * mysql_select_db
-     */
-    public static final byte COM_INIT_DB = 2;
+	protected int packetLength;
+	public byte packetId;
 
-    /**
-     * mysql_real_query
-     */
-    public static final byte COM_QUERY = 3;
 
-    /**
-     * mysql_list_fields
-     */
-    public static final byte COM_FIELD_LIST = 4;
+	/**
+	 * 计算数据包大小，不包含包头长度。
+	 */
+	public abstract int calcPacketSize();
 
-    /**
-     * mysql_create_db (deprecated)
-     */
-    public static final byte COM_CREATE_DB = 5;
+	/**
+	 * 取得数据包信息
+	 */
+	protected abstract String getPacketInfo();
 
-    /**
-     * mysql_drop_db (deprecated)
-     */
-    public static final byte COM_DROP_DB = 6;
+	@Override
+	public String toString() {
+		return new StringBuilder().append(getPacketInfo()).append("{length=")
+				.append(packetLength).append(",id=").append(packetId)
+				.append('}').toString();
+	}
 
-    /**
-     * mysql_refresh
-     */
-    public static final byte COM_REFRESH = 7;
-
-    /**
-     * mysql_shutdown
-     */
-    public static final byte COM_SHUTDOWN = 8;
-
-    /**
-     * mysql_stat
-     */
-    public static final byte COM_STATISTICS = 9;
-
-    /**
-     * mysql_list_processes
-     */
-    public static final byte COM_PROCESS_INFO = 10;
-
-    /**
-     * none, this is an internal thread state
-     */
-    public static final byte COM_CONNECT = 11;
-
-    /**
-     * mysql_kill
-     */
-    public static final byte COM_PROCESS_KILL = 12;
-
-    /**
-     * mysql_dump_debug_info
-     */
-    public static final byte COM_DEBUG = 13;
-
-    /**
-     * mysql_ping
-     */
-    public static final byte COM_PING = 14;
-
-    /**
-     * none, this is an internal thread state
-     */
-    public static final byte COM_TIME = 15;
-
-    /**
-     * none, this is an internal thread state
-     */
-    public static final byte COM_DELAYED_INSERT = 16;
-
-    /**
-     * mysql_change_user
-     */
-    public static final byte COM_CHANGE_USER = 17;
-
-    /**
-     * used by slave server mysqlbinlog
-     */
-    public static final byte COM_BINLOG_DUMP = 18;
-
-    /**
-     * used by slave server to get master table
-     */
-    public static final byte COM_TABLE_DUMP = 19;
-
-    /**
-     * used by slave to log connection to master
-     */
-    public static final byte COM_CONNECT_OUT = 20;
-
-    /**
-     * used by slave to register to master
-     */
-    public static final byte COM_REGISTER_SLAVE = 21;
-
-    /**
-     * mysql_stmt_prepare
-     */
-    public static final byte COM_STMT_PREPARE = 22;
-
-    /**
-     * mysql_stmt_execute
-     */
-    public static final byte COM_STMT_EXECUTE = 23;
-
-    /**
-     * mysql_stmt_send_long_data
-     */
-    public static final byte COM_STMT_SEND_LONG_DATA = 24;
-
-    /**
-     * mysql_stmt_close
-     */
-    public static final byte COM_STMT_CLOSE = 25;
-
-    /**
-     * mysql_stmt_reset
-     */
-    public static final byte COM_STMT_RESET = 26;
-
-    /**
-     * mysql_set_server_option
-     */
-    public static final byte COM_SET_OPTION = 27;
-
-    /**
-     * mysql_stmt_fetch
-     */
-    public static final byte COM_STMT_FETCH = 28;
-
-    /**
-     * timo heartbeat
-     */
-    public static final byte COM_HEARTBEAT = 64;
-
-    public int packetLength;
-    public byte packetId;
-
-    /**
-     * 把数据包写到buffer中，如果buffer满了就把buffer通过前端连接写出。
-     */
-    public ByteBuffer write(ByteBuffer buffer, FrontendConnection c) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * 把数据包通过后端连接写出，一般使用buffer机制来提高写的吞吐量。
-     */
-    public void write(BackendConnection c) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * 计算数据包大小，不包含包头长度。
-     */
-    public abstract int calcPacketSize();
-
-    /**
-     * 取得数据包信息
-     */
-    protected abstract String getPacketInfo();
-
-    @Override
-    public String toString() {
-        return new StringBuilder().append(getPacketInfo()).append("{length=").append(packetLength)
-                .append(",id=").append(packetId).append('}').toString();
-    }
-
+	/**
+	 * 获得MySQL PacketLength
+	 * @param buffer
+	 * @param offset
+	 * @return
+	 */
+	public static int getPacketLength(ByteBuffer buffer, int offset) {
+		if (buffer.position() < offset + MySQLPacket.PACKET_HEADER_SIZE) {
+			return -1;
+		} else {
+			int length = buffer.get(offset) & 0xff;
+			length |= (buffer.get(++offset) & 0xff) << 8;
+			length |= (buffer.get(++offset) & 0xff) << 16;
+			return length + MySQLPacket.PACKET_HEADER_SIZE;
+		}
+	}
+	
+	public void read(byte[] data) {
+		MySQLMessage mm = new MySQLMessage(data);
+		packetLength = mm.readUB3();
+		packetId = mm.read();
+		readBody(mm);
+	}
+	protected abstract void readBody(MySQLMessage mm);
+	/**
+	 * 把mysql packet的内容写入到buffer中；
+	 * 调用者已分配足够大的buffer空间,由调用者保证buffer.remaining() >= size，
+	 * 不会出现一个packet分散写入多个buffer的情况，一个完整的mysql packet最多占用一个buffer。
+	 * @param buffer
+	 * @param size
+	 */
+	public void write(ByteBuffer buffer,int size) {
+		BufferUtil.writeUB3(buffer, size);
+		buffer.put(packetId);
+		writeBody(buffer);
+	}
+	
+	protected abstract void writeBody(ByteBuffer buffer);
 }
