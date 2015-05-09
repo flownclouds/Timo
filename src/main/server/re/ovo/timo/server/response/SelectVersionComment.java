@@ -28,7 +28,7 @@ import re.ovo.timo.server.ServerConnection;
  */
 public class SelectVersionComment {
 
-    private static final byte[] VERSION_COMMENT = "Timo Server (ALIBABA)".getBytes();
+    private static final byte[] VERSION_COMMENT = "Timo Server".getBytes();
     private static final int FIELD_COUNT = 1;
     private static final ResultSetHeaderPacket header = PacketUtil.getHeader(FIELD_COUNT);
     private static final FieldPacket[] fields = new FieldPacket[FIELD_COUNT];
