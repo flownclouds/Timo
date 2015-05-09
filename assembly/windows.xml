@@ -10,9 +10,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSch ema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/assembly-1.0.0.xsd">
     <formats>
-        <format>zip</format>
+        <format>tar.gz</format>
     </formats>
-    <includeBaseDirectory>true</includeBaseDirectory>
+    <id>windows</id>
+    <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
             <directory>assembly/bin</directory>
