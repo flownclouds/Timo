@@ -20,6 +20,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import re.ovo.timo.net.buffer.BufferPool;
+import re.ovo.timo.net.connection.AbstractConnection;
+import re.ovo.timo.net.connection.BackendConnection;
+import re.ovo.timo.net.connection.FrontendConnection;
+import re.ovo.timo.net.connection.NIOConnection;
 import re.ovo.timo.statistic.CommandCount;
 import re.ovo.timo.util.ExecutorUtil;
 import re.ovo.timo.util.NameableExecutor;
@@ -35,7 +39,6 @@ public final class NIOProcessor {
     private final String name;
     private final NIOReactor reactor;
     private final BufferPool bufferPool;
-    private final NameableExecutor handler;
     private final NameableExecutor executor;
     private final ConcurrentMap<Long, FrontendConnection> frontends;
     private final ConcurrentMap<Long, BackendConnection> backends;
@@ -57,7 +60,6 @@ public final class NIOProcessor {
         this.name = name;
         this.reactor = new NIOReactor(name);
         this.bufferPool = new BufferPool(buffer, chunk);
-        this.handler = (handler > 0) ? ExecutorUtil.create(name + "-H", handler) : null;
         this.executor = (executor > 0) ? ExecutorUtil.create(name + "-E", executor) : null;
         this.frontends = new ConcurrentHashMap<Long, FrontendConnection>();
         this.backends = new ConcurrentHashMap<Long, BackendConnection>();
@@ -77,11 +79,14 @@ public final class NIOProcessor {
     }
 
     public int getWriteQueueSize() {
-        return reactor.getWriteQueue().size();
-    }
-
-    public NameableExecutor getHandler() {
-        return handler;
+        int total = 0;
+        for (FrontendConnection fron : frontends.values()) {
+            total += fron.getWriteQueue().size();
+        }
+        for (BackendConnection back : backends.values()) {
+            total += back.getWriteQueue().size();
+        }
+        return total;
     }
 
     public NameableExecutor getExecutor() {
@@ -92,12 +97,8 @@ public final class NIOProcessor {
         reactor.startup();
     }
 
-    public void postRegister(NIOConnection c) {
+    public void postRegister(AbstractConnection c) {
         reactor.postRegister(c);
-    }
-
-    public void postWrite(NIOConnection c) {
-        reactor.postWrite(c);
     }
 
     public CommandCount getCommands() {
@@ -133,7 +134,7 @@ public final class NIOProcessor {
     }
 
     public void addBackend(BackendConnection c) {
-        backends.put(c.getId(), c);
+        backends.put(c.getID(), c);
     }
 
     public ConcurrentMap<Long, BackendConnection> getBackends() {
@@ -165,7 +166,7 @@ public final class NIOProcessor {
                 it.remove();
                 c.cleanup();
             } else {
-                c.idleCheck();
+//                c.idleCheck();
             }
         }
     }
@@ -187,8 +188,20 @@ public final class NIOProcessor {
                 it.remove();
                 c.cleanup();
             } else {
-                c.idleCheck();
+//                c.idleCheck();
             }
+        }
+    }
+
+    public NIOReactor getReactor() {
+        return reactor;
+    }
+
+    public void remove(NIOConnection con) {
+        if (con instanceof FrontendConnection) {
+            frontends.remove(con.getID());
+        } else {
+            backends.remove(con.getID());
         }
     }
 

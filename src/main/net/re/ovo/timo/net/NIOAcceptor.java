@@ -24,6 +24,8 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import re.ovo.timo.TimoServer;
+import re.ovo.timo.net.connection.FrontendConnection;
 import re.ovo.timo.net.factory.FrontendConnectionFactory;
 
 /**
@@ -37,8 +39,6 @@ public final class NIOAcceptor extends Thread {
     private final Selector selector;
     private final ServerSocketChannel serverChannel;
     private final FrontendConnectionFactory factory;
-    private NIOProcessor[] processors;
-    private int nextProcessor;
     private long acceptCount;
 
     public NIOAcceptor(String name, int port, FrontendConnectionFactory factory) throws IOException {
@@ -58,10 +58,6 @@ public final class NIOAcceptor extends Thread {
 
     public long getAcceptCount() {
         return acceptCount;
-    }
-
-    public void setProcessors(NIOProcessor[] processors) {
-        this.processors = processors;
     }
 
     @Override
@@ -94,23 +90,16 @@ public final class NIOAcceptor extends Thread {
         try {
             channel = serverChannel.accept();
             channel.configureBlocking(false);
-            FrontendConnection c = factory.make(channel);
+            NIOProcessor processor = TimoServer.getInstance().nextProcessor();
+            FrontendConnection c = factory.make(channel,processor);
             c.setAccepted(true);
             c.setId(ID_GENERATOR.getId());
-            NIOProcessor processor = nextProcessor();
             c.setProcessor(processor);
             processor.postRegister(c);
         } catch (Throwable e) {
             closeChannel(channel);
             LOGGER.warn(getName(), e);
         }
-    }
-
-    private NIOProcessor nextProcessor() {
-        if (++nextProcessor == processors.length) {
-            nextProcessor = 0;
-        }
-        return processors[nextProcessor];
     }
 
     private static void closeChannel(SocketChannel channel) {

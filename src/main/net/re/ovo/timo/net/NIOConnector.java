@@ -14,15 +14,19 @@
 package re.ovo.timo.net;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
+import java.nio.channels.SocketChannel;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
 
-import re.ovo.timo.config.ErrorCode;
+import re.ovo.timo.mysql.connection.MySQLConnection;
+import re.ovo.timo.net.connection.AbstractConnection;
+import re.ovo.timo.net.connection.BackendConnection;
 
 /**
  * @author xianmao.hexm
@@ -86,12 +90,15 @@ public final class NIOConnector extends Thread {
     }
 
     private void connect(Selector selector) {
-        BackendConnection c = null;
+        AbstractConnection c = null;
         while ((c = connectQueue.poll()) != null) {
             try {
-                c.connect(selector);
+                SocketChannel channel = (SocketChannel) c.getChannel();
+                channel.register(selector, SelectionKey.OP_CONNECT, c);
+                channel.connect(new InetSocketAddress(c.getHost(), c.getPort()));
             } catch (Throwable e) {
-                c.error(ErrorCode.ERR_CONNECT_SOCKET, e);
+                e.printStackTrace();
+                c.close();
             }
         }
     }
@@ -99,16 +106,31 @@ public final class NIOConnector extends Thread {
     private void finishConnect(SelectionKey key, Object att) {
         BackendConnection c = (BackendConnection) att;
         try {
-            if (c.finishConnect()) {
+            if (finishConnect(c, (SocketChannel) c.getChannel())) {
                 clearSelectionKey(key);
-                c.setId(ID_GENERATOR.getId());
-                NIOProcessor processor = nextProcessor();
-                c.setProcessor(processor);
-                processor.postRegister(c);
+                c.setID(ID_GENERATOR.getId());
+                c.getProcessor().addBackend(c);
+                MySQLConnection msqlCon = (MySQLConnection) c;
+                msqlCon.getDatasource().add(c);
+                NIOProcessor processor = (NIOProcessor) c.getProcessor();
+                NIOReactor reactor = processor.getReactor();
+                reactor.postRegister(c);
             }
         } catch (Throwable e) {
             clearSelectionKey(key);
-            c.error(ErrorCode.ERR_FINISH_CONNECT, e);
+            c.onConnectFailed(e);
+            c.close();
+        }
+    }
+    
+    private boolean finishConnect(BackendConnection c, SocketChannel channel)
+            throws IOException {
+        if (channel.isConnectionPending()) {
+            channel.finishConnect();
+            c.finishConnect();
+            return true;
+        } else {
+            return false;
         }
     }
 
