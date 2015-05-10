@@ -18,7 +18,7 @@ package re.ovo.timo.parser.ast.expression.string;
 
 import re.ovo.timo.parser.ast.expression.Expression;
 import re.ovo.timo.parser.ast.expression.TernaryOperatorExpression;
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * <code>higherPreExpr 'NOT'? 'LIKE' higherPreExpr ('ESCAPE' higherPreExpr)?</code>
@@ -46,7 +46,7 @@ public class LikeExpression extends TernaryOperatorExpression {
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }

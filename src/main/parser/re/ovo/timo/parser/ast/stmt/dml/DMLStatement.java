@@ -21,7 +21,7 @@ import java.util.List;
 
 import re.ovo.timo.parser.ast.expression.Expression;
 import re.ovo.timo.parser.ast.stmt.SQLStatement;
-import re.ovo.timo.parser.visitor.MySQLOutputASTVisitor;
+import re.ovo.timo.parser.visitor.OutputVisitor;
 
 /**
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
@@ -86,7 +86,7 @@ public abstract class DMLStatement implements SQLStatement {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        accept(new MySQLOutputASTVisitor(sb));
+        accept(new OutputVisitor(sb));
         return sb.toString();
     }
 }

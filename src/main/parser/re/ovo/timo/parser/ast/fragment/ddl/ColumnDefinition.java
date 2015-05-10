@@ -20,7 +20,7 @@ import re.ovo.timo.parser.ast.ASTNode;
 import re.ovo.timo.parser.ast.expression.Expression;
 import re.ovo.timo.parser.ast.expression.primary.literal.LiteralString;
 import re.ovo.timo.parser.ast.fragment.ddl.datatype.DataType;
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * NOT FULL AST
@@ -96,7 +96,7 @@ public class ColumnDefinition implements ASTNode {
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 

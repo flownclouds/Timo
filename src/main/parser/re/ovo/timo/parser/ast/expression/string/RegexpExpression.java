@@ -18,7 +18,7 @@ package re.ovo.timo.parser.ast.expression.string;
 
 import re.ovo.timo.parser.ast.expression.BinaryOperatorExpression;
 import re.ovo.timo.parser.ast.expression.Expression;
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * <code>higherPreExpr 'NOT'? ('REGEXP'|'RLIKE') higherPreExp</code>
@@ -43,7 +43,7 @@ public class RegexpExpression extends BinaryOperatorExpression {
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }

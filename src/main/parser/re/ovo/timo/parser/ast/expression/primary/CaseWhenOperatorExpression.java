@@ -21,7 +21,7 @@ import java.util.List;
 
 import re.ovo.timo.parser.ast.expression.Expression;
 import re.ovo.timo.parser.util.Pair;
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * <code>'CASE' value? ('WHEN' condition 'THEN' result)+ ('ELSE' result)? 'END' </code>
@@ -66,7 +66,7 @@ public class CaseWhenOperatorExpression extends PrimaryExpression {
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }

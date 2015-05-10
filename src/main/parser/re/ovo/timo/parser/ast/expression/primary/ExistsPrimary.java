@@ -17,7 +17,7 @@
 package re.ovo.timo.parser.ast.expression.primary;
 
 import re.ovo.timo.parser.ast.expression.misc.QueryExpression;
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * <code>'EXISTS' '(' subquery ')'</code>
@@ -41,7 +41,7 @@ public class ExistsPrimary extends PrimaryExpression {
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2012 Alibaba Group.
+ * Copyright 2015 Liu Huanting.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -11,11 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-/**
- * (created at 2011-6-1)
- */
 package re.ovo.timo.parser.visitor;
-
 import static re.ovo.timo.parser.ast.expression.comparison.ComparisionIsExpression.IS_FALSE;
 import static re.ovo.timo.parser.ast.expression.comparison.ComparisionIsExpression.IS_NOT_FALSE;
 import static re.ovo.timo.parser.ast.expression.comparison.ComparisionIsExpression.IS_NOT_NULL;
@@ -137,6 +133,7 @@ import re.ovo.timo.parser.ast.stmt.dal.ShowTriggers;
 import re.ovo.timo.parser.ast.stmt.dal.ShowVariables;
 import re.ovo.timo.parser.ast.stmt.dal.ShowWarnings;
 import re.ovo.timo.parser.ast.stmt.ddl.DDLAlterTableStatement;
+import re.ovo.timo.parser.ast.stmt.ddl.DDLAlterTableStatement.AlterSpecification;
 import re.ovo.timo.parser.ast.stmt.ddl.DDLCreateIndexStatement;
 import re.ovo.timo.parser.ast.stmt.ddl.DDLCreateTableStatement;
 import re.ovo.timo.parser.ast.stmt.ddl.DDLDropIndexStatement;
@@ -144,7 +141,6 @@ import re.ovo.timo.parser.ast.stmt.ddl.DDLDropTableStatement;
 import re.ovo.timo.parser.ast.stmt.ddl.DDLRenameTableStatement;
 import re.ovo.timo.parser.ast.stmt.ddl.DDLTruncateStatement;
 import re.ovo.timo.parser.ast.stmt.ddl.DescTableStatement;
-import re.ovo.timo.parser.ast.stmt.ddl.DDLAlterTableStatement.AlterSpecification;
 import re.ovo.timo.parser.ast.stmt.dml.DMLCallStatement;
 import re.ovo.timo.parser.ast.stmt.dml.DMLDeleteStatement;
 import re.ovo.timo.parser.ast.stmt.dml.DMLInsertStatement;
@@ -161,9 +157,11 @@ import re.ovo.timo.parser.ast.stmt.mts.MTSSetTransactionStatement;
 import re.ovo.timo.parser.util.Pair;
 
 /**
- * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
+ * @author Liu Huanting
+ * 2015年5月10日
  */
-public final class MySQLOutputASTVisitor implements SQLASTVisitor {
+public class OutputVisitor extends Visitor {
+
     private static final Object[] EMPTY_OBJ_ARRAY = new Object[0];
     private static final int[] EMPTY_INT_ARRAY = new int[0];
     private final StringBuilder appendable;
@@ -171,14 +169,15 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
     private int[] argsIndex;
     private Map<PlaceHolder, Object> placeHolderToString;
 
-    public MySQLOutputASTVisitor(StringBuilder appendable) {
+    public OutputVisitor(StringBuilder appendable) {
         this(appendable, null);
     }
 
     /**
-     * @param args parameters for {@link java.sql.PreparedStatement preparedStmt}
+     * @param args parameters for {@link java.sql.PreparedStatement
+     *            preparedStmt}
      */
-    public MySQLOutputASTVisitor(StringBuilder appendable, Object[] args) {
+    public OutputVisitor(StringBuilder appendable, Object[] args) {
         this.appendable = appendable;
         this.args = args == null ? EMPTY_OBJ_ARRAY : args;
         this.argsIndex = args == null ? EMPTY_INT_ARRAY : new int[args.length];
@@ -282,33 +281,32 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
         if (paren)
             appendable.append(')');
         switch (node.getMode()) {
-            case IS_NULL:
-                appendable.append(" IS NULL");
-                break;
-            case IS_TRUE:
-                appendable.append(" IS TRUE");
-                break;
-            case IS_FALSE:
-                appendable.append(" IS FALSE");
-                break;
-            case IS_UNKNOWN:
-                appendable.append(" IS UNKNOWN");
-                break;
-            case IS_NOT_NULL:
-                appendable.append(" IS NOT NULL");
-                break;
-            case IS_NOT_TRUE:
-                appendable.append(" IS NOT TRUE");
-                break;
-            case IS_NOT_FALSE:
-                appendable.append(" IS NOT FALSE");
-                break;
-            case IS_NOT_UNKNOWN:
-                appendable.append(" IS NOT UNKNOWN");
-                break;
-            default:
-                throw new IllegalArgumentException("unknown mode for IS expression: "
-                        + node.getMode());
+        case IS_NULL:
+            appendable.append(" IS NULL");
+            break;
+        case IS_TRUE:
+            appendable.append(" IS TRUE");
+            break;
+        case IS_FALSE:
+            appendable.append(" IS FALSE");
+            break;
+        case IS_UNKNOWN:
+            appendable.append(" IS UNKNOWN");
+            break;
+        case IS_NOT_NULL:
+            appendable.append(" IS NOT NULL");
+            break;
+        case IS_NOT_TRUE:
+            appendable.append(" IS NOT TRUE");
+            break;
+        case IS_NOT_FALSE:
+            appendable.append(" IS NOT FALSE");
+            break;
+        case IS_NOT_UNKNOWN:
+            appendable.append(" IS NOT UNKNOWN");
+            break;
+        default:
+            throw new IllegalArgumentException("unknown mode for IS expression: " + node.getMode());
         }
     }
 
@@ -382,13 +380,27 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
         if (paren)
             appendable.append(')');
     }
-
+    private static boolean isDBID(Expression expr){
+        if(expr instanceof Identifier){
+            String name = ((Identifier) expr).getIdTextUpUnescape();
+            return "DBID".equals(name);
+        }
+        return false;
+    }
     @Override
     public void visit(BinaryOperatorExpression node) {
+        /** replace <code> dbid = ? </code> with <code>TRUE<code>*/
+        if((node instanceof ComparisionEqualsExpression)){
+            Expression left = node.getLeftOprand();
+            Expression right = node.getRightOprand();
+            if(isDBID(left)||isDBID(right)){
+                appendable.append("TRUE");
+                return;
+            }
+        }
         Expression left = node.getLeftOprand();
-        boolean paren =
-                node.isLeftCombine() ? left.getPrecedence() < node.getPrecedence() : left
-                        .getPrecedence() <= node.getPrecedence();
+        boolean paren = node.isLeftCombine()
+                ? left.getPrecedence() < node.getPrecedence() : left.getPrecedence() <= node.getPrecedence();
         if (paren)
             appendable.append('(');
         left.accept(this);
@@ -398,9 +410,8 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
         appendable.append(' ').append(node.getOperator()).append(' ');
 
         Expression right = node.getRightOprand();
-        paren =
-                node.isLeftCombine() ? right.getPrecedence() <= node.getPrecedence() : right
-                        .getPrecedence() < node.getPrecedence();
+        paren = node.isLeftCombine()
+                ? right.getPrecedence() <= node.getPrecedence() : right.getPrecedence() < node.getPrecedence();
         if (paren)
             appendable.append('(');
         right.accept(this);
@@ -484,32 +495,32 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
         appendable.append(functionName).append('(');
         Expression remStr = node.getRemainString();
         switch (node.getDirection()) {
-            case DEFAULT:
-                if (remStr != null) {
-                    remStr.accept(this);
-                    appendable.append(" FROM ");
-                }
-                break;
-            case BOTH:
-                appendable.append("BOTH ");
-                if (remStr != null)
-                    remStr.accept(this);
+        case DEFAULT:
+            if (remStr != null) {
+                remStr.accept(this);
                 appendable.append(" FROM ");
-                break;
-            case LEADING:
-                appendable.append("LEADING ");
-                if (remStr != null)
-                    remStr.accept(this);
-                appendable.append(" FROM ");
-                break;
-            case TRAILING:
-                appendable.append("TRAILING ");
-                if (remStr != null)
-                    remStr.accept(this);
-                appendable.append(" FROM ");
-                break;
-            default:
-                throw new IllegalArgumentException("unknown trim direction: " + node.getDirection());
+            }
+            break;
+        case BOTH:
+            appendable.append("BOTH ");
+            if (remStr != null)
+                remStr.accept(this);
+            appendable.append(" FROM ");
+            break;
+        case LEADING:
+            appendable.append("LEADING ");
+            if (remStr != null)
+                remStr.accept(this);
+            appendable.append(" FROM ");
+            break;
+        case TRAILING:
+            appendable.append("TRAILING ");
+            if (remStr != null)
+                remStr.accept(this);
+            appendable.append(" FROM ");
+            break;
+        default:
+            throw new IllegalArgumentException("unknown trim direction: " + node.getDirection());
         }
         Expression str = node.getString();
         str.accept(this);
@@ -793,8 +804,7 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
             return containsCompIn(is.getOperand());
         } else if (pat instanceof TernaryOperatorExpression) {
             TernaryOperatorExpression tp = (TernaryOperatorExpression) pat;
-            return containsCompIn(tp.getFirst()) || containsCompIn(tp.getSecond())
-                    || containsCompIn(tp.getThird());
+            return containsCompIn(tp.getFirst()) || containsCompIn(tp.getSecond()) || containsCompIn(tp.getThird());
         } else if (pat instanceof UnaryOperatorExpression) {
             UnaryOperatorExpression up = (UnaryOperatorExpression) pat;
             return containsCompIn(up.getOperand());
@@ -816,23 +826,22 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
         if (inparen)
             appendable.append(')');
         switch (node.getModifier()) {
-            case IN_BOOLEAN_MODE:
-                appendable.append(" IN BOOLEAN MODE");
-                break;
-            case IN_NATURAL_LANGUAGE_MODE:
-                appendable.append(" IN NATURAL LANGUAGE MODE");
-                break;
-            case IN_NATURAL_LANGUAGE_MODE_WITH_QUERY_EXPANSION:
-                appendable.append(" IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION");
-                break;
-            case WITH_QUERY_EXPANSION:
-                appendable.append(" WITH QUERY EXPANSION");
-                break;
-            case _DEFAULT:
-                break;
-            default:
-                throw new IllegalArgumentException("unkown modifier for match expression: "
-                        + node.getModifier());
+        case IN_BOOLEAN_MODE:
+            appendable.append(" IN BOOLEAN MODE");
+            break;
+        case IN_NATURAL_LANGUAGE_MODE:
+            appendable.append(" IN NATURAL LANGUAGE MODE");
+            break;
+        case IN_NATURAL_LANGUAGE_MODE_WITH_QUERY_EXPANSION:
+            appendable.append(" IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION");
+            break;
+        case WITH_QUERY_EXPANSION:
+            appendable.append(" WITH QUERY EXPANSION");
+            break;
+        case _DEFAULT:
+            break;
+        default:
+            throw new IllegalArgumentException("unkown modifier for match expression: " + node.getModifier());
         }
         appendable.append(')');
     }
@@ -867,14 +876,14 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
     public void visit(SysVarPrimary node) {
         VariableScope scope = node.getScope();
         switch (scope) {
-            case GLOBAL:
-                appendable.append("@@global.");
-                break;
-            case SESSION:
-                appendable.append("@@");
-                break;
-            default:
-                throw new IllegalArgumentException("unkown scope for sysVar primary: " + scope);
+        case GLOBAL:
+            appendable.append("@@global.");
+            break;
+        case SESSION:
+            appendable.append("@@");
+            break;
+        default:
+            throw new IllegalArgumentException("unkown scope for sysVar primary: " + scope);
         }
         appendable.append(node.getVarText());
     }
@@ -888,44 +897,44 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
     public void visit(IndexHint node) {
         IndexHint.IndexAction action = node.getAction();
         switch (action) {
-            case FORCE:
-                appendable.append("FORCE ");
-                break;
-            case IGNORE:
-                appendable.append("IGNORE ");
-                break;
-            case USE:
-                appendable.append("USE ");
-                break;
-            default:
-                throw new IllegalArgumentException("unkown index action for index hint: " + action);
+        case FORCE:
+            appendable.append("FORCE ");
+            break;
+        case IGNORE:
+            appendable.append("IGNORE ");
+            break;
+        case USE:
+            appendable.append("USE ");
+            break;
+        default:
+            throw new IllegalArgumentException("unkown index action for index hint: " + action);
         }
         IndexHint.IndexType type = node.getType();
         switch (type) {
-            case INDEX:
-                appendable.append("INDEX ");
-                break;
-            case KEY:
-                appendable.append("KEY ");
-                break;
-            default:
-                throw new IllegalArgumentException("unkown index type for index hint: " + type);
+        case INDEX:
+            appendable.append("INDEX ");
+            break;
+        case KEY:
+            appendable.append("KEY ");
+            break;
+        default:
+            throw new IllegalArgumentException("unkown index type for index hint: " + type);
         }
         IndexHint.IndexScope scope = node.getScope();
         switch (scope) {
-            case GROUP_BY:
-                appendable.append("FOR GROUP BY ");
-                break;
-            case ORDER_BY:
-                appendable.append("FOR ORDER BY ");
-                break;
-            case JOIN:
-                appendable.append("FOR JOIN ");
-                break;
-            case ALL:
-                break;
-            default:
-                throw new IllegalArgumentException("unkown index scope for index hint: " + scope);
+        case GROUP_BY:
+            appendable.append("FOR GROUP BY ");
+            break;
+        case ORDER_BY:
+            appendable.append("FOR ORDER BY ");
+            break;
+        case JOIN:
+            appendable.append("FOR JOIN ");
+            break;
+        case ALL:
+            break;
+        default:
+            throw new IllegalArgumentException("unkown index scope for index hint: " + scope);
         }
         appendable.append('(');
         List<String> indexList = node.getIndexList();
@@ -1110,6 +1119,7 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
         appendable.append("DUAL");
     }
 
+    @SuppressWarnings("incomplete-switch")
     @Override
     public void visit(GroupBy node) {
         appendable.append("GROUP BY ");
@@ -1122,9 +1132,9 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
             Expression col = p.getKey();
             col.accept(this);
             switch (p.getValue()) {
-                case DESC:
-                    appendable.append(" DESC");
-                    break;
+            case DESC:
+                appendable.append(" DESC");
+                break;
             }
         }
         if (node.isWithRollup()) {
@@ -1144,8 +1154,12 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
             Expression col = p.getKey();
             col.accept(this);
             switch (p.getValue()) {
-                case DESC:
-                    appendable.append(" DESC");
+            case DESC:
+                appendable.append(" DESC");
+                break;
+                case ASC:
+                    break;
+                default:
                     break;
             }
         }
@@ -1182,12 +1196,12 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
         } else if (node.getIndexType() != null) {
             appendable.append("USING ");
             switch (node.getIndexType()) {// USING {BTREE | HASH}
-                case BTREE:
-                    appendable.append("BTREE");
-                    break;
-                case HASH:
-                    appendable.append("HASH");
-                    break;
+            case BTREE:
+                appendable.append("BTREE");
+                break;
+            case HASH:
+                appendable.append("HASH");
+                break;
             }
         } else if (node.getParserName() != null) {
             appendable.append("WITH PARSER ");
@@ -1306,18 +1320,17 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
     public void visit(ShowEngine node) {
         appendable.append("SHOW ENGINE ");
         switch (node.getType()) {
-            case INNODB_MUTEX:
-                appendable.append("INNODB MUTEX");
-                break;
-            case INNODB_STATUS:
-                appendable.append("INNODB STATUS");
-                break;
-            case PERFORMANCE_SCHEMA_STATUS:
-                appendable.append("PERFORMANCE SCHEMA STATUS");
-                break;
-            default:
-                throw new IllegalArgumentException("unrecognized type for SHOW ENGINE: "
-                        + node.getType());
+        case INNODB_MUTEX:
+            appendable.append("INNODB MUTEX");
+            break;
+        case INNODB_STATUS:
+            appendable.append("INNODB STATUS");
+            break;
+        case PERFORMANCE_SCHEMA_STATUS:
+            appendable.append("PERFORMANCE SCHEMA STATUS");
+            break;
+        default:
+            throw new IllegalArgumentException("unrecognized type for SHOW ENGINE: " + node.getType());
         }
     }
 
@@ -1378,18 +1391,17 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
     public void visit(ShowIndex node) {
         appendable.append("SHOW ");
         switch (node.getType()) {
-            case INDEX:
-                appendable.append("INDEX ");
-                break;
-            case INDEXES:
-                appendable.append("INDEXES ");
-                break;
-            case KEYS:
-                appendable.append("KEYS ");
-                break;
-            default:
-                throw new IllegalArgumentException("unrecognized type for SHOW INDEX: "
-                        + node.getType());
+        case INDEX:
+            appendable.append("INDEX ");
+            break;
+        case INDEXES:
+            appendable.append("INDEXES ");
+            break;
+        case KEYS:
+            appendable.append("KEYS ");
+            break;
+        default:
+            throw new IllegalArgumentException("unrecognized type for SHOW INDEX: " + node.getType());
         }
         appendable.append("IN ");
         node.getTable().accept(this);
@@ -1484,8 +1496,7 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
 
     @Override
     public void visit(ShowStatus node) {
-        appendable.append("SHOW ").append(node.getScope().name().replace('_', ' '))
-                .append(" STATUS");
+        appendable.append("SHOW ").append(node.getScope().name().replace('_', ' ')).append(" STATUS");
         printLikeOrWhere(node.getPattern(), node.getWhere());
     }
 
@@ -1527,8 +1538,7 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
 
     @Override
     public void visit(ShowVariables node) {
-        appendable.append("SHOW ").append(node.getScope().name().replace('_', ' '))
-                .append(" VARIABLES");
+        appendable.append("SHOW ").append(node.getScope().name().replace('_', ' ')).append(" VARIABLES");
         printLikeOrWhere(node.getPattern(), node.getWhere());
     }
 
@@ -1599,34 +1609,32 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
         VariableScope scope = node.getScope();
         if (scope != null) {
             switch (scope) {
-                case SESSION:
-                    appendable.append("SESSION ");
-                    break;
-                case GLOBAL:
-                    appendable.append("GLOBAL ");
-                    break;
-                default:
-                    throw new IllegalArgumentException(
-                            "unknown scope for SET TRANSACTION ISOLATION LEVEL: " + scope);
+            case SESSION:
+                appendable.append("SESSION ");
+                break;
+            case GLOBAL:
+                appendable.append("GLOBAL ");
+                break;
+            default:
+                throw new IllegalArgumentException("unknown scope for SET TRANSACTION ISOLATION LEVEL: " + scope);
             }
         }
         appendable.append("TRANSACTION ISOLATION LEVEL ");
         switch (node.getLevel()) {
-            case READ_COMMITTED:
-                appendable.append("READ COMMITTED");
-                break;
-            case READ_UNCOMMITTED:
-                appendable.append("READ UNCOMMITTED");
-                break;
-            case REPEATABLE_READ:
-                appendable.append("REPEATABLE READ");
-                break;
-            case SERIALIZABLE:
-                appendable.append("SERIALIZABLE");
-                break;
-            default:
-                throw new IllegalArgumentException(
-                        "unknown level for SET TRANSACTION ISOLATION LEVEL: " + node.getLevel());
+        case READ_COMMITTED:
+            appendable.append("READ COMMITTED");
+            break;
+        case READ_UNCOMMITTED:
+            appendable.append("READ UNCOMMITTED");
+            break;
+        case REPEATABLE_READ:
+            appendable.append("REPEATABLE READ");
+            break;
+        case SERIALIZABLE:
+            appendable.append("SERIALIZABLE");
+            break;
+        default:
+            throw new IllegalArgumentException("unknown level for SET TRANSACTION ISOLATION LEVEL: " + node.getLevel());
         }
     }
 
@@ -1649,22 +1657,22 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
         if (savepoint == null) {
             MTSRollbackStatement.CompleteType type = node.getCompleteType();
             switch (type) {
-                case CHAIN:
-                    appendable.append(" AND CHAIN");
-                    break;
-                case NO_CHAIN:
-                    appendable.append(" AND NO CHAIN");
-                    break;
-                case NO_RELEASE:
-                    appendable.append(" NO RELEASE");
-                    break;
-                case RELEASE:
-                    appendable.append(" RELEASE");
-                    break;
-                case UN_DEF:
-                    break;
-                default:
-                    throw new IllegalArgumentException("unrecgnized complete type: " + type);
+            case CHAIN:
+                appendable.append(" AND CHAIN");
+                break;
+            case NO_CHAIN:
+                appendable.append(" AND NO CHAIN");
+                break;
+            case NO_RELEASE:
+                appendable.append(" NO RELEASE");
+                break;
+            case RELEASE:
+                appendable.append(" RELEASE");
+                break;
+            case UN_DEF:
+                break;
+            default:
+                throw new IllegalArgumentException("unrecgnized complete type: " + type);
             }
         } else {
             appendable.append(" TO SAVEPOINT ");
@@ -1720,19 +1728,19 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
     public void visit(DMLInsertStatement node) {
         appendable.append("INSERT ");
         switch (node.getMode()) {
-            case DELAY:
-                appendable.append("DELAYED ");
-                break;
-            case HIGH:
-                appendable.append("HIGH_PRIORITY ");
-                break;
-            case LOW:
-                appendable.append("LOW_PRIORITY ");
-                break;
-            case UNDEF:
-                break;
-            default:
-                throw new IllegalArgumentException("unknown mode for INSERT: " + node.getMode());
+        case DELAY:
+            appendable.append("DELAYED ");
+            break;
+        case HIGH:
+            appendable.append("HIGH_PRIORITY ");
+            break;
+        case LOW:
+            appendable.append("LOW_PRIORITY ");
+            break;
+        case UNDEF:
+            break;
+        default:
+            throw new IllegalArgumentException("unknown mode for INSERT: " + node.getMode());
         }
         if (node.isIgnore())
             appendable.append("IGNORE ");
@@ -1791,16 +1799,16 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
     public void visit(DMLReplaceStatement node) {
         appendable.append("REPLACE ");
         switch (node.getMode()) {
-            case DELAY:
-                appendable.append("DELAYED ");
-                break;
-            case LOW:
-                appendable.append("LOW_PRIORITY ");
-                break;
-            case UNDEF:
-                break;
-            default:
-                throw new IllegalArgumentException("unknown mode for INSERT: " + node.getMode());
+        case DELAY:
+            appendable.append("DELAYED ");
+            break;
+        case LOW:
+            appendable.append("LOW_PRIORITY ");
+            break;
+        case UNDEF:
+            break;
+        default:
+            throw new IllegalArgumentException("unknown mode for INSERT: " + node.getMode());
         }
         appendable.append("INTO ");
         node.getTable().accept(this);
@@ -1843,16 +1851,16 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
         appendable.append("SELECT ");
         final DMLSelectStatement.SelectOption option = node.getOption();
         switch (option.resultDup) {
-            case ALL:
-                break;
-            case DISTINCT:
-                appendable.append("DISTINCT ");
-                break;
-            case DISTINCTROW:
-                appendable.append("DISTINCTROW ");
-                break;
-            default:
-                throw new IllegalArgumentException("unknown option for SELECT: " + option);
+        case ALL:
+            break;
+        case DISTINCT:
+            appendable.append("DISTINCT ");
+            break;
+        case DISTINCTROW:
+            appendable.append("DISTINCTROW ");
+            break;
+        default:
+            throw new IllegalArgumentException("unknown option for SELECT: " + option);
         }
         if (option.highPriority) {
             appendable.append("HIGH_PRIORITY ");
@@ -1861,31 +1869,31 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
             appendable.append("STRAIGHT_JOIN ");
         }
         switch (option.resultSize) {
-            case SQL_BIG_RESULT:
-                appendable.append("SQL_BIG_RESULT ");
-                break;
-            case SQL_SMALL_RESULT:
-                appendable.append("SQL_SMALL_RESULT ");
-                break;
-            case UNDEF:
-                break;
-            default:
-                throw new IllegalArgumentException("unknown option for SELECT: " + option);
+        case SQL_BIG_RESULT:
+            appendable.append("SQL_BIG_RESULT ");
+            break;
+        case SQL_SMALL_RESULT:
+            appendable.append("SQL_SMALL_RESULT ");
+            break;
+        case UNDEF:
+            break;
+        default:
+            throw new IllegalArgumentException("unknown option for SELECT: " + option);
         }
         if (option.sqlBufferResult) {
             appendable.append("SQL_BUFFER_RESULT ");
         }
         switch (option.queryCache) {
-            case SQL_CACHE:
-                appendable.append("SQL_CACHE ");
-                break;
-            case SQL_NO_CACHE:
-                appendable.append("SQL_NO_CACHE ");
-                break;
-            case UNDEF:
-                break;
-            default:
-                throw new IllegalArgumentException("unknown option for SELECT: " + option);
+        case SQL_CACHE:
+            appendable.append("SQL_CACHE ");
+            break;
+        case SQL_NO_CACHE:
+            appendable.append("SQL_NO_CACHE ");
+            break;
+        case UNDEF:
+            break;
+        default:
+            throw new IllegalArgumentException("unknown option for SELECT: " + option);
         }
         if (option.sqlCalcFoundRows) {
             appendable.append("SQL_CALC_FOUND_ROWS ");
@@ -1942,16 +1950,16 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
         }
 
         switch (option.lockMode) {
-            case FOR_UPDATE:
-                appendable.append(" FOR UPDATE");
-                break;
-            case LOCK_IN_SHARE_MODE:
-                appendable.append(" LOCK IN SHARE MODE");
-                break;
-            case UNDEF:
-                break;
-            default:
-                throw new IllegalArgumentException("unknown option for SELECT: " + option);
+        case FOR_UPDATE:
+            appendable.append(" FOR UPDATE");
+            break;
+        case LOCK_IN_SHARE_MODE:
+            appendable.append(" LOCK IN SHARE MODE");
+            break;
+        case UNDEF:
+            break;
+        default:
+            throw new IllegalArgumentException("unknown option for SELECT: " + option);
         }
     }
 
@@ -2081,17 +2089,16 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
         }
         printList(node.getTableNames());
         switch (node.getMode()) {
-            case CASCADE:
-                appendable.append(" CASCADE");
-                break;
-            case RESTRICT:
-                appendable.append(" RESTRICT");
-                break;
-            case UNDEF:
-                break;
-            default:
-                throw new IllegalArgumentException("unsupported mode for DROP TABLE: "
-                        + node.getMode());
+        case CASCADE:
+            appendable.append(" CASCADE");
+            break;
+        case RESTRICT:
+            appendable.append(" RESTRICT");
+            break;
+        case UNDEF:
+            break;
+        default:
+            throw new IllegalArgumentException("unsupported mode for DROP TABLE: " + node.getMode());
         }
     }
 
@@ -2117,5 +2124,6 @@ public final class MySQLOutputASTVisitor implements SQLASTVisitor {
         appendable.append("DROP POLICY ");
         node.getPolicyName().accept(this);
     }
+
 
 }

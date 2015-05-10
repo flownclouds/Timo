@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import re.ovo.timo.parser.ast.expression.Expression;
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * <code>higherExpr 'DIV' higherExpr</code>
@@ -38,7 +38,7 @@ public class ArithmeticIntegerDivideExpression extends ArithmeticBinaryOperatorE
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 

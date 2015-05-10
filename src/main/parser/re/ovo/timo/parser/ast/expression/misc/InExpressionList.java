@@ -23,7 +23,7 @@ import java.util.Map;
 
 import re.ovo.timo.parser.ast.expression.AbstractExpression;
 import re.ovo.timo.parser.ast.expression.Expression;
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
@@ -69,7 +69,7 @@ public class InExpressionList extends AbstractExpression {
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         if (replaceList == null) {
             visitor.visit(this);
         } else {

@@ -22,7 +22,7 @@ import re.ovo.timo.parser.ast.expression.BinaryOperatorExpression;
 import re.ovo.timo.parser.ast.expression.Expression;
 import re.ovo.timo.parser.ast.expression.primary.literal.LiteralBoolean;
 import re.ovo.timo.parser.util.ExprEvalUtils;
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
@@ -51,7 +51,7 @@ public class LogicalXORExpression extends BinaryOperatorExpression {
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }

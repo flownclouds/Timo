@@ -25,7 +25,7 @@ import re.ovo.timo.parser.ast.expression.primary.Identifier;
 import re.ovo.timo.parser.ast.fragment.Limit;
 import re.ovo.timo.parser.ast.fragment.OrderBy;
 import re.ovo.timo.parser.ast.fragment.tableref.TableReferences;
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
@@ -128,7 +128,7 @@ public class DMLDeleteStatement extends DMLStatement {
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }

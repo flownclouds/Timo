@@ -21,7 +21,7 @@ import java.util.List;
 import re.ovo.timo.parser.ast.ASTNode;
 import re.ovo.timo.parser.ast.expression.Expression;
 import re.ovo.timo.parser.ast.expression.primary.Identifier;
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * <code>spatial data type</code> for MyISAM is not supported
@@ -133,7 +133,7 @@ public class DataType implements ASTNode {
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }

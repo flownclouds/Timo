@@ -16,11 +16,11 @@
  */
 package re.ovo.timo.parser.ast;
 
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public interface ASTNode {
-    void accept(SQLASTVisitor visitor);
+    void accept(Visitor visitor);
 }

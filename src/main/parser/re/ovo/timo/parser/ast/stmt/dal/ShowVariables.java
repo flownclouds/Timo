@@ -18,7 +18,7 @@ package re.ovo.timo.parser.ast.stmt.dal;
 
 import re.ovo.timo.parser.ast.expression.Expression;
 import re.ovo.timo.parser.ast.fragment.VariableScope;
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
@@ -59,7 +59,7 @@ public class ShowVariables extends DALShowStatement {
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }

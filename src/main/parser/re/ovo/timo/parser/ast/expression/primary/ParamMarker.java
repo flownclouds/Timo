@@ -18,7 +18,7 @@ package re.ovo.timo.parser.ast.expression.primary;
 
 import java.util.Map;
 
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * <code>'?'</code>
@@ -64,7 +64,7 @@ public class ParamMarker extends PrimaryExpression {
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }

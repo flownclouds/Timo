@@ -21,7 +21,7 @@ import java.util.Map;
 
 import re.ovo.timo.parser.ast.expression.AbstractExpression;
 import re.ovo.timo.parser.ast.expression.Expression;
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * <code>higherExpr 'COLLATE' collateName</code>
@@ -58,7 +58,7 @@ public class CollateExpression extends AbstractExpression {
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }

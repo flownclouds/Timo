@@ -26,7 +26,7 @@ import re.ovo.timo.parser.ast.fragment.ddl.TableOptions;
 import re.ovo.timo.parser.ast.fragment.ddl.index.IndexDefinition;
 import re.ovo.timo.parser.ast.stmt.dml.DMLSelectStatement;
 import re.ovo.timo.parser.util.Pair;
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * NOT FULL AST: foreign key, ... not supported
@@ -160,7 +160,7 @@ public class DDLCreateTableStatement implements DDLStatement {
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }

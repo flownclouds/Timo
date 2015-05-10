@@ -18,7 +18,7 @@ package re.ovo.timo.parser.ast.expression.primary.literal;
 
 import java.util.Map;
 
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * literal date is also possible
@@ -115,7 +115,7 @@ public class LiteralString extends Literal {
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }

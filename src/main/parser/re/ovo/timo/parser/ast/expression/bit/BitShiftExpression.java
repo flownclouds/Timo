@@ -18,7 +18,7 @@ package re.ovo.timo.parser.ast.expression.bit;
 
 import re.ovo.timo.parser.ast.expression.BinaryOperatorExpression;
 import re.ovo.timo.parser.ast.expression.Expression;
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * <code>higherExpr ( ('&lt;&lt;'|'&gt;&gt;') higherExpr )+</code>
@@ -46,7 +46,7 @@ public class BitShiftExpression extends BinaryOperatorExpression {
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }

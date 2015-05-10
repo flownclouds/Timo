@@ -23,7 +23,7 @@ import java.util.List;
 import re.ovo.timo.parser.ast.ASTNode;
 import re.ovo.timo.parser.ast.expression.Expression;
 import re.ovo.timo.parser.util.Pair;
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
@@ -71,7 +71,7 @@ public class GroupBy implements ASTNode {
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }

@@ -26,7 +26,7 @@ import re.ovo.timo.parser.ast.fragment.ddl.ColumnDefinition;
 import re.ovo.timo.parser.ast.fragment.ddl.TableOptions;
 import re.ovo.timo.parser.ast.fragment.ddl.index.IndexDefinition;
 import re.ovo.timo.parser.util.Pair;
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * NOT FULL AST: partition options, foreign key, ORDER BY not supported
@@ -86,7 +86,7 @@ public class DDLAlterTableStatement implements DDLStatement {
         }
 
         @Override
-        public void accept(SQLASTVisitor visitor) {
+        public void accept(Visitor visitor) {
             visitor.visit(this);
         }
     }
@@ -109,7 +109,7 @@ public class DDLAlterTableStatement implements DDLStatement {
         }
 
         @Override
-        public void accept(SQLASTVisitor visitor) {
+        public void accept(Visitor visitor) {
             visitor.visit(this);
         }
     }
@@ -138,7 +138,7 @@ public class DDLAlterTableStatement implements DDLStatement {
         }
 
         @Override
-        public void accept(SQLASTVisitor visitor) {
+        public void accept(Visitor visitor) {
             visitor.visit(this);
         }
     }
@@ -157,7 +157,7 @@ public class DDLAlterTableStatement implements DDLStatement {
         }
 
         @Override
-        public void accept(SQLASTVisitor visitor) {
+        public void accept(Visitor visitor) {
             visitor.visit(this);
         }
     }
@@ -182,7 +182,7 @@ public class DDLAlterTableStatement implements DDLStatement {
         }
 
         @Override
-        public void accept(SQLASTVisitor visitor) {
+        public void accept(Visitor visitor) {
             visitor.visit(this);
 
         }
@@ -208,7 +208,7 @@ public class DDLAlterTableStatement implements DDLStatement {
         }
 
         @Override
-        public void accept(SQLASTVisitor visitor) {
+        public void accept(Visitor visitor) {
             visitor.visit(this);
         }
     }
@@ -233,7 +233,7 @@ public class DDLAlterTableStatement implements DDLStatement {
         }
 
         @Override
-        public void accept(SQLASTVisitor visitor) {
+        public void accept(Visitor visitor) {
             visitor.visit(this);
         }
     }
@@ -278,7 +278,7 @@ public class DDLAlterTableStatement implements DDLStatement {
         }
 
         @Override
-        public void accept(SQLASTVisitor visitor) {
+        public void accept(Visitor visitor) {
             visitor.visit(this);
         }
     }
@@ -333,7 +333,7 @@ public class DDLAlterTableStatement implements DDLStatement {
         }
 
         @Override
-        public void accept(SQLASTVisitor visitor) {
+        public void accept(Visitor visitor) {
             visitor.visit(this);
         }
     }
@@ -379,7 +379,7 @@ public class DDLAlterTableStatement implements DDLStatement {
         }
 
         @Override
-        public void accept(SQLASTVisitor visitor) {
+        public void accept(Visitor visitor) {
             visitor.visit(this);
         }
     }
@@ -397,7 +397,7 @@ public class DDLAlterTableStatement implements DDLStatement {
         }
 
         @Override
-        public void accept(SQLASTVisitor visitor) {
+        public void accept(Visitor visitor) {
             visitor.visit(this);
         }
     }
@@ -405,7 +405,7 @@ public class DDLAlterTableStatement implements DDLStatement {
     // | DROP PRIMARY KEY
     public static class DropPrimaryKey implements AlterSpecification {
         @Override
-        public void accept(SQLASTVisitor visitor) {
+        public void accept(Visitor visitor) {
             visitor.visit(this);
         }
     }
@@ -423,7 +423,7 @@ public class DDLAlterTableStatement implements DDLStatement {
         }
 
         @Override
-        public void accept(SQLASTVisitor visitor) {
+        public void accept(Visitor visitor) {
             visitor.visit(this);
         }
     }
@@ -544,7 +544,7 @@ public class DDLAlterTableStatement implements DDLStatement {
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 

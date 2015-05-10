@@ -24,7 +24,7 @@ import re.ovo.timo.parser.ast.expression.ReplacableExpression;
 import re.ovo.timo.parser.ast.expression.primary.literal.LiteralBoolean;
 import re.ovo.timo.parser.util.ExprEvalUtils;
 import re.ovo.timo.parser.util.Pair;
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * <code>higherPreExpr '=' higherPreExpr</code>
@@ -72,7 +72,7 @@ public class ComparisionEqualsExpression extends BinaryOperatorExpression implem
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         if (replaceExpr == null)
             visitor.visit(this);
         else

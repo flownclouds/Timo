@@ -16,7 +16,7 @@
  */
 package re.ovo.timo.parser.ast.fragment.tableref;
 
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
@@ -71,7 +71,7 @@ public class NaturalJoin implements TableReference {
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }

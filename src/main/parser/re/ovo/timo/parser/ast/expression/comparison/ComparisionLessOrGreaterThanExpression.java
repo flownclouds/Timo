@@ -18,7 +18,7 @@ package re.ovo.timo.parser.ast.expression.comparison;
 
 import re.ovo.timo.parser.ast.expression.BinaryOperatorExpression;
 import re.ovo.timo.parser.ast.expression.Expression;
-import re.ovo.timo.parser.visitor.SQLASTVisitor;
+import re.ovo.timo.parser.visitor.Visitor;
 
 /**
  * <code>higherPreExpr '&lt;&gt;' higherPreExpr</code>
@@ -36,7 +36,7 @@ public class ComparisionLessOrGreaterThanExpression extends BinaryOperatorExpres
     }
 
     @Override
-    public void accept(SQLASTVisitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }
