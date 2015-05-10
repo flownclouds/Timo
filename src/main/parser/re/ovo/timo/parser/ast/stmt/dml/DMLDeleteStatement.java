@@ -24,6 +24,8 @@ import re.ovo.timo.parser.ast.expression.Expression;
 import re.ovo.timo.parser.ast.expression.primary.Identifier;
 import re.ovo.timo.parser.ast.fragment.Limit;
 import re.ovo.timo.parser.ast.fragment.OrderBy;
+import re.ovo.timo.parser.ast.fragment.tableref.TableRefFactor;
+import re.ovo.timo.parser.ast.fragment.tableref.TableReference;
 import re.ovo.timo.parser.ast.fragment.tableref.TableReferences;
 import re.ovo.timo.parser.visitor.Visitor;
 
@@ -60,7 +62,9 @@ public class DMLDeleteStatement extends DMLStatement {
         this.ignore = ignore;
         this.tableNames = new ArrayList<Identifier>(1);
         this.tableNames.add(tableName);
-        this.tableRefs = null;
+        List<TableReference> tables = new ArrayList<TableReference>();
+        tables.add(new TableRefFactor(tableName,null,null));
+        this.tableRefs = new TableReferences(tables);
         this.whereCondition = where;
         this.orderBy = orderBy;
         this.limit = limit;
