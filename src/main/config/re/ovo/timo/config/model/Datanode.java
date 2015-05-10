@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2012 Alibaba Group.
+ * Copyright 2015 Liu Huanting.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -11,24 +11,28 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-/**
- * (created at 2012-6-13)
- */
-package re.ovo.timo.config.model.rule;
+package re.ovo.timo.config.model;
 
-import java.util.Map;
+import java.util.List;
 
 /**
- * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
+ * @author Liu Huanting
+ * 2015年5月9日
  */
-public interface RuleAlgorithm {
+public class Datanode {
+    private final int id;
+    private final List<Integer> datasources;
 
-    RuleAlgorithm constructMe(Object... objects);
+    public Datanode(int id, List<Integer> datasources) {
+        this.id = id;
+        this.datasources = datasources;
+    }
 
-    void initialize();
+    public int getID() {
+        return id;
+    }
 
-    /**
-     * @return never null
-     */
-    Integer[] calculate(Map<? extends Object, ? extends Object> parameters);
+    public List<Integer> getDatasources() {
+        return datasources;
+    }
 }

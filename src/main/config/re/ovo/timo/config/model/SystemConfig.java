@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2012 Alibaba Group.
+ * Copyright 2015 Liu Huanting.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -16,12 +16,10 @@ package re.ovo.timo.config.model;
 import re.ovo.timo.config.Isolations;
 
 /**
- * 系统基础配置项
- * 
- * @author xianmao.hexm 2011-1-11 下午02:14:04
+ * @author Liu Huanting
+ * 2015年5月9日
  */
-public final class SystemConfig {
-
+public class SystemConfig {
     private static final int DEFAULT_PORT = 8066;
     private static final int DEFAULT_MANAGER_PORT = 9066;
     private static final String DEFAULT_CHARSET = "UTF-8";
@@ -59,6 +57,9 @@ public final class SystemConfig {
     private int txIsolation;
     private int parserCommentVersion;
     private int sqlRecordCount;
+    private String url;
+    private String username;
+    private String password;
 
     public SystemConfig() {
         this.serverPort = DEFAULT_PORT;
@@ -251,5 +252,30 @@ public final class SystemConfig {
     public void setSqlRecordCount(int sqlRecordCount) {
         this.sqlRecordCount = sqlRecordCount;
     }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 
 }

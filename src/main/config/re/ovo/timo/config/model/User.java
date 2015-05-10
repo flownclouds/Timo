@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2012 Alibaba Group.
+ * Copyright 2015 Liu Huanting.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -16,36 +16,35 @@ package re.ovo.timo.config.model;
 import java.util.Set;
 
 /**
- * @author xianmao.hexm 2011-1-11 下午02:26:09
+ * @author Liu Huanting
+ * 2015年5月9日
  */
-public class UserConfig {
+public class User {
+    private final String username;
+    private final String password;
+    private final Set<String> databases;
+    private final Set<String> hosts;
 
-    private String name;
-    private String password;
-    private Set<String> schemas;
-
-    public String getName() {
-        return name;
+    public User(String username, String password, Set<String> databases, Set<String> hosts) {
+        this.username = username;
+        this.password = password;
+        this.databases = databases;
+        this.hosts = hosts;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public Set<String> getDatabases() {
+        return databases;
     }
 
-    public Set<String> getSchemas() {
-        return schemas;
+    public Set<String> getHosts() {
+        return hosts;
     }
-
-    public void setSchemas(Set<String> schemas) {
-        this.schemas = schemas;
-    }
-
 }

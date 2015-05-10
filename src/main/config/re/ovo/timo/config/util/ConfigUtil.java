@@ -78,7 +78,7 @@ public class ConfigUtil {
     public static Document getDocument(final InputStream dtd, InputStream xml)
             throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setValidating(true);
+        factory.setValidating(false);
         factory.setNamespaceAware(false);
         DocumentBuilder builder = factory.newDocumentBuilder();
         builder.setEntityResolver(new EntityResolver() {

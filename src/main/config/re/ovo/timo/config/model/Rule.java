@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2012 Alibaba Group.
+ * Copyright 2015 Liu Huanting.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,25 +13,24 @@
  */
 package re.ovo.timo.config.model;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 /**
- * 隔离区配置定义
- * 
- * @author haiqing.zhuhq 2012-4-17
+ * @author Liu Huanting
+ * 2015年5月9日
  */
-public final class QuarantineConfig {
+public class Rule {
+    private final String column;
+    private final Function function;
 
-    private final Map<String, Set<String>> hosts;
-
-    public QuarantineConfig() {
-        hosts = new HashMap<String, Set<String>>();
+    public Rule(String column, Function function) {
+        this.column = column;
+        this.function = function;
     }
 
-    public Map<String, Set<String>> getHosts() {
-        return hosts;
+    public String getColumn() {
+        return column;
     }
 
+    public Function getFunction() {
+        return function;
+    }
 }

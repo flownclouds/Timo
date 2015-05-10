@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2012 Alibaba Group.
+ * Copyright 2015 Liu Huanting.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -11,17 +11,15 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package re.ovo.timo.config;
+package re.ovo.timo.config.model;
+
+import java.util.Collection;
+import java.util.Set;
 
 /**
- * @author xianmao.hexm
+ * @author Liu Huanting
+ * 2015年5月9日
  */
-public interface Versions {
-
-    /** 协议版本 */
-    byte PROTOCOL_VERSION = 10;
-
-    /** 服务器版本 */
-    byte[] SERVER_VERSION = "5.1.27-Timo-1.0.0".getBytes();
-
+public interface Function {
+    public Set<Integer> calcute(Collection<Object> values);
 }
