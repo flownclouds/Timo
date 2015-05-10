@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
 
 import re.ovo.timo.net.buffer.BufferPool;
 import re.ovo.timo.net.connection.AbstractConnection;
@@ -26,7 +27,6 @@ import re.ovo.timo.net.connection.FrontendConnection;
 import re.ovo.timo.net.connection.NIOConnection;
 import re.ovo.timo.statistic.CommandCount;
 import re.ovo.timo.util.ExecutorUtil;
-import re.ovo.timo.util.NameableExecutor;
 
 /**
  * @author xianmao.hexm
@@ -39,7 +39,7 @@ public final class NIOProcessor {
     private final String name;
     private final NIOReactor reactor;
     private final BufferPool bufferPool;
-    private final NameableExecutor executor;
+    private final ExecutorService executor;
     private final ConcurrentMap<Long, FrontendConnection> frontends;
     private final ConcurrentMap<Long, BackendConnection> backends;
     private final CommandCount commands;
@@ -89,7 +89,7 @@ public final class NIOProcessor {
         return total;
     }
 
-    public NameableExecutor getExecutor() {
+    public ExecutorService getExecutor() {
         return executor;
     }
 

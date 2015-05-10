@@ -54,7 +54,7 @@ public abstract class FrontendConnection extends AbstractConnection {
 
     protected byte[] seed;
     protected String user;
-    protected String schema;
+    protected String db;
     protected NIOHandler handler;
     protected FrontendPrivileges privileges;
     protected FrontendQueryHandler queryHandler;
@@ -157,12 +157,12 @@ public abstract class FrontendConnection extends AbstractConnection {
         this.user = user;
     }
 
-    public String getSchema() {
-        return schema;
+    public String getDB() {
+        return db;
     }
 
-    public void setSchema(String schema) {
-        this.schema = schema;
+    public void setDB(String db) {
+        this.db = db;
     }
 
     public byte[] getSeed() {
@@ -219,8 +219,8 @@ public abstract class FrontendConnection extends AbstractConnection {
         String db = mm.readString();
 
         // 检查schema是否已经设置
-        if (schema != null) {
-            if (schema.equals(db)) {
+        if (this.db != null) {
+            if (this.db.equals(db)) {
                 write(writeToBuffer(OkPacket.OK, allocate()));
             } else {
                 writeErrMessage(ErrorCode.ER_DBACCESS_DENIED_ERROR,
@@ -241,7 +241,7 @@ public abstract class FrontendConnection extends AbstractConnection {
         }
         Set<String> schemas = privileges.getUserSchemas(user);
         if (schemas == null || schemas.size() == 0 || schemas.contains(db)) {
-            this.schema = db;
+            this.db = db;
             write(writeToBuffer(OkPacket.OK, allocate()));
         } else {
             String s = "Access denied for user '" + user + "' to database '" + db + "'";
@@ -402,12 +402,22 @@ public abstract class FrontendConnection extends AbstractConnection {
         }
         return false;
     }
+    
+    @Override
+    public void error(int errCode, Throwable t) {
+        t.printStackTrace();
+        if (this.isClosed()) {
+            return;
+        }
+        String msg = t.getMessage();
+        writeErrMessage(ErrorCode.ER_YES, msg == null ? t.getClass().getSimpleName() : msg);
+    }
 
     @Override
     public String toString() {
         return new StringBuilder().append("[thread=").append(Thread.currentThread().getName())
                 .append(",class=").append(getClass().getSimpleName()).append(",host=").append(host)
-                .append(",port=").append(port).append(",schema=").append(schema).append(']')
+                .append(",port=").append(port).append(",schema=").append(db).append(']')
                 .toString();
     }
 

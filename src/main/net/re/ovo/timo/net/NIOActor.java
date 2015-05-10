@@ -28,7 +28,7 @@ import re.ovo.timo.net.connection.AbstractConnection;
  * 2015年5月9日
  */
 public class NIOActor {
-    private SelectionKey key;
+    private volatile SelectionKey key;
     private final AbstractConnection con;
     private final SocketChannel channel;
     private final AtomicBoolean writing = new AtomicBoolean(false);
@@ -65,16 +65,15 @@ public class NIOActor {
         if (!writing.compareAndSet(false, true)) {
             return;
         }
-        boolean finished;
         try {
-            finished = write();
+            boolean finished = write();
             writing.set(false);
             if (finished && con.getWriteQueue().isEmpty()) {
-                if (key.isValid() && (key.interestOps() & SelectionKey.OP_WRITE) != 0) {
+                if ((key.isValid() && (key.interestOps() & SelectionKey.OP_WRITE) != 0)) {
                     key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
                 }
             } else {
-                if (key.isValid() && (key.interestOps() & SelectionKey.OP_WRITE) != 0) {
+                if ((key.isValid() && (key.interestOps() & SelectionKey.OP_WRITE) == 0)) {
                     key.interestOps(key.interestOps() | SelectionKey.OP_WRITE);
                 }
             }

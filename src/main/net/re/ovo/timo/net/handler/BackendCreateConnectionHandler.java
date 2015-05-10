@@ -16,7 +16,7 @@ package re.ovo.timo.net.handler;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import re.ovo.timo.net.connection.BackendConnection;
-import re.ovo.timo.route.RouteResultsetNode;
+import re.ovo.timo.route.Outlet;
 import re.ovo.timo.server.session.handler.OKResultHandler;
 import re.ovo.timo.server.session.handler.ResultHandler;
 
@@ -40,8 +40,8 @@ public class BackendCreateConnectionHandler implements BackendConnectHandler {
     @Override
     public void acquired(BackendConnection con) {
         ResultHandler handler = new InitDBHandler();
-        RouteResultsetNode rrn = new RouteResultsetNode("", "USE " + db);
-        con.query(rrn, handler);
+        Outlet out = new Outlet(-1, "USE " + db);
+        con.query(out, handler);
     }
 
     @Override
@@ -69,5 +69,9 @@ public class BackendCreateConnectionHandler implements BackendConnectHandler {
     private void connectSuccess(BackendConnection con) {
         finished.incrementAndGet();
         con.release();
+    }
+    
+    public int getFinished(){
+        return finished.get();
     }
 }

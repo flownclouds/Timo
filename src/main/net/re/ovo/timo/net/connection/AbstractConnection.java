@@ -111,7 +111,6 @@ public abstract class AbstractConnection implements NIOConnection {
         if (isClosed()) {
             return;
         }
-
         ByteBuffer buffer = this.getReadBuffer();
         // 循环处理字节信息
         int offset = readBufferOffset, length = 0, position = buffer.position();
@@ -128,7 +127,6 @@ public abstract class AbstractConnection implements NIOConnection {
                 byte[] data = new byte[length];
                 buffer.get(data, 0, length);
                 handle(data);
-
                 offset += length;
                 if (position == offset) {
                     if (readBufferOffset != 0) {
@@ -171,25 +169,15 @@ public abstract class AbstractConnection implements NIOConnection {
         }
     }
 
-    public ByteBuffer checkWriteBuffer(ByteBuffer buffer, int capacity, boolean writeSocketIfFull) {
+    public ByteBuffer checkWriteBuffer(ByteBuffer buffer, int capacity) {
         if (capacity > buffer.remaining()) {
-            if (writeSocketIfFull) {
-                write(buffer);
-
-                // 如果分配的buffer比要求的capacity还小，则按着capacity分配
-                int size = this.processor.getBufferPool().getChunkSize();
-                if (capacity > size) {
-                    size = capacity;
-                }
-                return allocate(capacity);
-            } else {
-                // Relocate a larger buffer 要考虑把当前buffer拷贝过去的大小，属于累加值
-                ByteBuffer newBuf = allocate(capacity + buffer.position() + 1);
-                buffer.flip();
-                newBuf.put(buffer);
-                this.recycle(buffer);
-                return newBuf;
+            write(buffer);
+            // 如果分配的buffer比要求的capacity还小，则按着capacity分配
+            int size = this.processor.getBufferPool().getChunkSize();
+            if (capacity > size) {
+                size = capacity;
             }
+            return allocate(capacity);
         } else {
             return buffer;
         }

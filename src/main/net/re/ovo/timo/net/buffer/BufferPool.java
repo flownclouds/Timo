@@ -68,6 +68,14 @@ public final class BufferPool {
             return node;
         }
     }
+    
+    public ByteBuffer allocate(int size) {
+        if (size <= this.chunkSize) {
+            return allocate();
+        } else {
+            return ByteBuffer.allocate(size);
+        }
+    }
 
     public void recycle(ByteBuffer buffer) {
         // 拒绝回收null和容量大于chunkSize的缓存
@@ -107,6 +115,11 @@ public final class BufferPool {
 
     private ByteBuffer create(int size) {
         return ByteBuffer.allocate(size);
+    }
+
+    public int getChunkSize() {
+        // TODO Auto-generated method stub
+        return chunkSize;
     }
 
 }

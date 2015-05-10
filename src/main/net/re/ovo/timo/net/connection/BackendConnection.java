@@ -18,7 +18,7 @@ import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 
 import re.ovo.timo.net.NIOProcessor;
-import re.ovo.timo.route.RouteResultsetNode;
+import re.ovo.timo.route.Outlet;
 import re.ovo.timo.server.session.handler.ResultHandler;
 
 /**
@@ -38,7 +38,7 @@ public abstract class BackendConnection extends AbstractConnection {
     
     public abstract void onConnectFailed(Throwable e);
 
-    public abstract void query(RouteResultsetNode rrn, ResultHandler handler);
+    public abstract void query(Outlet out, ResultHandler handler);
 
     public abstract void release();
 

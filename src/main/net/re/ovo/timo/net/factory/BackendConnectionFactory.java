@@ -20,7 +20,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.SocketChannel;
 
 import re.ovo.timo.TimoServer;
-import re.ovo.timo.config.m.Datasource;
+import re.ovo.timo.config.model.Datasource;
 import re.ovo.timo.mysql.connection.MySQLConnection;
 import re.ovo.timo.mysql.handler.MySQLAuthenticatorHandler;
 import re.ovo.timo.net.NIOProcessor;
