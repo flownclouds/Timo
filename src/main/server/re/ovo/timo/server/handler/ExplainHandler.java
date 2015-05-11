@@ -24,16 +24,17 @@ import org.apache.log4j.Logger;
 import re.ovo.timo.TimoServer;
 import re.ovo.timo.config.ErrorCode;
 import re.ovo.timo.config.Fields;
-import re.ovo.timo.config.model.SchemaConfig;
+import re.ovo.timo.config.model.Database;
 import re.ovo.timo.mysql.PacketUtil;
 import re.ovo.timo.net.mysql.EOFPacket;
 import re.ovo.timo.net.mysql.FieldPacket;
 import re.ovo.timo.net.mysql.ResultSetHeaderPacket;
 import re.ovo.timo.net.mysql.RowDataPacket;
-import re.ovo.timo.route.RouteResultset;
-import re.ovo.timo.route.RouteResultsetNode;
-import re.ovo.timo.route.ServerRouter;
+import re.ovo.timo.route.Outlet;
+import re.ovo.timo.route.Outlets;
+import re.ovo.timo.route.Router;
 import re.ovo.timo.server.ServerConnection;
+import re.ovo.timo.server.parser.ServerParse;
 import re.ovo.timo.util.StringUtil;
 
 /**
@@ -42,7 +43,6 @@ import re.ovo.timo.util.StringUtil;
 public class ExplainHandler {
 
     private static final Logger logger = Logger.getLogger(ExplainHandler.class);
-    private static final RouteResultsetNode[] EMPTY_ARRAY = new RouteResultsetNode[0];
     private static final int FIELD_COUNT = 2;
     private static final FieldPacket[] fields = new FieldPacket[FIELD_COUNT];
     static {
@@ -53,8 +53,9 @@ public class ExplainHandler {
     public static void handle(String stmt, ServerConnection c, int offset) {
         stmt = stmt.substring(offset);
 
-        RouteResultset rrs = getRouteResultset(c, stmt);
-        if (rrs == null)
+        
+        Outlets outltes = getRouteResultset(c, stmt);
+        if (outltes == null)
             return;
 
         ByteBuffer buffer = c.allocate();
@@ -76,9 +77,8 @@ public class ExplainHandler {
         buffer = eof.write(buffer, c);
 
         // write rows
-        RouteResultsetNode[] rrsn = (rrs != null) ? rrs.getNodes() : EMPTY_ARRAY;
-        for (RouteResultsetNode node : rrsn) {
-            RowDataPacket row = getRow(node, c.getCharset());
+        for (Outlet outlet : outltes.getResult()) {
+            RowDataPacket row = getRow(outlet, c.getCharset());
             row.packetId = ++packetId;
             buffer = row.write(buffer, c);
         }
@@ -93,26 +93,27 @@ public class ExplainHandler {
 
     }
 
-    private static RowDataPacket getRow(RouteResultsetNode node, String charset) {
+    private static RowDataPacket getRow(Outlet node, String charset) {
         RowDataPacket row = new RowDataPacket(FIELD_COUNT);
-        row.add(StringUtil.encode(node.getName(), charset));
-        row.add(StringUtil.encode(node.getStatement(), charset));
+        row.add(StringUtil.encode(node.getID()+"", charset));
+        row.add(StringUtil.encode(node.getSql(), charset));
         return row;
     }
 
-    private static RouteResultset getRouteResultset(ServerConnection c, String stmt) {
-        String db = c.getSchema();
+    private static Outlets getRouteResultset(ServerConnection c, String stmt) {
+        String db = c.getDB();
         if (db == null) {
             c.writeErrMessage(ErrorCode.ER_NO_DB_ERROR, "No database selected");
             return null;
         }
-        SchemaConfig schema = TimoServer.getInstance().getConfig().getSchemas().get(db);
-        if (schema == null) {
+        Database database = TimoServer.getInstance().getConfig().getDatabases().get(db.toUpperCase());
+        if (database == null) {
             c.writeErrMessage(ErrorCode.ER_BAD_DB_ERROR, "Unknown database '" + db + "'");
             return null;
         }
         try {
-            return ServerRouter.route(schema, stmt, c.getCharset(), c);
+            int sqlType = ServerParse.parse(stmt) & 0xff;
+            return Router.route(database, stmt, c.getCharset(), sqlType);
         } catch (SQLNonTransientException e) {
             StringBuilder s = new StringBuilder();
             logger.warn(s.append(c).append(stmt).toString(), e);

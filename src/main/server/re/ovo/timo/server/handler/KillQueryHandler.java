@@ -15,8 +15,8 @@ package re.ovo.timo.server.handler;
 
 import re.ovo.timo.TimoServer;
 import re.ovo.timo.config.ErrorCode;
-import re.ovo.timo.net.FrontendConnection;
 import re.ovo.timo.net.NIOProcessor;
+import re.ovo.timo.net.connection.FrontendConnection;
 import re.ovo.timo.server.ServerConnection;
 import re.ovo.timo.util.StringUtil;
 

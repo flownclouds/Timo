@@ -16,28 +16,25 @@ package re.ovo.timo.server;
 import java.nio.channels.SocketChannel;
 
 import re.ovo.timo.TimoPrivileges;
-import re.ovo.timo.TimoServer;
-import re.ovo.timo.config.model.SystemConfig;
-import re.ovo.timo.net.FrontendConnection;
+import re.ovo.timo.net.NIOProcessor;
+import re.ovo.timo.net.connection.FrontendConnection;
+import re.ovo.timo.net.connection.Variables;
 import re.ovo.timo.net.factory.FrontendConnectionFactory;
-import re.ovo.timo.server.session.BlockingSession;
-import re.ovo.timo.server.session.NonBlockingSession;
 
 /**
  * @author xianmao.hexm
  */
 public class ServerConnectionFactory extends FrontendConnectionFactory {
 
+    public ServerConnectionFactory(Variables variables) {
+        super(variables);
+    }
+
     @Override
-    protected FrontendConnection getConnection(SocketChannel channel) {
-        SystemConfig sys = TimoServer.getInstance().getConfig().getSystem();
-        ServerConnection c = new ServerConnection(channel);
+    protected FrontendConnection getConnection(SocketChannel channel, NIOProcessor processor) {
+        ServerConnection c = new ServerConnection(channel, processor);
         c.setPrivileges(new TimoPrivileges());
         c.setQueryHandler(new ServerQueryHandler(c));
-        // c.setPrepareHandler(new ServerPrepareHandler(c)); TODO prepare
-        c.setTxIsolation(sys.getTxIsolation());
-        c.setSession(new BlockingSession(c));
-        c.setSession2(new NonBlockingSession(c));
         return c;
     }
 

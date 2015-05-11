@@ -78,12 +78,12 @@ public class ServerQueryHandler implements FrontendQueryHandler {
             case ServerParse.USE:
                 UseHandler.handle(sql, c, rs >>> 8);
                 break;
-            case ServerParse.COMMIT:
-                c.commit();
-                break;
-            case ServerParse.ROLLBACK:
-                c.rollback();
-                break;
+//            case ServerParse.COMMIT:
+//                c.commit();
+//                break;
+//            case ServerParse.ROLLBACK:
+//                c.rollback();
+//                break;
             default:
                 c.execute(sql, rs);
         }

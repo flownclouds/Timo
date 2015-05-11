@@ -16,10 +16,9 @@ package re.ovo.timo.server.handler;
 import re.ovo.timo.server.ServerConnection;
 import re.ovo.timo.server.parser.ServerParse;
 import re.ovo.timo.server.parser.ServerParseShow;
-import re.ovo.timo.server.response.ShowTimoCluster;
-import re.ovo.timo.server.response.ShowTimoStatus;
 import re.ovo.timo.server.response.ShowDataSources;
 import re.ovo.timo.server.response.ShowDatabases;
+import re.ovo.timo.server.response.ShowTimoStatus;
 
 /**
  * @author xianmao.hexm
@@ -36,9 +35,6 @@ public final class ShowHandler {
                 break;
             case ServerParseShow.Timo_STATUS:
                 ShowTimoStatus.response(c);
-                break;
-            case ServerParseShow.Timo_CLUSTER:
-                ShowTimoCluster.response(c);
                 break;
             default:
                 c.execute(stmt, ServerParse.SHOW);

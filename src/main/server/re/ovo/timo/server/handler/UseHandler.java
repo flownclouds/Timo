@@ -36,8 +36,8 @@ public final class UseHandler {
         }
 
         // 表示当前连接已经指定了schema
-        if (c.getSchema() != null) {
-            if (c.getSchema().equals(schema)) {
+        if (c.getDB() != null) {
+            if (c.getDB().equals(schema)) {
                 ByteBuffer buffer = c.allocate();
                 c.write(c.writeToBuffer(OkPacket.OK, buffer));
             } else {
@@ -61,7 +61,7 @@ public final class UseHandler {
         }
         Set<String> schemas = privileges.getUserSchemas(user);
         if (schemas == null || schemas.size() == 0 || schemas.contains(schema)) {
-            c.setSchema(schema);
+            c.setDB(schema);
             ByteBuffer buffer = c.allocate();
             c.write(c.writeToBuffer(OkPacket.OK, buffer));
         } else {

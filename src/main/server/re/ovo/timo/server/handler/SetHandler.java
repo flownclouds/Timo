@@ -13,21 +13,14 @@
  */
 package re.ovo.timo.server.handler;
 
-import static re.ovo.timo.server.parser.ServerParseSet.AUTOCOMMIT_OFF;
-import static re.ovo.timo.server.parser.ServerParseSet.AUTOCOMMIT_ON;
 import static re.ovo.timo.server.parser.ServerParseSet.CHARACTER_SET_CLIENT;
 import static re.ovo.timo.server.parser.ServerParseSet.CHARACTER_SET_CONNECTION;
 import static re.ovo.timo.server.parser.ServerParseSet.CHARACTER_SET_RESULTS;
 import static re.ovo.timo.server.parser.ServerParseSet.NAMES;
-import static re.ovo.timo.server.parser.ServerParseSet.TX_READ_COMMITTED;
-import static re.ovo.timo.server.parser.ServerParseSet.TX_READ_UNCOMMITTED;
-import static re.ovo.timo.server.parser.ServerParseSet.TX_REPEATED_READ;
-import static re.ovo.timo.server.parser.ServerParseSet.TX_SERIALIZABLE;
 
 import org.apache.log4j.Logger;
 
 import re.ovo.timo.config.ErrorCode;
-import re.ovo.timo.config.Isolations;
 import re.ovo.timo.net.mysql.OkPacket;
 import re.ovo.timo.server.ServerConnection;
 import re.ovo.timo.server.parser.ServerParseSet;
@@ -46,41 +39,41 @@ public final class SetHandler {
     public static void handle(String stmt, ServerConnection c, int offset) {
         int rs = ServerParseSet.parse(stmt, offset);
         switch (rs & 0xff) {
-            case AUTOCOMMIT_ON:
-                if (c.isAutocommit()) {
-                    c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));
-                } else {
-                    c.commit();
-                    c.setAutocommit(true);
-                }
-                break;
-            case AUTOCOMMIT_OFF: {
-                if (c.isAutocommit()) {
-                    c.setAutocommit(false);
-                }
-                c.write(c.writeToBuffer(AC_OFF, c.allocate()));
-                break;
-            }
-            case TX_READ_UNCOMMITTED: {
-                c.setTxIsolation(Isolations.READ_UNCOMMITTED);
-                c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));
-                break;
-            }
-            case TX_READ_COMMITTED: {
-                c.setTxIsolation(Isolations.READ_COMMITTED);
-                c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));
-                break;
-            }
-            case TX_REPEATED_READ: {
-                c.setTxIsolation(Isolations.REPEATED_READ);
-                c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));
-                break;
-            }
-            case TX_SERIALIZABLE: {
-                c.setTxIsolation(Isolations.SERIALIZABLE);
-                c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));
-                break;
-            }
+//            case AUTOCOMMIT_ON:
+//                if (c.isAutocommit()) {
+//                    c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));
+//                } else {
+//                    c.commit();
+//                    c.setAutocommit(true);
+//                }
+//                break;
+//            case AUTOCOMMIT_OFF: {
+//                if (c.isAutocommit()) {
+//                    c.setAutocommit(false);
+//                }
+//                c.write(c.writeToBuffer(AC_OFF, c.allocate()));
+//                break;
+//            }
+//            case TX_READ_UNCOMMITTED: {
+//                c.setTxIsolation(Isolations.READ_UNCOMMITTED);
+//                c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));
+//                break;
+//            }
+//            case TX_READ_COMMITTED: {
+//                c.setTxIsolation(Isolations.READ_COMMITTED);
+//                c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));
+//                break;
+//            }
+//            case TX_REPEATED_READ: {
+//                c.setTxIsolation(Isolations.REPEATED_READ);
+//                c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));
+//                break;
+//            }
+//            case TX_SERIALIZABLE: {
+//                c.setTxIsolation(Isolations.SERIALIZABLE);
+//                c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));
+//                break;
+//            }
             case NAMES:
                 String charset = stmt.substring(rs >>> 8).trim();
                 if (c.setCharset(charset)) {
