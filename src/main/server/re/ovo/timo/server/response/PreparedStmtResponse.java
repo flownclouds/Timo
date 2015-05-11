@@ -16,7 +16,7 @@ package re.ovo.timo.server.response;
 import java.nio.ByteBuffer;
 
 import re.ovo.timo.mysql.PreparedStatement;
-import re.ovo.timo.net.FrontendConnection;
+import re.ovo.timo.net.connection.FrontendConnection;
 import re.ovo.timo.net.mysql.EOFPacket;
 import re.ovo.timo.net.mysql.FieldPacket;
 import re.ovo.timo.net.mysql.PreparedOkPacket;

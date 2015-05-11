@@ -18,10 +18,10 @@ import java.util.Map;
 
 import re.ovo.timo.TimoServer;
 import re.ovo.timo.config.Fields;
-import re.ovo.timo.config.model.DataSourceConfig;
-import re.ovo.timo.mysql.MySQLDataNode;
-import re.ovo.timo.mysql.MySQLDataSource;
+import re.ovo.timo.config.model.Datasource;
 import re.ovo.timo.mysql.PacketUtil;
+import re.ovo.timo.net.backend.Node;
+import re.ovo.timo.net.backend.Source;
 import re.ovo.timo.net.mysql.EOFPacket;
 import re.ovo.timo.net.mysql.FieldPacket;
 import re.ovo.timo.net.mysql.ResultSetHeaderPacket;
@@ -74,8 +74,8 @@ public class ShowDataSources {
 
         // write rows
         byte packetId = eof.packetId;
-        Map<String, MySQLDataNode> nodes = TimoServer.getInstance().getConfig().getDataNodes();
-        for (MySQLDataNode node : nodes.values()) {
+        Map<Integer, Node> nodes = TimoServer.getInstance().getConfig().getNodes();
+        for (Node node : nodes.values()) {
             RowDataPacket row = getRow(node, c.getCharset());
             row.packetId = ++packetId;
             buffer = row.write(buffer, c);
@@ -90,16 +90,16 @@ public class ShowDataSources {
         c.write(buffer);
     }
 
-    private static RowDataPacket getRow(MySQLDataNode node, String charset) {
+    private static RowDataPacket getRow(Node node, String charset) {
         RowDataPacket row = new RowDataPacket(FIELD_COUNT);
-        row.add(StringUtil.encode(node.getName(), charset));
-        MySQLDataSource ds = node.getSource();
+        row.add(StringUtil.encode(node.getID()+"", charset));
+        Source ds = node.getSource();
         if (ds != null) {
-            DataSourceConfig dsc = ds.getConfig();
-            row.add(StringUtil.encode(dsc.getType(), charset));
+            Datasource dsc = ds.getConfig();
+            row.add(StringUtil.encode(dsc.getID()+"", charset));
             row.add(StringUtil.encode(dsc.getHost(), charset));
             row.add(IntegerUtil.toBytes(dsc.getPort()));
-            row.add(StringUtil.encode(dsc.getDatabase(), charset));
+            row.add(StringUtil.encode(dsc.getDB(), charset));
         } else {
             row.add(null);
             row.add(null);

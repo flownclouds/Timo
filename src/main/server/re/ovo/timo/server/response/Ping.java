@@ -15,7 +15,7 @@ package re.ovo.timo.server.response;
 
 import re.ovo.timo.TimoServer;
 import re.ovo.timo.mysql.PacketUtil;
-import re.ovo.timo.net.FrontendConnection;
+import re.ovo.timo.net.connection.FrontendConnection;
 import re.ovo.timo.net.mysql.ErrorPacket;
 import re.ovo.timo.net.mysql.OkPacket;
 

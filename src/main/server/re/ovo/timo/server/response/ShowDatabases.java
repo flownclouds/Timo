@@ -21,7 +21,7 @@ import java.util.TreeSet;
 import re.ovo.timo.TimoConfig;
 import re.ovo.timo.TimoServer;
 import re.ovo.timo.config.Fields;
-import re.ovo.timo.config.model.UserConfig;
+import re.ovo.timo.config.model.User;
 import re.ovo.timo.mysql.PacketUtil;
 import re.ovo.timo.net.mysql.EOFPacket;
 import re.ovo.timo.net.mysql.FieldPacket;
@@ -65,13 +65,13 @@ public class ShowDatabases {
         // write rows
         byte packetId = eof.packetId;
         TimoConfig conf = TimoServer.getInstance().getConfig();
-        Map<String, UserConfig> users = conf.getUsers();
-        UserConfig user = users == null ? null : users.get(c.getUser());
+        Map<String, User> users = conf.getUsers();
+        User user = users == null ? null : users.get(c.getUser());
         if (user != null) {
             TreeSet<String> schemaSet = new TreeSet<String>();
-            Set<String> schemaList = user.getSchemas();
+            Set<String> schemaList = user.getDatabases();
             if (schemaList == null || schemaList.size() == 0) {
-                schemaSet.addAll(conf.getSchemas().keySet());
+                schemaSet.addAll(conf.getDatabases().keySet());
             } else {
                 for (String schema : schemaList) {
                     schemaSet.add(schema);

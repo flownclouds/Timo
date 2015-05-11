@@ -50,7 +50,7 @@ public class SelectDatabase {
         buffer = eof.write(buffer, c);
         byte packetId = eof.packetId;
         RowDataPacket row = new RowDataPacket(FIELD_COUNT);
-        row.add(StringUtil.encode(c.getSchema(), c.getCharset()));
+        row.add(StringUtil.encode(c.getDB(), c.getCharset()));
         row.packetId = ++packetId;
         buffer = row.write(buffer, c);
         EOFPacket lastEof = new EOFPacket();

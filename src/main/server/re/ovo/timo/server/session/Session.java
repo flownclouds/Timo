@@ -13,8 +13,8 @@
  */
 package re.ovo.timo.server.session;
 
-import re.ovo.timo.net.FrontendConnection;
-import re.ovo.timo.route.RouteResultset;
+import re.ovo.timo.net.connection.FrontendConnection;
+import re.ovo.timo.route.Outlets;
 
 /**
  * @author xianmao.hexm 2012-7-11
@@ -34,7 +34,7 @@ public interface Session {
     /**
      * 开启一个会话执行
      */
-    void execute(RouteResultset rrs, int type);
+    void execute(Outlets outcomes, int type);
 
     /**
      * 提交一个会话执行
