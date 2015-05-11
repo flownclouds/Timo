@@ -17,14 +17,10 @@ import java.nio.ByteBuffer;
 
 import re.ovo.timo.TimoServer;
 import re.ovo.timo.config.Fields;
-import re.ovo.timo.heartbeat.TimoDetector;
-import re.ovo.timo.heartbeat.TimoHeartbeat;
-import re.ovo.timo.heartbeat.MySQLDetector;
-import re.ovo.timo.heartbeat.MySQLHeartbeat;
 import re.ovo.timo.manager.ManagerConnection;
 import re.ovo.timo.mysql.PacketUtil;
-import re.ovo.timo.net.BackendConnection;
 import re.ovo.timo.net.NIOProcessor;
+import re.ovo.timo.net.connection.BackendConnection;
 import re.ovo.timo.net.mysql.EOFPacket;
 import re.ovo.timo.net.mysql.FieldPacket;
 import re.ovo.timo.net.mysql.ResultSetHeaderPacket;
@@ -57,26 +53,6 @@ public class ShowBackend {
         fields[i++].packetId = ++packetId;
         fields[i] = PacketUtil.getField("port", Fields.FIELD_TYPE_LONG);
         fields[i++].packetId = ++packetId;
-        fields[i] = PacketUtil.getField("l_port", Fields.FIELD_TYPE_LONG);
-        fields[i++].packetId = ++packetId;
-        fields[i] = PacketUtil.getField("net_in", Fields.FIELD_TYPE_LONGLONG);
-        fields[i++].packetId = ++packetId;
-        fields[i] = PacketUtil.getField("net_out", Fields.FIELD_TYPE_LONGLONG);
-        fields[i++].packetId = ++packetId;
-        fields[i] = PacketUtil.getField("life", Fields.FIELD_TYPE_LONGLONG);
-        fields[i++].packetId = ++packetId;
-        fields[i] = PacketUtil.getField("closed", Fields.FIELD_TYPE_VAR_STRING);
-        fields[i++].packetId = ++packetId;
-        fields[i] = PacketUtil.getField("auth", Fields.FIELD_TYPE_VAR_STRING);
-        fields[i++].packetId = ++packetId;
-        fields[i] = PacketUtil.getField("quit", Fields.FIELD_TYPE_VAR_STRING);
-        fields[i++].packetId = ++packetId;
-        fields[i] = PacketUtil.getField("checking", Fields.FIELD_TYPE_VAR_STRING);
-        fields[i++].packetId = ++packetId;
-        fields[i] = PacketUtil.getField("stop", Fields.FIELD_TYPE_VAR_STRING);
-        fields[i++].packetId = ++packetId;
-        fields[i] = PacketUtil.getField("status", Fields.FIELD_TYPE_LONGLONG);
-        fields[i++].packetId = ++packetId;
         eof.packetId = ++packetId;
     }
 
@@ -107,37 +83,10 @@ public class ShowBackend {
     private static RowDataPacket getRow(BackendConnection c, String charset) {
         RowDataPacket row = new RowDataPacket(FIELD_COUNT);
         row.add(c.getProcessor().getName().getBytes());
-        row.add(LongUtil.toBytes(c.getId()));
+        row.add(LongUtil.toBytes(c.getID()));
         row.add(StringUtil.encode(c.getHost(), charset));
         row.add(IntegerUtil.toBytes(c.getPort()));
-        row.add(IntegerUtil.toBytes(c.getLocalPort()));
-        row.add(LongUtil.toBytes(c.getNetInBytes()));
-        row.add(LongUtil.toBytes(c.getNetOutBytes()));
-        row.add(LongUtil.toBytes((TimeUtil.currentTimeMillis() - c.getStartupTime()) / 1000L));
-        row.add(c.isClosed() ? "true".getBytes() : "false".getBytes());
-        if (c instanceof TimoDetector) {
-            TimoDetector detector = (TimoDetector) c;
-            TimoHeartbeat heartbeat = detector.getHeartbeat();
-            row.add(detector.isAuthenticated() ? "true".getBytes() : "false".getBytes());
-            row.add(detector.isQuit() ? "true".getBytes() : "false".getBytes());
-            row.add(heartbeat.isChecking() ? "true".getBytes() : "false".getBytes());
-            row.add(heartbeat.isStop() ? "true".getBytes() : "false".getBytes());
-            row.add(LongUtil.toBytes(heartbeat.getStatus()));
-        } else if (c instanceof MySQLDetector) {
-            MySQLDetector detector = (MySQLDetector) c;
-            MySQLHeartbeat heartbeat = detector.getHeartbeat();
-            row.add(detector.isAuthenticated() ? "true".getBytes() : "false".getBytes());
-            row.add(detector.isQuit() ? "true".getBytes() : "false".getBytes());
-            row.add(heartbeat.isChecking() ? "true".getBytes() : "false".getBytes());
-            row.add(heartbeat.isStop() ? "true".getBytes() : "false".getBytes());
-            row.add(LongUtil.toBytes(heartbeat.getStatus()));
-        } else {
-            row.add(null);
-            row.add(null);
-            row.add(null);
-            row.add(null);
-            row.add(null);
-        }
+        row.add(IntegerUtil.toBytes(c.getPort()));
         return row;
     }
 

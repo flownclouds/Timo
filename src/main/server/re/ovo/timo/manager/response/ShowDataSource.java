@@ -16,24 +16,20 @@ package re.ovo.timo.manager.response;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 import re.ovo.timo.TimoConfig;
 import re.ovo.timo.TimoServer;
 import re.ovo.timo.config.Fields;
-import re.ovo.timo.config.model.DataSourceConfig;
+import re.ovo.timo.config.model.Datasource;
 import re.ovo.timo.manager.ManagerConnection;
-import re.ovo.timo.mysql.MySQLDataNode;
-import re.ovo.timo.mysql.MySQLDataSource;
 import re.ovo.timo.mysql.PacketUtil;
+import re.ovo.timo.net.backend.Node;
 import re.ovo.timo.net.mysql.EOFPacket;
 import re.ovo.timo.net.mysql.FieldPacket;
 import re.ovo.timo.net.mysql.ResultSetHeaderPacket;
 import re.ovo.timo.net.mysql.RowDataPacket;
-import re.ovo.timo.parser.util.Pair;
-import re.ovo.timo.parser.util.PairUtil;
 import re.ovo.timo.util.IntegerUtil;
 import re.ovo.timo.util.StringUtil;
 
@@ -72,7 +68,7 @@ public final class ShowDataSource {
         eof.packetId = ++packetId;
     }
 
-    public static void execute(ManagerConnection c, String name) {
+    public static void execute(ManagerConnection c, int name) {
         ByteBuffer buffer = c.allocate();
 
         // write header
@@ -89,21 +85,19 @@ public final class ShowDataSource {
         // write rows
         byte packetId = eof.packetId;
         TimoConfig conf = TimoServer.getInstance().getConfig();
-        Map<String, DataSourceConfig> dataSources = conf.getDataSources();
-        List<String> keys = new ArrayList<String>();
-        if (null != name) {
-            MySQLDataNode dn = conf.getDataNodes().get(name);
+        Map<Integer, Datasource> dataSources = conf.getDatasources();
+        List<Integer> keys = new ArrayList<Integer>();
+        if (name!=0) {
+            Node dn = conf.getNodes().get(name);
             if (dn != null)
-                for (MySQLDataSource ds : dn.getSources()) {
-                    if (ds != null) {
-                        keys.add(ds.getName());
-                    }
+                for (Integer ds : dn.getSources().keySet()) {
+                        keys.add(ds);
                 }
         } else {
             keys.addAll(dataSources.keySet());
         }
-        Collections.sort(keys, new Comparators<String>());
-        for (String key : keys) {
+        Collections.sort(keys);
+        for (int key : keys) {
             RowDataPacket row = getRow(dataSources.get(key), c.getCharset());
             row.packetId = ++packetId;
             buffer = row.write(buffer, c);
@@ -118,27 +112,14 @@ public final class ShowDataSource {
         c.write(buffer);
     }
 
-    private static RowDataPacket getRow(DataSourceConfig dsc, String charset) {
+    private static RowDataPacket getRow(Datasource dsc, String charset) {
         RowDataPacket row = new RowDataPacket(FIELD_COUNT);
-        row.add(StringUtil.encode(dsc.getName(), charset));
-        row.add(StringUtil.encode(dsc.getType(), charset));
+        row.add(StringUtil.encode(dsc.getID()+"", charset));
+        row.add(StringUtil.encode(dsc.getType().toString(), charset));
         row.add(StringUtil.encode(dsc.getHost(), charset));
         row.add(IntegerUtil.toBytes(dsc.getPort()));
-        row.add(StringUtil.encode(dsc.getDatabase(), charset));
+        row.add(StringUtil.encode(dsc.getDB(), charset));
         return row;
-    }
-
-    private static final class Comparators<T> implements Comparator<String> {
-        @Override
-        public int compare(String s1, String s2) {
-            Pair<String, Integer> p1 = PairUtil.splitIndex(s1, '[', ']');
-            Pair<String, Integer> p2 = PairUtil.splitIndex(s2, '[', ']');
-            if (p1.getKey().compareTo(p2.getKey()) == 0) {
-                return p1.getValue() - p2.getValue();
-            } else {
-                return p1.getKey().compareTo(p2.getKey());
-            }
-        }
     }
 
 }

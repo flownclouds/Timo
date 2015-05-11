@@ -57,11 +57,11 @@ public final class ShowServer {
         fields[i] = PacketUtil.getField("MAX_MEMORY", Fields.FIELD_TYPE_LONGLONG);
         fields[i++].packetId = ++packetId;
 
-        fields[i] = PacketUtil.getField("RELOAD_TIME", Fields.FIELD_TYPE_LONGLONG);
-        fields[i++].packetId = ++packetId;
-
-        fields[i] = PacketUtil.getField("ROLLBACK_TIME", Fields.FIELD_TYPE_LONGLONG);
-        fields[i++].packetId = ++packetId;
+//        fields[i] = PacketUtil.getField("RELOAD_TIME", Fields.FIELD_TYPE_LONGLONG);
+//        fields[i++].packetId = ++packetId;
+//
+//        fields[i] = PacketUtil.getField("ROLLBACK_TIME", Fields.FIELD_TYPE_LONGLONG);
+//        fields[i++].packetId = ++packetId;
 
         fields[i] = PacketUtil.getField("CHARSET", Fields.FIELD_TYPE_VAR_STRING);
         fields[i++].packetId = ++packetId;
@@ -115,8 +115,8 @@ public final class ShowServer {
         row.add(LongUtil.toBytes(used));
         row.add(LongUtil.toBytes(total));
         row.add(LongUtil.toBytes(max));
-        row.add(LongUtil.toBytes(server.getConfig().getReloadTime()));
-        row.add(LongUtil.toBytes(server.getConfig().getRollbackTime()));
+//        row.add(LongUtil.toBytes(server.getConfig().getReloadTime()));
+//        row.add(LongUtil.toBytes(server.getConfig().getRollbackTime()));
         row.add(StringUtil.encode(charset, charset));
         row.add(StringUtil.encode(TimoServer.getInstance().isOnline() ? "ON" : "OFF", charset));
         return row;

@@ -18,10 +18,10 @@ import java.util.Map;
 import re.ovo.timo.TimoConfig;
 import re.ovo.timo.TimoServer;
 import re.ovo.timo.config.ErrorCode;
-import re.ovo.timo.config.model.SchemaConfig;
+import re.ovo.timo.config.model.Database;
 import re.ovo.timo.manager.ManagerConnection;
-import re.ovo.timo.mysql.MySQLDataNode;
-import re.ovo.timo.mysql.MySQLDataSource;
+import re.ovo.timo.net.backend.Node;
+import re.ovo.timo.net.backend.Source;
 import re.ovo.timo.net.mysql.OkPacket;
 
 /**
@@ -30,10 +30,10 @@ import re.ovo.timo.net.mysql.OkPacket;
 public class ClearSlow {
 
     public static void dataNode(ManagerConnection c, String name) {
-        MySQLDataNode dn = TimoServer.getInstance().getConfig().getDataNodes().get(name);
-        MySQLDataSource ds = null;
+        Node dn = TimoServer.getInstance().getConfig().getNodes().get(name);
+        Source ds = null;
         if (dn != null && (ds = dn.getSource()) != null) {
-            ds.getSqlRecorder().clear();
+//            ds.getSqlRecorder().clear();
             c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));
         } else {
             c.writeErrMessage(ErrorCode.ER_YES, "Invalid DataNode:" + name);
@@ -42,14 +42,14 @@ public class ClearSlow {
 
     public static void schema(ManagerConnection c, String name) {
         TimoConfig conf = TimoServer.getInstance().getConfig();
-        SchemaConfig schema = conf.getSchemas().get(name);
+        Database schema = conf.getDatabases().get(name);
         if (schema != null) {
-            Map<String, MySQLDataNode> dataNodes = conf.getDataNodes();
-            for (String n : schema.getAllDataNodes()) {
-                MySQLDataNode dn = dataNodes.get(n);
-                MySQLDataSource ds = null;
+            Map<Integer, Node> dataNodes = conf.getNodes();
+            for (Integer n : schema.getNodes()) {
+                Node dn = dataNodes.get(n);
+                Source ds = null;
                 if (dn != null && (ds = dn.getSource()) != null) {
-                    ds.getSqlRecorder().clear();
+//                    ds.getSqlRecorder().clear();
                 }
             }
             c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));

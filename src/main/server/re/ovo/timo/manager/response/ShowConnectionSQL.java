@@ -19,8 +19,8 @@ import re.ovo.timo.TimoServer;
 import re.ovo.timo.config.Fields;
 import re.ovo.timo.manager.ManagerConnection;
 import re.ovo.timo.mysql.PacketUtil;
-import re.ovo.timo.net.FrontendConnection;
 import re.ovo.timo.net.NIOProcessor;
+import re.ovo.timo.net.connection.FrontendConnection;
 import re.ovo.timo.net.mysql.EOFPacket;
 import re.ovo.timo.net.mysql.FieldPacket;
 import re.ovo.timo.net.mysql.ResultSetHeaderPacket;
@@ -50,15 +50,6 @@ public final class ShowConnectionSQL {
         fields[i++].packetId = ++packetId;
 
         fields[i] = PacketUtil.getField("SCHEMA", Fields.FIELD_TYPE_VAR_STRING);
-        fields[i++].packetId = ++packetId;
-
-        fields[i] = PacketUtil.getField("START_TIME", Fields.FIELD_TYPE_LONGLONG);
-        fields[i++].packetId = ++packetId;
-
-        fields[i] = PacketUtil.getField("EXECUTE_TIME", Fields.FIELD_TYPE_LONGLONG);
-        fields[i++].packetId = ++packetId;
-
-        fields[i] = PacketUtil.getField("SQL", Fields.FIELD_TYPE_VAR_STRING);
         fields[i++].packetId = ++packetId;
 
         eof.packetId = ++packetId;
@@ -104,12 +95,7 @@ public final class ShowConnectionSQL {
         RowDataPacket row = new RowDataPacket(FIELD_COUNT);
         row.add(LongUtil.toBytes(c.getId()));
         row.add(StringUtil.encode(c.getHost(), charset));
-        row.add(StringUtil.encode(c.getSchema(), charset));
-        row.add(LongUtil.toBytes(c.getLastReadTime()));
-        long rt = c.getLastReadTime();
-        long wt = c.getLastWriteTime();
-        row.add(LongUtil.toBytes((wt > rt) ? (wt - rt) : (TimeUtil.currentTimeMillis() - rt)));
-        row.add(null);
+        row.add(StringUtil.encode(c.getDB(), charset));
         return row;
     }
 

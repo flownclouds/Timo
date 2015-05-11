@@ -32,9 +32,7 @@ import re.ovo.timo.manager.response.ShowRouter;
 import re.ovo.timo.manager.response.ShowSQL;
 import re.ovo.timo.manager.response.ShowSQLDetail;
 import re.ovo.timo.manager.response.ShowSQLExecute;
-import re.ovo.timo.manager.response.ShowSQLSlow;
 import re.ovo.timo.manager.response.ShowServer;
-import re.ovo.timo.manager.response.ShowSlow;
 import re.ovo.timo.manager.response.ShowThreadPool;
 import re.ovo.timo.manager.response.ShowTime;
 import re.ovo.timo.manager.response.ShowVariables;
@@ -81,14 +79,14 @@ public final class ShowHandler {
                 break;
             }
             case ManagerParseShow.DATASOURCE:
-                ShowDataSource.execute(c, null);
+                ShowDataSource.execute(c, 0);
                 break;
             case ManagerParseShow.DATASOURCE_WHERE: {
                 String name = stmt.substring(rs >>> 8).trim();
                 if (StringUtil.isEmpty(name)) {
                     c.writeErrMessage(ErrorCode.ER_YES, "Unsupported statement");
                 } else {
-                    ShowDataSource.execute(c, name);
+                    ShowDataSource.execute(c, Integer.valueOf(name));
                 }
                 break;
             }
@@ -119,27 +117,6 @@ public final class ShowHandler {
             case ManagerParseShow.SQL_EXECUTE:
                 ShowSQLExecute.execute(c);
                 break;
-            case ManagerParseShow.SQL_SLOW:
-                ShowSQLSlow.execute(c);
-                break;
-            case ManagerParseShow.SLOW_DATANODE: {
-                String name = stmt.substring(rs >>> 8).trim();
-                if (StringUtil.isEmpty(name)) {
-                    c.writeErrMessage(ErrorCode.ER_YES, "Unsupported statement");
-                } else {
-                    ShowSlow.dataNode(c, name);
-                }
-                break;
-            }
-            case ManagerParseShow.SLOW_SCHEMA: {
-                String name = stmt.substring(rs >>> 8).trim();
-                if (StringUtil.isEmpty(name)) {
-                    c.writeErrMessage(ErrorCode.ER_YES, "Unsupported statement");
-                } else {
-                    ShowSlow.schema(c, name);
-                }
-                break;
-            }
             case ManagerParseShow.THREADPOOL:
                 ShowThreadPool.execute(c);
                 break;

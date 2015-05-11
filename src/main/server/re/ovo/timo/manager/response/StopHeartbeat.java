@@ -13,18 +13,10 @@
  */
 package re.ovo.timo.manager.response;
 
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 
-import re.ovo.timo.TimoServer;
 import re.ovo.timo.manager.ManagerConnection;
-import re.ovo.timo.manager.parser.ManagerParseStop;
-import re.ovo.timo.mysql.MySQLDataNode;
 import re.ovo.timo.net.mysql.OkPacket;
-import re.ovo.timo.parser.util.Pair;
-import re.ovo.timo.util.FormatUtil;
-import re.ovo.timo.util.TimeUtil;
 
 /**
  * 暂停数据节点心跳检测
@@ -37,21 +29,21 @@ public final class StopHeartbeat {
 
     public static void execute(String stmt, ManagerConnection c) {
         int count = 0;
-        Pair<String[], Integer> keys = ManagerParseStop.getPair(stmt);
-        if (keys.getKey() != null && keys.getValue() != null) {
-            long time = keys.getValue().intValue() * 1000L;
-            Map<String, MySQLDataNode> dns = TimoServer.getInstance().getConfig().getDataNodes();
-            for (String key : keys.getKey()) {
-                MySQLDataNode dn = dns.get(key);
-                if (dn != null) {
-                    dn.setHeartbeatRecoveryTime(TimeUtil.currentTimeMillis() + time);
-                    ++count;
-                    StringBuilder s = new StringBuilder();
-                    s.append(dn.getName()).append(" stop heartbeat '");
-                    logger.warn(s.append(FormatUtil.formatTime(time, 3)).append("' by manager."));
-                }
-            }
-        }
+//        Pair<String[], Integer> keys = ManagerParseStop.getPair(stmt);
+//        if (keys.getKey() != null && keys.getValue() != null) {
+//            long time = keys.getValue().intValue() * 1000L;
+//            Map<String, MySQLDataNode> dns = TimoServer.getInstance().getConfig().getDataNodes();
+//            for (String key : keys.getKey()) {
+//                MySQLDataNode dn = dns.get(key);
+//                if (dn != null) {
+//                    dn.setHeartbeatRecoveryTime(TimeUtil.currentTimeMillis() + time);
+//                    ++count;
+//                    StringBuilder s = new StringBuilder();
+//                    s.append(dn.getName()).append(" stop heartbeat '");
+//                    logger.warn(s.append(FormatUtil.formatTime(time, 3)).append("' by manager."));
+//                }
+//            }
+//        }
         OkPacket packet = new OkPacket();
         packet.packetId = 1;
         packet.affectedRows = count;

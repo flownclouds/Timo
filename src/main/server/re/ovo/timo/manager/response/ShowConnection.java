@@ -19,9 +19,9 @@ import re.ovo.timo.TimoServer;
 import re.ovo.timo.config.Fields;
 import re.ovo.timo.manager.ManagerConnection;
 import re.ovo.timo.mysql.PacketUtil;
-import re.ovo.timo.net.FrontendConnection;
 import re.ovo.timo.net.NIOProcessor;
 import re.ovo.timo.net.buffer.BufferQueue;
+import re.ovo.timo.net.connection.FrontendConnection;
 import re.ovo.timo.net.mysql.EOFPacket;
 import re.ovo.timo.net.mysql.FieldPacket;
 import re.ovo.timo.net.mysql.ResultSetHeaderPacket;
@@ -70,27 +70,6 @@ public final class ShowConnection {
         fields[i] = PacketUtil.getField("CHARSET", Fields.FIELD_TYPE_VAR_STRING);
         fields[i++].packetId = ++packetId;
 
-        fields[i] = PacketUtil.getField("NET_IN", Fields.FIELD_TYPE_LONGLONG);
-        fields[i++].packetId = ++packetId;
-
-        fields[i] = PacketUtil.getField("NET_OUT", Fields.FIELD_TYPE_LONGLONG);
-        fields[i++].packetId = ++packetId;
-
-        fields[i] = PacketUtil.getField("ALIVE_TIME(S)", Fields.FIELD_TYPE_LONGLONG);
-        fields[i++].packetId = ++packetId;
-
-        fields[i] = PacketUtil.getField("WRITE_ATTEMPTS", Fields.FIELD_TYPE_LONG);
-        fields[i++].packetId = ++packetId;
-
-        fields[i] = PacketUtil.getField("RECV_BUFFER", Fields.FIELD_TYPE_LONG);
-        fields[i++].packetId = ++packetId;
-
-        fields[i] = PacketUtil.getField("SEND_QUEUE", Fields.FIELD_TYPE_LONG);
-        fields[i++].packetId = ++packetId;
-
-        fields[i] = PacketUtil.getField("CHANNELS", Fields.FIELD_TYPE_LONG);
-        fields[i++].packetId = ++packetId;
-
         eof.packetId = ++packetId;
     }
 
@@ -137,22 +116,8 @@ public final class ShowConnection {
         row.add(StringUtil.encode(c.getHost(), charset));
         row.add(IntegerUtil.toBytes(c.getPort()));
         row.add(IntegerUtil.toBytes(c.getLocalPort()));
-        row.add(StringUtil.encode(c.getSchema(), charset));
+        row.add(StringUtil.encode(c.getDB(), charset));
         row.add(StringUtil.encode(c.getCharset(), charset));
-        row.add(LongUtil.toBytes(c.getNetInBytes()));
-        row.add(LongUtil.toBytes(c.getNetOutBytes()));
-        row.add(LongUtil.toBytes((TimeUtil.currentTimeMillis() - c.getStartupTime()) / 1000L));
-        row.add(IntegerUtil.toBytes(c.getWriteAttempts()));
-        ByteBuffer bb = c.getReadBuffer();
-        row.add(IntegerUtil.toBytes(bb == null ? 0 : bb.capacity()));
-        BufferQueue bq = c.getWriteQueue();
-        row.add(IntegerUtil.toBytes(bq == null ? 0 : bq.size()));
-        if (c instanceof ServerConnection) {
-            ServerConnection sc = (ServerConnection) c;
-            row.add(IntegerUtil.toBytes(sc.getSession().getTargetCount()));
-        } else {
-            row.add(null);
-        }
         return row;
     }
 

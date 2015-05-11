@@ -20,9 +20,9 @@ import org.apache.log4j.Logger;
 
 import re.ovo.timo.TimoServer;
 import re.ovo.timo.manager.ManagerConnection;
-import re.ovo.timo.net.FrontendConnection;
-import re.ovo.timo.net.NIOConnection;
 import re.ovo.timo.net.NIOProcessor;
+import re.ovo.timo.net.connection.FrontendConnection;
+import re.ovo.timo.net.connection.NIOConnection;
 import re.ovo.timo.net.mysql.OkPacket;
 import re.ovo.timo.util.SplitUtil;
 

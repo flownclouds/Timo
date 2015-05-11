@@ -117,12 +117,9 @@ public final class ShowThreadPool {
     private static List<NameableExecutor> getExecutors() {
         List<NameableExecutor> list = new LinkedList<NameableExecutor>();
         TimoServer server = TimoServer.getInstance();
-        list.add(server.getInitExecutor());
         list.add(server.getTimerExecutor());
-        list.add(server.getManagerExecutor());
         for (NIOProcessor p : server.getProcessors()) {
-            list.add(p.getHandler());
-            list.add(p.getExecutor());
+            list.add((NameableExecutor) p.getExecutor());
         }
         return list;
     }

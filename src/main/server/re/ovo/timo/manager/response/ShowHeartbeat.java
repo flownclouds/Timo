@@ -22,14 +22,11 @@ import java.util.List;
 import java.util.Map;
 
 import re.ovo.timo.TimoConfig;
-import re.ovo.timo.TimoNode;
 import re.ovo.timo.TimoServer;
 import re.ovo.timo.config.Fields;
-import re.ovo.timo.heartbeat.TimoHeartbeat;
-import re.ovo.timo.heartbeat.MySQLHeartbeat;
 import re.ovo.timo.manager.ManagerConnection;
-import re.ovo.timo.mysql.MySQLDataNode;
 import re.ovo.timo.mysql.PacketUtil;
+import re.ovo.timo.net.backend.Node;
 import re.ovo.timo.net.mysql.EOFPacket;
 import re.ovo.timo.net.mysql.FieldPacket;
 import re.ovo.timo.net.mysql.ResultSetHeaderPacket;
@@ -123,56 +120,30 @@ public class ShowHeartbeat {
         List<RowDataPacket> list = new LinkedList<RowDataPacket>();
         TimoConfig conf = TimoServer.getInstance().getConfig();
 
-        // timo nodes
-        Map<String, TimoNode> timoNodes = conf.getCluster().getNodes();
-        List<String> timoNodeKeys = new ArrayList<String>(timoNodes.size());
-        timoNodeKeys.addAll(timoNodes.keySet());
-        Collections.sort(timoNodeKeys);
-        for (String key : timoNodeKeys) {
-            TimoNode node = timoNodes.get(key);
-            if (node != null) {
-                TimoHeartbeat hb = node.getHeartbeat();
-                RowDataPacket row = new RowDataPacket(FIELD_COUNT);
-                row.add(node.getName().getBytes());
-                row.add("Timo".getBytes());
-                row.add(node.getConfig().getHost().getBytes());
-                row.add(IntegerUtil.toBytes(node.getConfig().getPort()));
-                row.add(IntegerUtil.toBytes(hb.getStatus()));
-                row.add(IntegerUtil.toBytes(hb.getErrorCount()));
-                row.add(hb.isChecking() ? "checking".getBytes() : "idle".getBytes());
-                row.add(LongUtil.toBytes(hb.getTimeout()));
-                row.add(hb.getRecorder().get().getBytes());
-                String at = hb.lastActiveTime();
-                row.add(at == null ? null : at.getBytes());
-                row.add(hb.isStop() ? "true".getBytes() : "false".getBytes());
-                list.add(row);
-            }
-        }
-
         // data nodes
-        Map<String, MySQLDataNode> dataNodes = conf.getDataNodes();
-        List<String> dataNodeKeys = new ArrayList<String>(dataNodes.size());
+        Map<Integer, Node> dataNodes = conf.getNodes();
+        List<Integer> dataNodeKeys = new ArrayList<Integer>(dataNodes.size());
         dataNodeKeys.addAll(dataNodes.keySet());
-        Collections.sort(dataNodeKeys, new Comparators<String>());
-        for (String key : dataNodeKeys) {
-            MySQLDataNode node = dataNodes.get(key);
+        Collections.sort(dataNodeKeys);
+        for (Integer key : dataNodeKeys) {
+            Node node = dataNodes.get(key);
             if (node != null) {
-                MySQLHeartbeat hb = node.getHeartbeat();
+//                MySQLHeartbeat hb = node.getHeartbeat();
                 RowDataPacket row = new RowDataPacket(FIELD_COUNT);
-                row.add(node.getName().getBytes());
+                row.add((node.getID()+"").getBytes());
                 row.add("MYSQL".getBytes());
-                if (hb != null) {
-                    row.add(hb.getSource().getConfig().getHost().getBytes());
-                    row.add(IntegerUtil.toBytes(hb.getSource().getConfig().getPort()));
-                    row.add(IntegerUtil.toBytes(hb.getStatus()));
-                    row.add(IntegerUtil.toBytes(hb.getErrorCount()));
-                    row.add(hb.isChecking() ? "checking".getBytes() : "idle".getBytes());
-                    row.add(LongUtil.toBytes(hb.getTimeout()));
-                    row.add(hb.getRecorder().get().getBytes());
-                    String lat = hb.getLastActiveTime();
-                    row.add(lat == null ? null : lat.getBytes());
-                    row.add(hb.isStop() ? "true".getBytes() : "false".getBytes());
-                } else {
+//                if (hb != null) {
+//                    row.add(hb.getSource().getConfig().getHost().getBytes());
+//                    row.add(IntegerUtil.toBytes(hb.getSource().getConfig().getPort()));
+//                    row.add(IntegerUtil.toBytes(hb.getStatus()));
+//                    row.add(IntegerUtil.toBytes(hb.getErrorCount()));
+//                    row.add(hb.isChecking() ? "checking".getBytes() : "idle".getBytes());
+//                    row.add(LongUtil.toBytes(hb.getTimeout()));
+//                    row.add(hb.getRecorder().get().getBytes());
+//                    String lat = hb.getLastActiveTime();
+//                    row.add(lat == null ? null : lat.getBytes());
+//                    row.add(hb.isStop() ? "true".getBytes() : "false".getBytes());
+//                } else {
                     row.add(null);
                     row.add(null);
                     row.add(null);
@@ -182,7 +153,7 @@ public class ShowHeartbeat {
                     row.add(null);
                     row.add(null);
                     row.add(null);
-                }
+//                }
                 list.add(row);
             }
         }

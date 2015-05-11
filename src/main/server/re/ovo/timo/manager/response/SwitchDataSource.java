@@ -13,14 +13,8 @@
  */
 package re.ovo.timo.manager.response;
 
-import java.util.Map;
-
-import re.ovo.timo.TimoServer;
 import re.ovo.timo.manager.ManagerConnection;
-import re.ovo.timo.manager.parser.ManagerParseSwitch;
-import re.ovo.timo.mysql.MySQLDataNode;
 import re.ovo.timo.net.mysql.OkPacket;
-import re.ovo.timo.parser.util.Pair;
 
 /**
  * 切换数据节点的数据源
@@ -31,19 +25,19 @@ public final class SwitchDataSource {
 
     public static void response(String stmt, ManagerConnection c) {
         int count = 0;
-        Pair<String[], Integer> pair = ManagerParseSwitch.getPair(stmt);
-        Map<String, MySQLDataNode> dns = TimoServer.getInstance().getConfig().getDataNodes();
-        Integer idx = pair.getValue();
-        for (String key : pair.getKey()) {
-            MySQLDataNode dn = dns.get(key);
-            if (dn != null) {
-                int m = dn.getActivedIndex();
-                int n = (idx == null) ? dn.next(m) : idx.intValue();
-                if (dn.switchSource(n, false, "MANAGER")) {
-                    ++count;
-                }
-            }
-        }
+//        Pair<String[], Integer> pair = ManagerParseSwitch.getPair(stmt);
+//        Map<String, MySQLDataNode> dns = TimoServer.getInstance().getConfig().getDataNodes();
+//        Integer idx = pair.getValue();
+//        for (String key : pair.getKey()) {
+//            MySQLDataNode dn = dns.get(key);
+//            if (dn != null) {
+//                int m = dn.getActivedIndex();
+//                int n = (idx == null) ? dn.next(m) : idx.intValue();
+//                if (dn.switchSource(n, false, "MANAGER")) {
+//                    ++count;
+//                }
+//            }
+//        }
         OkPacket packet = new OkPacket();
         packet.packetId = 1;
         packet.affectedRows = count;

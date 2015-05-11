@@ -16,7 +16,9 @@ package re.ovo.timo.manager;
 import java.nio.channels.SocketChannel;
 
 import re.ovo.timo.TimoPrivileges;
-import re.ovo.timo.net.FrontendConnection;
+import re.ovo.timo.net.NIOProcessor;
+import re.ovo.timo.net.connection.FrontendConnection;
+import re.ovo.timo.net.connection.Variables;
 import re.ovo.timo.net.factory.FrontendConnectionFactory;
 
 /**
@@ -24,9 +26,13 @@ import re.ovo.timo.net.factory.FrontendConnectionFactory;
  */
 public class ManagerConnectionFactory extends FrontendConnectionFactory {
 
+    public ManagerConnectionFactory(Variables variables) {
+        super(variables);
+    }
+
     @Override
-    protected FrontendConnection getConnection(SocketChannel channel) {
-        ManagerConnection c = new ManagerConnection(channel);
+    protected FrontendConnection getConnection(SocketChannel channel, NIOProcessor processor) {
+        ManagerConnection c = new ManagerConnection(channel, processor);
         c.setPrivileges(new TimoPrivileges());
         c.setQueryHandler(new ManagerQueryHandler(c));
         return c;
