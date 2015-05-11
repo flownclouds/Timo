@@ -11,55 +11,55 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package re.ovo.timo.mysql.nio;
+package re.ovo.timo.mysql.handler;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import re.ovo.timo.mysql.ByteUtil;
-import re.ovo.timo.mysql.nio.handler.ResponseHandler;
-import re.ovo.timo.net.handler.BackendAsyncHandler;
+import re.ovo.timo.mysql.connection.MySQLConnection;
+import re.ovo.timo.net.connection.AbstractConnection.State;
+import re.ovo.timo.net.handler.BackendHandler;
 import re.ovo.timo.net.mysql.EOFPacket;
 import re.ovo.timo.net.mysql.ErrorPacket;
 import re.ovo.timo.net.mysql.OkPacket;
+import re.ovo.timo.server.session.handler.ResultHandler;
 
 /**
  * life cycle: from connection establish to close <br/>
  * 
  * @author xianmao.hexm 2012-4-12
  */
-public class MySQLConnectionHandler extends BackendAsyncHandler {
+public class MySQLConnectionHandler extends BackendHandler {
     private static final int RESULT_STATUS_INIT = 0;
     private static final int RESULT_STATUS_HEADER = 1;
     private static final int RESULT_STATUS_FIELD_EOF = 2;
 
-    private final MySQLConnection source;
+    private final MySQLConnection con;
     private volatile int resultStatus;
     private volatile byte[] header;
     private volatile List<byte[]> fields;
 
-    /**
-     * life cycle: one SQL execution
-     */
-    private volatile ResponseHandler responseHandler;
-
     public MySQLConnectionHandler(MySQLConnection source) {
-        this.source = source;
+        this.con = source;
         this.resultStatus = RESULT_STATUS_INIT;
     }
 
     public void connectionError(Throwable e) {
-        // connError = e;
-        // handleQueue();
+        dataQueue.clear();
+        ResultHandler handler = con.getResultHandler();
+        if(handler!=null){
+            handler.close(con, "connection error");
+        }
     }
 
     public MySQLConnection getSource() {
-        return source;
+        return con;
     }
 
     @Override
     public void handle(byte[] data) {
-        offerData(data, source.getProcessor().getExecutor());
+        offerData(data, con.getProcessor().getExecutor());
     }
 
     @Override
@@ -119,50 +119,67 @@ public class MySQLConnectionHandler extends BackendAsyncHandler {
         }
     }
 
-    public void setResponseHandler(ResponseHandler responseHandler) {
-        this.responseHandler = responseHandler;
-    }
-
     @Override
     protected void handleDataError(Throwable t) {
         dataQueue.clear();
         resultStatus = RESULT_STATUS_INIT;
-        responseHandler.connectionError(t, source);
+        ResultHandler handler = con.getResultHandler();
+        if(handler!=null){
+            handler.close(con, "handle data error");
+        }
     }
 
     /**
      * OK数据包处理
      */
     private void handleOkPacket(byte[] data) {
-        responseHandler.okResponse(data, source);
+        con.setState(State.borrowed);
+        ResultHandler handler = con.getResultHandler();
+        if (handler != null) {
+            handler.ok(data, con);
+        }
     }
 
     /**
      * ERROR数据包处理
      */
     private void handleErrorPacket(byte[] data) {
-        responseHandler.errorResponse(data, source);
+        con.setState(State.borrowed);
+        ResultHandler handler = con.getResultHandler();
+        if (handler != null) {
+            handler.error(data, con);
+        }
     }
 
     /**
      * 字段数据包结束处理
      */
     private void handleFieldEofPacket(byte[] data) {
-        responseHandler.fieldEofResponse(header, fields, data, source);
+        ResultHandler handler = con.getResultHandler();
+        if (handler != null) {
+            handler.field(header, fields, data, con);
+        }
     }
 
     /**
      * 行数据包处理
      */
     private void handleRowPacket(byte[] data) {
-        responseHandler.rowResponse(data, source);
+        ResultHandler handler = con.getResultHandler();
+        if (handler != null) {
+            handler.row(data, con);
+        }
     }
 
     /**
      * 行数据包结束处理
      */
     private void handleRowEofPacket(byte[] data) {
-        responseHandler.rowEofResponse(data, source);
+        con.setState(State.borrowed);
+        ResultHandler handler = con.getResultHandler();
+        if (handler != null) {
+            handler.eof(data, con);
+        }
     }
 
 }

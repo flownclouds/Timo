@@ -24,7 +24,6 @@ import re.ovo.timo.config.ErrorCode;
 import re.ovo.timo.mysql.ByteUtil;
 import re.ovo.timo.mysql.SecurityUtil;
 import re.ovo.timo.mysql.handler.MySQLAuthenticatorHandler;
-import re.ovo.timo.mysql.handler.MySQLSingleNodeHandler;
 import re.ovo.timo.net.NIOProcessor;
 import re.ovo.timo.net.backend.Source;
 import re.ovo.timo.net.connection.BackendConnection;
@@ -35,7 +34,7 @@ import re.ovo.timo.net.mysql.ErrorPacket;
 import re.ovo.timo.net.mysql.HandshakePacket;
 import re.ovo.timo.net.mysql.MySQLPacket;
 import re.ovo.timo.net.mysql.OkPacket;
-import re.ovo.timo.route.RouteResultsetNode;
+import re.ovo.timo.route.Outlet;
 import re.ovo.timo.server.session.handler.ResultHandler;
 
 /**
@@ -91,11 +90,7 @@ public class MySQLConnection extends BackendConnection {
             return;
         }
         if (resultHandler != null) {
-            if (resultHandler instanceof MySQLSingleNodeHandler) {
-
-            } else {
-                decode();
-            }
+            decode();
         } else {
             if (!isAuthenticated) {
                 super.onRead(got);
@@ -269,8 +264,7 @@ public class MySQLConnection extends BackendConnection {
                     resultHandler = null;
                     temp.close(this, "connectionError");
                 } else if (handler instanceof MySQLAuthenticatorHandler) {
-                    MySQLAuthenticatorHandler theHandler =
-                            (MySQLAuthenticatorHandler) handler;
+                    MySQLAuthenticatorHandler theHandler = (MySQLAuthenticatorHandler) handler;
                     theHandler.error(t);
                 }
                 break;
@@ -316,7 +310,7 @@ public class MySQLConnection extends BackendConnection {
     }
 
     @Override
-    public void query(RouteResultsetNode rrn, ResultHandler handler) {
+    public void query(Outlet out, ResultHandler handler) {
         if (this.isClosed()) {
             this.setResultHandler(null);
             handler.close(this, "backend connection already closed!");
@@ -325,15 +319,15 @@ public class MySQLConnection extends BackendConnection {
         this.setResultHandler(handler);
         this.setState(State.running);
         CommandPacket packet = new CommandPacket(CommandPacket.COM_QUERY);
-        packet.arg = rrn.getStatement().getBytes();
+        packet.arg = out.getSql().getBytes();
         packet.write(this);
     }
 
     public void setResultHandler(ResultHandler handler) {
         this.resultHandler = handler;
     }
-    
-    public ResultHandler getResultHandler(){
+
+    public ResultHandler getResultHandler() {
         return resultHandler;
     }
 

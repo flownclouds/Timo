@@ -70,12 +70,4 @@ public class PacketUtil {
         return error;
     }
 
-    public static final FieldPacket getField(BinaryPacket src, String fieldName) {
-        FieldPacket field = new FieldPacket();
-        field.read(src);
-        field.name = encode(fieldName, CODE_PAGE_1252);
-        field.packetLength = field.calcPacketSize();
-        return field;
-    }
-
 }
