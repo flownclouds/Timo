@@ -56,7 +56,7 @@ RUN_CMD="java "
 RUN_CMD="$RUN_CMD -DTIMO_HOME=\"$TIMO_HOME\""
 RUN_CMD="$RUN_CMD -classpath \"$TIMO_CLASSPATH\""
 RUN_CMD="$RUN_CMD $JAVA_OPTS"
-RUN_CMD="$RUN_CMD re.ovo.timo.TimoStartup $@"
+RUN_CMD="$RUN_CMD fm.liu.timo.TimoStartup $@"
 RUN_CMD="$RUN_CMD >> \"$TIMO_HOME/logs/console.log\" 2>&1 &"
 echo $RUN_CMD
 eval $RUN_CMD
