@@ -26,13 +26,13 @@ import org.apache.log4j.helpers.LogLog;
 
 import re.ovo.timo.config.model.SystemConfig;
 import re.ovo.timo.manager.ManagerConnectionFactory;
-import re.ovo.timo.mysql.MySQLDataNode;
 import re.ovo.timo.net.NIOAcceptor;
 import re.ovo.timo.net.NIOConnector;
 import re.ovo.timo.net.NIOProcessor;
+import re.ovo.timo.net.backend.Node;
+import re.ovo.timo.net.connection.Variables;
 import re.ovo.timo.parser.recognizer.mysql.lexer.MySQLLexer;
 import re.ovo.timo.server.ServerConnectionFactory;
-import re.ovo.timo.statistic.SQLRecorder;
 import re.ovo.timo.util.ExecutorUtil;
 import re.ovo.timo.util.NameableExecutor;
 import re.ovo.timo.util.TimeUtil;
@@ -53,10 +53,7 @@ public class TimoServer {
 
     private final TimoConfig config;
     private final Timer timer;
-    private final NameableExecutor managerExecutor;
     private final NameableExecutor timerExecutor;
-    private final NameableExecutor initExecutor;
-    private final SQLRecorder sqlRecorder;
     private final AtomicBoolean isOnline;
     private final long startupTime;
     private NIOProcessor[] processors;
@@ -69,10 +66,7 @@ public class TimoServer {
         SystemConfig system = config.getSystem();
         MySQLLexer.setCStyleCommentVersion(system.getParserCommentVersion());
         this.timer = new Timer(NAME + "Timer", true);
-        this.initExecutor = ExecutorUtil.create("InitExecutor", system.getInitExecutor());
         this.timerExecutor = ExecutorUtil.create("TimerExecutor", system.getTimerExecutor());
-        this.managerExecutor = ExecutorUtil.create("ManagerExecutor", system.getManagerExecutor());
-        this.sqlRecorder = new SQLRecorder(system.getSqlRecordCount());
         this.isOnline = new AtomicBoolean(true);
         this.startupTime = TimeUtil.currentTimeMillis();
     }
@@ -82,10 +76,10 @@ public class TimoServer {
     }
 
     public void beforeStart(String dateFormat) {
-        String home = System.getProperty("timo.home");
+        String home = System.getProperty("TIMO_HOME");
         if (home == null) {
             SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-            LogLog.warn(sdf.format(new Date()) + " [timo.home] is not set.");
+            LogLog.warn(sdf.format(new Date()) + " [TIMO_HOME] is not set.");
         } else {
             Log4jInitializer.configureAndWatch(home + "/conf/log4j.xml", LOG_WATCH_DELAY);
         }
@@ -97,7 +91,8 @@ public class TimoServer {
         LOGGER.info(NAME + " is ready to startup ...");
         SystemConfig system = config.getSystem();
         timer.schedule(updateTime(), 0L, TIME_UPDATE_PERIOD);
-
+        Variables variables = new Variables();
+        variables.setCharset(system.getCharset());
         // startup processors
         LOGGER.info("Startup processors ...");
         int handler = system.getProcessorHandler();
@@ -107,7 +102,7 @@ public class TimoServer {
             processors[i] = new NIOProcessor("Processor" + i, handler, executor);
             processors[i].startup();
         }
-        timer.schedule(processorCheck(), 0L, system.getProcessorCheckPeriod());
+//        timer.schedule(processorCheck(), 0L, system.getProcessorCheckPeriod());
 
         // startup connector
         LOGGER.info("Startup connector ...");
@@ -116,31 +111,29 @@ public class TimoServer {
         connector.start();
 
         // init dataNodes
-        Map<String, MySQLDataNode> dataNodes = config.getDataNodes();
+        Map<Integer, Node> nodes = config.getNodes();
         LOGGER.info("Initialize dataNodes ...");
-        for (MySQLDataNode node : dataNodes.values()) {
-            node.init(1, 0);
+        for (Node node : nodes.values()) {
+            if(!node.init()){
+                LOGGER.error("node init failed, check your config");
+                System.exit(-1);
+            }
         }
-        timer.schedule(dataNodeIdleCheck(), 0L, system.getDataNodeIdleCheckPeriod());
-        timer.schedule(dataNodeHeartbeat(), 0L, system.getDataNodeHeartbeatPeriod());
+//        timer.schedule(dataNodeIdleCheck(), 0L, system.getDataNodeIdleCheckPeriod());
+//        timer.schedule(dataNodeHeartbeat(), 0L, system.getDataNodeHeartbeatPeriod());
 
         // startup manager
-        ManagerConnectionFactory mf = new ManagerConnectionFactory();
-        mf.setCharset(system.getCharset());
+        ManagerConnectionFactory mf = new ManagerConnectionFactory(variables);
         mf.setIdleTimeout(system.getIdleTimeout());
         manager = new NIOAcceptor(NAME + "Manager", system.getManagerPort(), mf);
-        manager.setProcessors(processors);
         manager.start();
         LOGGER.info(manager.getName() + " is started and listening on " + manager.getPort());
 
         // startup server
-        ServerConnectionFactory sf = new ServerConnectionFactory();
-        sf.setCharset(system.getCharset());
+        ServerConnectionFactory sf = new ServerConnectionFactory(variables);
         sf.setIdleTimeout(system.getIdleTimeout());
         server = new NIOAcceptor(NAME + "Server", system.getServerPort(), sf);
-        server.setProcessors(processors);
         server.start();
-        timer.schedule(clusterHeartbeat(), 0L, system.getClusterHeartbeatPeriod());
 
         // server started
         LOGGER.info(server.getName() + " is started and listening on " + server.getPort());
@@ -155,20 +148,8 @@ public class TimoServer {
         return connector;
     }
 
-    public NameableExecutor getManagerExecutor() {
-        return managerExecutor;
-    }
-
     public NameableExecutor getTimerExecutor() {
         return timerExecutor;
-    }
-
-    public NameableExecutor getInitExecutor() {
-        return initExecutor;
-    }
-
-    public SQLRecorder getSqlRecorder() {
-        return sqlRecorder;
     }
 
     public long getStartupTime() {
@@ -198,80 +179,70 @@ public class TimoServer {
     }
 
     // 处理器定时检查任务
-    private TimerTask processorCheck() {
-        return new TimerTask() {
-            @Override
-            public void run() {
-                timerExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (NIOProcessor p : processors) {
-                            p.check();
-                        }
-                    }
-                });
-            }
-        };
-    }
+//    private TimerTask processorCheck() {
+//        return new TimerTask() {
+//            @Override
+//            public void run() {
+//                timerExecutor.execute(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        for (NIOProcessor p : processors) {
+//                            p.check();
+//                        }
+//                    }
+//                });
+//            }
+//        };
+//    }
 
     // 数据节点定时连接空闲超时检查任务
-    private TimerTask dataNodeIdleCheck() {
-        return new TimerTask() {
-            @Override
-            public void run() {
-                timerExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Map<String, MySQLDataNode> nodes = config.getDataNodes();
-                        for (MySQLDataNode node : nodes.values()) {
-                            node.idleCheck();
-                        }
-                        Map<String, MySQLDataNode> _nodes = config.getBackupDataNodes();
-                        if (_nodes != null) {
-                            for (MySQLDataNode node : _nodes.values()) {
-                                node.idleCheck();
-                            }
-                        }
-                    }
-                });
-            }
-        };
-    }
-
-    // 数据节点定时心跳任务
-    private TimerTask dataNodeHeartbeat() {
-        return new TimerTask() {
-            @Override
-            public void run() {
-                timerExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Map<String, MySQLDataNode> nodes = config.getDataNodes();
-                        for (MySQLDataNode node : nodes.values()) {
-                            node.doHeartbeat();
-                        }
-                    }
-                });
-            }
-        };
-    }
-
-    // 集群节点定时心跳任务
-    private TimerTask clusterHeartbeat() {
-        return new TimerTask() {
-            @Override
-            public void run() {
-                timerExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Map<String, TimoNode> nodes = config.getCluster().getNodes();
-                        for (TimoNode node : nodes.values()) {
-                            node.doHeartbeat();
-                        }
-                    }
-                });
-            }
-        };
+//    private TimerTask dataNodeIdleCheck() {
+//        return new TimerTask() {
+//            @Override
+//            public void run() {
+//                timerExecutor.execute(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Map<String, MySQLDataNode> nodes = config.getDataNodes();
+//                        for (MySQLDataNode node : nodes.values()) {
+//                            node.idleCheck();
+//                        }
+//                        Map<String, MySQLDataNode> _nodes = config.getBackupDataNodes();
+//                        if (_nodes != null) {
+//                            for (MySQLDataNode node : _nodes.values()) {
+//                                node.idleCheck();
+//                            }
+//                        }
+//                    }
+//                });
+//            }
+//        };
+//    }
+//
+//    // 数据节点定时心跳任务
+//    private TimerTask dataNodeHeartbeat() {
+//        return new TimerTask() {
+//            @Override
+//            public void run() {
+//                timerExecutor.execute(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Map<String, MySQLDataNode> nodes = config.getDataNodes();
+//                        for (MySQLDataNode node : nodes.values()) {
+//                            node.doHeartbeat();
+//                        }
+//                    }
+//                });
+//            }
+//        };
+//    }
+    private int processorIndex = 0;
+    public NIOProcessor nextProcessor() {
+        if (processors.length == 1) {
+            return processors[0];
+        } else {
+            return processors[(++processorIndex) % processors.length];
+        }
     }
 
 }

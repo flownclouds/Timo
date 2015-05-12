@@ -13,13 +13,11 @@
  */
 package re.ovo.timo;
 
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import re.ovo.timo.config.Alarms;
-import re.ovo.timo.config.model.UserConfig;
+import re.ovo.timo.config.model.User;
 import re.ovo.timo.net.handler.FrontendPrivileges;
 
 /**
@@ -29,29 +27,30 @@ public class TimoPrivileges implements FrontendPrivileges {
     private static final Logger ALARM = Logger.getLogger("alarm");
 
     @Override
-    public boolean schemaExists(String schema) {
+    public boolean schemaExists(String db) {
         TimoConfig conf = TimoServer.getInstance().getConfig();
-        return conf.getSchemas().containsKey(schema);
+        return conf.getDatabases().containsKey(db.toUpperCase());
     }
 
     @Override
     public boolean userExists(String user, String host) {
-        TimoConfig conf = TimoServer.getInstance().getConfig();
-        Map<String, Set<String>> quarantineHosts = conf.getQuarantine().getHosts();
-        if (quarantineHosts.containsKey(host)) {
-            boolean rs = quarantineHosts.get(host).contains(user);
-            if (!rs) {
-                ALARM.error(new StringBuilder().append(Alarms.QUARANTINE_ATTACK).append("[host=")
-                        .append(host).append(",user=").append(user).append(']').toString());
-            }
-            return rs;
-        } else {
-            if (user != null && user.equals(conf.getSystem().getClusterHeartbeatUser())) {
-                return true;
-            } else {
-                return conf.getUsers().containsKey(user);
-            }
-        }
+//        TimoConfig conf = TimoServer.getInstance().getConfig();
+//        Map<String, Set<String>> quarantineHosts = conf.getQuarantine().getHosts();
+//        if (quarantineHosts.containsKey(host)) {
+//            boolean rs = quarantineHosts.get(host).contains(user);
+//            if (!rs) {
+//                ALARM.error(new StringBuilder().append(Alarms.QUARANTINE_ATTACK).append("[host=")
+//                        .append(host).append(",user=").append(user).append(']').toString());
+//            }
+//            return rs;
+//        } else {
+//            if (user != null && user.equals(conf.getSystem().getClusterHeartbeatUser())) {
+//                return true;
+//            } else {
+//                return conf.getUsers().containsKey(user);
+//            }
+//        }
+        return true;
     }
 
     @Override
@@ -60,7 +59,7 @@ public class TimoPrivileges implements FrontendPrivileges {
         if (user != null && user.equals(conf.getSystem().getClusterHeartbeatUser())) {
             return conf.getSystem().getClusterHeartbeatPass();
         } else {
-            UserConfig uc = conf.getUsers().get(user);
+            User uc = conf.getUsers().get(user);
             if (uc != null) {
                 return uc.getPassword();
             } else {
@@ -72,9 +71,9 @@ public class TimoPrivileges implements FrontendPrivileges {
     @Override
     public Set<String> getUserSchemas(String user) {
         TimoConfig conf = TimoServer.getInstance().getConfig();
-        UserConfig uc = conf.getUsers().get(user);
+        User uc = conf.getUsers().get(user);
         if (uc != null) {
-            return uc.getSchemas();
+            return uc.getDatabases();
         } else {
             return null;
         }

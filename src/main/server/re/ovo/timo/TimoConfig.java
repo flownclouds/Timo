@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2012 Alibaba Group.
+ * Copyright 2015 Liu Huanting.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,205 +13,83 @@
  */
 package re.ovo.timo;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
-import re.ovo.timo.config.model.DataSourceConfig;
-import re.ovo.timo.config.model.QuarantineConfig;
-import re.ovo.timo.config.model.SchemaConfig;
+import re.ovo.timo.config.loader.ServerConfigLoader;
+import re.ovo.timo.config.loader.SystemConfigLoader;
+import re.ovo.timo.config.model.Database;
+import re.ovo.timo.config.model.Datanode;
+import re.ovo.timo.config.model.Datasource;
 import re.ovo.timo.config.model.SystemConfig;
-import re.ovo.timo.config.model.UserConfig;
-import re.ovo.timo.mysql.MySQLDataNode;
-import re.ovo.timo.util.TimeUtil;
+import re.ovo.timo.config.model.User;
+import re.ovo.timo.net.backend.Node;
+import re.ovo.timo.net.backend.Source;
+import re.ovo.timo.net.connection.Variables;
 
 /**
- * @author xianmao.hexm
+ * @author Liu Huanting
+ * 2015年5月10日
  */
 public class TimoConfig {
-    private static final int RELOAD = 1;
-    private static final int ROLLBACK = 2;
-
     private volatile SystemConfig system;
-    private volatile TimoCluster cluster;
-    private volatile TimoCluster _cluster;
-    private volatile QuarantineConfig quarantine;
-    private volatile QuarantineConfig _quarantine;
-    private volatile Map<String, UserConfig> users;
-    private volatile Map<String, UserConfig> _users;
-    private volatile Map<String, SchemaConfig> schemas;
-    private volatile Map<String, SchemaConfig> _schemas;
-    private volatile Map<String, MySQLDataNode> dataNodes;
-    private volatile Map<String, MySQLDataNode> _dataNodes;
-    private volatile Map<String, DataSourceConfig> dataSources;
-    private volatile Map<String, DataSourceConfig> _dataSources;
-    private long reloadTime;
-    private long rollbackTime;
-    private int status;
-    private final ReentrantLock lock;
+    private volatile Map<String, User> users;
+    private volatile Map<String, Database> databases;
+    private volatile Map<Integer, Node> nodes;
+    private ReentrantLock lock = new ReentrantLock();
+    private final Map<Integer, Datasource> datasources;
+    public TimoConfig(){
+        this.system = new SystemConfigLoader().getSystemConfig();
+        ServerConfigLoader conf =
+                new ServerConfigLoader(system.getUrl(), system.getUsername(), system.getPassword());
+        this.users = conf.getUsers();
+        this.databases = conf.getDatabases();
+        this.datasources = conf.getDatasources();
+        this.nodes = initDatanodes(conf.getDatanodes(), conf.getDatasources());
+    }
 
-    public TimoConfig() {
-        ConfigInitializer confInit = new ConfigInitializer();
-        this.system = confInit.getSystem();
-        this.users = confInit.getUsers();
-        this.schemas = confInit.getSchemas();
-        this.dataSources = confInit.getDataSources();
-        this.dataNodes = confInit.getDataNodes();
-        this.quarantine = confInit.getQuarantine();
-        this.cluster = confInit.getCluster();
-
-        this.reloadTime = TimeUtil.currentTimeMillis();
-        this.rollbackTime = -1L;
-        this.status = RELOAD;
-        this.lock = new ReentrantLock();
+    private Map<Integer, Node> initDatanodes(Map<Integer, Datanode> datanodes,
+            Map<Integer, Datasource> datasources) {
+        Map<Integer, Node> nodes = new HashMap<Integer, Node>();
+        Variables variables = new Variables();
+        variables.setCharset(system.getCharset());
+        variables.setIsolationLevel(system.getTxIsolation());
+        for (Datanode datanode : datanodes.values()) {
+            Map<Integer, Source> sources = new HashMap<Integer, Source>();
+            for (Integer i : datanode.getDatasources()) {
+                Datasource datasource = datasources.get(i);
+                Source source = new Source(datasource, i, variables);
+                sources.put(i, source);
+            }
+            Node node = new Node(datanode.getID(), sources);
+            nodes.put(datanode.getID(), node);
+        }
+        return nodes;
     }
 
     public SystemConfig getSystem() {
         return system;
     }
 
-    public Map<String, UserConfig> getUsers() {
+    public Map<String, User> getUsers() {
         return users;
     }
 
-    public Map<String, UserConfig> getBackupUsers() {
-        return _users;
+    public Map<String, Database> getDatabases() {
+        return databases;
     }
 
-    public Map<String, SchemaConfig> getSchemas() {
-        return schemas;
-    }
-
-    public Map<String, SchemaConfig> getBackupSchemas() {
-        return _schemas;
-    }
-
-    public Map<String, MySQLDataNode> getDataNodes() {
-        return dataNodes;
-    }
-
-    public Map<String, MySQLDataNode> getBackupDataNodes() {
-        return _dataNodes;
-    }
-
-    public Map<String, DataSourceConfig> getDataSources() {
-        return dataSources;
-    }
-
-    public Map<String, DataSourceConfig> getBackupDataSources() {
-        return _dataSources;
-    }
-
-    public TimoCluster getCluster() {
-        return cluster;
-    }
-
-    public TimoCluster getBackupCluster() {
-        return _cluster;
-    }
-
-    public QuarantineConfig getQuarantine() {
-        return quarantine;
-    }
-
-    public QuarantineConfig getBackupQuarantine() {
-        return _quarantine;
+    public Map<Integer, Node> getNodes() {
+        return nodes;
     }
 
     public ReentrantLock getLock() {
         return lock;
     }
 
-    public long getReloadTime() {
-        return reloadTime;
-    }
-
-    public long getRollbackTime() {
-        return rollbackTime;
-    }
-
-    public void reload(Map<String, UserConfig> users, Map<String, SchemaConfig> schemas,
-            Map<String, MySQLDataNode> dataNodes, Map<String, DataSourceConfig> dataSources,
-            TimoCluster cluster, QuarantineConfig quarantine) {
-        apply(users, schemas, dataNodes, dataSources, cluster, quarantine);
-        this.reloadTime = TimeUtil.currentTimeMillis();
-        this.status = RELOAD;
-    }
-
-    public boolean canRollback() {
-        if (_users == null || _schemas == null || _dataNodes == null || _dataSources == null
-                || _cluster == null || _quarantine == null || status == ROLLBACK) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public void rollback(Map<String, UserConfig> users, Map<String, SchemaConfig> schemas,
-            Map<String, MySQLDataNode> dataNodes, Map<String, DataSourceConfig> dataSources,
-            TimoCluster cluster, QuarantineConfig quarantine) {
-        apply(users, schemas, dataNodes, dataSources, cluster, quarantine);
-        this.rollbackTime = TimeUtil.currentTimeMillis();
-        this.status = ROLLBACK;
-    }
-
-    private void apply(Map<String, UserConfig> users, Map<String, SchemaConfig> schemas,
-            Map<String, MySQLDataNode> dataNodes, Map<String, DataSourceConfig> dataSources,
-            TimoCluster cluster, QuarantineConfig quarantine) {
-        final ReentrantLock lock = this.lock;
-        lock.lock();
-        try {
-            // stop mysql heartbeat
-            Map<String, MySQLDataNode> oldDataNodes = this.dataNodes;
-            if (oldDataNodes != null) {
-                for (MySQLDataNode n : oldDataNodes.values()) {
-                    if (n != null) {
-                        n.stopHeartbeat();
-                    }
-                }
-            }
-            // stop timo heartbeat
-            TimoCluster oldCluster = this.cluster;
-            if (oldCluster != null) {
-                Map<String, TimoNode> nodes = oldCluster.getNodes();
-                for (TimoNode n : nodes.values()) {
-                    if (n != null) {
-                        n.stopHeartbeat();
-                    }
-                }
-            }
-            this._users = this.users;
-            this._schemas = this.schemas;
-            this._dataNodes = this.dataNodes;
-            this._dataSources = this.dataSources;
-            this._cluster = this.cluster;
-            this._quarantine = this.quarantine;
-
-            // start mysql heartbeat
-            if (dataNodes != null) {
-                for (MySQLDataNode n : dataNodes.values()) {
-                    if (n != null) {
-                        n.startHeartbeat();
-                    }
-                }
-            }
-            // start timo heartbeat
-            if (cluster != null) {
-                Map<String, TimoNode> nodes = cluster.getNodes();
-                for (TimoNode n : nodes.values()) {
-                    if (n != null) {
-                        n.startHeartbeat();
-                    }
-                }
-            }
-            this.users = users;
-            this.schemas = schemas;
-            this.dataNodes = dataNodes;
-            this.dataSources = dataSources;
-            this.cluster = cluster;
-            this.quarantine = quarantine;
-        } finally {
-            lock.unlock();
-        }
+    public Map<Integer, Datasource> getDatasources() {
+        return datasources;
     }
 
 }
