@@ -26,7 +26,7 @@ import fm.liu.timo.parser.visitor.Visitor;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class LiteralNumber extends Literal {
-    private final Number number;
+    private Number number;
 
     public LiteralNumber(Number number) {
         super();
@@ -49,4 +49,7 @@ public class LiteralNumber extends Literal {
         return number;
     }
 
+    public void setNumber(Number number) {
+        this.number = number;
+    }
 }

@@ -16,14 +16,7 @@
  */
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_DUAL;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_FROM;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_HAVING;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_IN;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_SELECT;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_UPDATE;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_WHERE;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_COMMA;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
@@ -194,6 +187,8 @@ public class MySQLDMLSelectParser extends MySQLDMLParser {
                     matchIdentifier("SHARE");
                     matchIdentifier("MODE");
                     option.lockMode = DMLSelectStatement.LockMode.LOCK_IN_SHARE_MODE;
+                    break;
+                default:
                     break;
             }
         }

@@ -86,7 +86,7 @@ public abstract class DMLStatement implements SQLStatement {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        accept(new OutputVisitor(sb));
+        accept(new OutputVisitor(sb, false));
         return sb.toString();
     }
 }

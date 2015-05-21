@@ -83,7 +83,7 @@ public class MySQLLexer {
         final int end = srcOffset + len;
         boolean lowerCase = false;
         int srcIndex = srcOffset;
-        int hash = 0;
+        // int hash = 0;
         for (; srcIndex < end; ++srcIndex) {
             char c = src[srcIndex];
             if (c >= 'a' && c <= 'z') {
@@ -93,15 +93,15 @@ public class MySQLLexer {
                 }
                 break;
             }
-            hash = 31 * hash + c;
+            // hash = 31 * hash + c;
         }
         if (lowerCase) {
             for (int destIndex = srcIndex - srcOffset; destIndex < len; ++destIndex) {
                 char c = src[srcIndex++];
-                hash = 31 * hash + c;
+                // hash = 31 * hash + c;
                 if (c >= 'a' && c <= 'z') {
                     sbuf[destIndex] = (char) (c - 32);
-                    hash -= 32;
+                    // hash -= 32;
                 } else {
                     sbuf[destIndex] = c;
                 }

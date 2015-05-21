@@ -63,7 +63,7 @@ public class ArithmeticSubtractExpression extends ArithmeticBinaryOperatorExpres
 
     @Override
     public Number calculate(Long long1, Long long2) {
-        if (long1 == null || long1 == null)
+        if (long1 == null || long2 == null)
             return null;
         long l1 = long1.longValue();
         long l2 = long1.longValue();
@@ -105,4 +105,5 @@ public class ArithmeticSubtractExpression extends ArithmeticBinaryOperatorExpres
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
+
 }

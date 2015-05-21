@@ -16,34 +16,7 @@
  */
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.EOF;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.IDENTIFIER;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_AS;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_BINARY;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_CHARACTER;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_COLLATE;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_COLUMN;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_DEFAULT;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_EXISTS;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_IF;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_IGNORE;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_INDEX;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_KEY;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_KEYS;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_NOT;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_ON;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_SET;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_TABLE;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_TO;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_UNSIGNED;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_USING;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_ZEROFILL;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.LITERAL_NULL;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.LITERAL_NUM_PURE_DIGIT;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.OP_EQUALS;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_COMMA;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_LEFT_PAREN;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_RIGHT_PAREN;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
@@ -54,7 +27,6 @@ import java.util.Map;
 
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
-import fm.liu.timo.parser.ast.expression.primary.literal.Literal;
 import fm.liu.timo.parser.ast.expression.primary.literal.LiteralString;
 import fm.liu.timo.parser.ast.fragment.ddl.ColumnDefinition;
 import fm.liu.timo.parser.ast.fragment.ddl.TableOptions;
@@ -92,12 +64,15 @@ public class MySQLDDLParser extends MySQLParser {
         /** MySQL 5.1 legacy syntax */
         CHARSET,
         /** EXTENSION syntax */
-        POLICY
+        POLICY, BOOL, BOOLEAN, SERIAL
     }
 
     private static final Map<String, SpecialIdentifier> specialIdentifiers =
             new HashMap<String, SpecialIdentifier>(1, 1);
     static {
+        specialIdentifiers.put("SERIAL", SpecialIdentifier.SERIAL);
+        specialIdentifiers.put("BOOL", SpecialIdentifier.BOOL);
+        specialIdentifiers.put("BOOLEAN", SpecialIdentifier.BOOLEAN);
         specialIdentifiers.put("TRUNCATE", SpecialIdentifier.TRUNCATE);
         specialIdentifiers.put("TEMPORARY", SpecialIdentifier.TEMPORARY);
         specialIdentifiers.put("DEFINER", SpecialIdentifier.DEFINER);
@@ -211,6 +186,8 @@ public class MySQLDDLParser extends MySQLParser {
                                     }
                                     match(PUNC_RIGHT_PAREN);
                                     return policy;
+                                default:
+                                    break;
                             }
                         }
                     default:
@@ -239,6 +216,8 @@ public class MySQLDDLParser extends MySQLParser {
                                     lexer.nextToken();
                                     Identifier policyName = identifier();
                                     return new ExtDDLDropPolicy(policyName);
+                                default:
+                                    break;
                             }
                         }
                     default:
@@ -272,6 +251,8 @@ public class MySQLDDLParser extends MySQLParser {
                     switch (si) {
                         case TRUNCATE:
                             return truncate();
+                        default:
+                            break;
                     }
                 }
             default:
@@ -312,6 +293,8 @@ public class MySQLDDLParser extends MySQLParser {
             case KW_CASCADE:
                 lexer.nextToken();
                 mode = DDLDropTableStatement.Mode.CASCADE;
+                break;
+            default:
                 break;
         }
         return new DDLDropTableStatement(list, temp, ifExists, mode);
@@ -557,6 +540,8 @@ public class MySQLDDLParser extends MySQLParser {
                                 case KW_INDEX:
                                 case KW_KEY:
                                     lexer.nextToken();
+                                default:
+                                    break;
                             }
                             id = null;
                             if (lexer.token() == IDENTIFIER) {
@@ -573,6 +558,8 @@ public class MySQLDDLParser extends MySQLParser {
                                 case KW_INDEX:
                                 case KW_KEY:
                                     lexer.nextToken();
+                                default:
+                                    break;
                             }
                             id = null;
                             if (lexer.token() == IDENTIFIER) {
@@ -589,6 +576,8 @@ public class MySQLDDLParser extends MySQLParser {
                                 case KW_INDEX:
                                 case KW_KEY:
                                     lexer.nextToken();
+                                default:
+                                    break;
                             }
                             id = null;
                             if (lexer.token() == IDENTIFIER) {
@@ -657,6 +646,8 @@ public class MySQLDDLParser extends MySQLParser {
                                             id, colDef));
                                 }
                                 break main_switch;
+                            default:
+                                break;
                         }
                     }
                 default:
@@ -749,6 +740,8 @@ public class MySQLDDLParser extends MySQLParser {
                         case KW_KEY:
                             lexer.nextToken();
                             break;
+                        default:
+                            break;
                     }
                     if (lexer.token() == IDENTIFIER) {
                         id = identifier();
@@ -763,6 +756,8 @@ public class MySQLDDLParser extends MySQLParser {
                         case KW_INDEX:
                         case KW_KEY:
                             lexer.nextToken();
+                            break;
+                        default:
                             break;
                     }
                     if (lexer.token() == IDENTIFIER) {
@@ -782,6 +777,8 @@ public class MySQLDDLParser extends MySQLParser {
                         case KW_INDEX:
                         case KW_KEY:
                             lexer.nextToken();
+                            break;
+                        default:
                             break;
                     }
                     if (lexer.token() == IDENTIFIER) {
@@ -833,6 +830,9 @@ public class MySQLDDLParser extends MySQLParser {
             lexer.nextToken();
             int tp = matchIdentifier("BTREE", "HASH");
             indexType = tp == 0 ? IndexDefinition.IndexType.BTREE : IndexDefinition.IndexType.HASH;
+        }
+        if (lexer.token() == IDENTIFIER) {
+            lexer.nextToken();
         }
         match(PUNC_LEFT_PAREN);
         for (int i = 0; lexer.token() != PUNC_RIGHT_PAREN; ++i) {
@@ -892,6 +892,8 @@ public class MySQLDDLParser extends MySQLParser {
                                 }
                                 list.add(new IndexOption(string));
                                 break main_switch;
+                            default:
+                                break;
                         }
                     }
                 default:
@@ -949,14 +951,7 @@ public class MySQLDDLParser extends MySQLParser {
                     length = exprParser.expression();
                     match(PUNC_RIGHT_PAREN);
                 }
-                if (lexer.token() == KW_UNSIGNED) {
-                    unsigned = true;
-                    lexer.nextToken();
-                }
-                if (lexer.token() == KW_ZEROFILL) {
-                    zerofill = true;
-                    lexer.nextToken();
-                }
+                match(lexer, unsigned, zerofill);
                 break typeName;
             case KW_SMALLINT:
                 // | SMALLINT[(length)] [UNSIGNED] [ZEROFILL]
@@ -966,14 +961,7 @@ public class MySQLDDLParser extends MySQLParser {
                     length = exprParser.expression();
                     match(PUNC_RIGHT_PAREN);
                 }
-                if (lexer.token() == KW_UNSIGNED) {
-                    unsigned = true;
-                    lexer.nextToken();
-                }
-                if (lexer.token() == KW_ZEROFILL) {
-                    zerofill = true;
-                    lexer.nextToken();
-                }
+                match(lexer, unsigned, zerofill);
                 break typeName;
             case KW_MEDIUMINT:
                 // | MEDIUMINT[(length)] [UNSIGNED] [ZEROFILL]
@@ -983,14 +971,7 @@ public class MySQLDDLParser extends MySQLParser {
                     length = exprParser.expression();
                     match(PUNC_RIGHT_PAREN);
                 }
-                if (lexer.token() == KW_UNSIGNED) {
-                    unsigned = true;
-                    lexer.nextToken();
-                }
-                if (lexer.token() == KW_ZEROFILL) {
-                    zerofill = true;
-                    lexer.nextToken();
-                }
+                match(lexer, unsigned, zerofill);
                 break typeName;
             case KW_INTEGER:
             case KW_INT:
@@ -1002,14 +983,7 @@ public class MySQLDDLParser extends MySQLParser {
                     length = exprParser.expression();
                     match(PUNC_RIGHT_PAREN);
                 }
-                if (lexer.token() == KW_UNSIGNED) {
-                    unsigned = true;
-                    lexer.nextToken();
-                }
-                if (lexer.token() == KW_ZEROFILL) {
-                    zerofill = true;
-                    lexer.nextToken();
-                }
+                match(lexer, unsigned, zerofill);
                 break typeName;
             case KW_BIGINT:
                 // | BIGINT[(length)] [UNSIGNED] [ZEROFILL]
@@ -1019,14 +993,7 @@ public class MySQLDDLParser extends MySQLParser {
                     length = exprParser.expression();
                     match(PUNC_RIGHT_PAREN);
                 }
-                if (lexer.token() == KW_UNSIGNED) {
-                    unsigned = true;
-                    lexer.nextToken();
-                }
-                if (lexer.token() == KW_ZEROFILL) {
-                    zerofill = true;
-                    lexer.nextToken();
-                }
+                match(lexer, unsigned, zerofill);
                 break typeName;
             case KW_REAL:
                 // | REAL[(length,decimals)] [UNSIGNED] [ZEROFILL]
@@ -1038,33 +1005,24 @@ public class MySQLDDLParser extends MySQLParser {
                     decimals = exprParser.expression();
                     match(PUNC_RIGHT_PAREN);
                 }
-                if (lexer.token() == KW_UNSIGNED) {
-                    unsigned = true;
-                    lexer.nextToken();
-                }
-                if (lexer.token() == KW_ZEROFILL) {
-                    zerofill = true;
-                    lexer.nextToken();
-                }
+                match(lexer, unsigned, zerofill);
                 break typeName;
             case KW_DOUBLE:
                 // | DOUBLE[(length,decimals)] [UNSIGNED] [ZEROFILL]
                 typeName = DataType.DataTypeName.DOUBLE;
-                if (lexer.nextToken() == PUNC_LEFT_PAREN) {
+                lexer.nextToken();
+                if (lexer.token() == KW_PRECISION) {
+                    lexer.nextToken();
+                }
+                if (lexer.token() == PUNC_LEFT_PAREN) {
                     lexer.nextToken();
                     length = exprParser.expression();
                     match(PUNC_COMMA);
                     decimals = exprParser.expression();
                     match(PUNC_RIGHT_PAREN);
                 }
-                if (lexer.token() == KW_UNSIGNED) {
-                    unsigned = true;
-                    lexer.nextToken();
-                }
-                if (lexer.token() == KW_ZEROFILL) {
-                    zerofill = true;
-                    lexer.nextToken();
-                }
+
+                match(lexer, unsigned, zerofill);
                 break typeName;
             case KW_FLOAT:
                 // | FLOAT[(length,decimals)] [UNSIGNED] [ZEROFILL]
@@ -1072,18 +1030,45 @@ public class MySQLDDLParser extends MySQLParser {
                 if (lexer.nextToken() == PUNC_LEFT_PAREN) {
                     lexer.nextToken();
                     length = exprParser.expression();
-                    match(PUNC_COMMA);
-                    decimals = exprParser.expression();
+                    if (lexer.token() == PUNC_COMMA) {
+                        lexer.nextToken();
+                        decimals = exprParser.expression();
+                    }
                     match(PUNC_RIGHT_PAREN);
                 }
-                if (lexer.token() == KW_UNSIGNED) {
-                    unsigned = true;
-                    lexer.nextToken();
-                }
-                if (lexer.token() == KW_ZEROFILL) {
-                    zerofill = true;
-                    lexer.nextToken();
-                }
+                match(lexer, unsigned, zerofill);
+                break typeName;
+            case KW_GEOMETRY:
+                typeName = DataType.DataTypeName.GEOMETRY;
+                lexer.nextToken();
+                break typeName;
+            case KW_POINT:
+                typeName = DataType.DataTypeName.POINT;
+                lexer.nextToken();
+                break typeName;
+            case KW_LINESTRING:
+                typeName = DataType.DataTypeName.LINESTRING;
+                lexer.nextToken();
+                break typeName;
+            case KW_POLYGON:
+                typeName = DataType.DataTypeName.POLYGON;
+                lexer.nextToken();
+                break typeName;
+            case KW_MULTIPOINT:
+                typeName = DataType.DataTypeName.MULTIPOINT;
+                lexer.nextToken();
+                break typeName;
+            case KW_MULTILINESTRING:
+                typeName = DataType.DataTypeName.MULTILINESTRING;
+                lexer.nextToken();
+                break typeName;
+            case KW_GEOMETRYCOLLECTION:
+                typeName = DataType.DataTypeName.GEOMETRYCOLLECTION;
+                lexer.nextToken();
+                break typeName;
+            case KW_MULTIPOLYGON:
+                typeName = DataType.DataTypeName.MULTIPOLYGON;
+                lexer.nextToken();
                 break typeName;
             case KW_NUMERIC:
             case KW_DECIMAL:
@@ -1100,14 +1085,7 @@ public class MySQLDDLParser extends MySQLParser {
                     }
                     match(PUNC_RIGHT_PAREN);
                 }
-                if (lexer.token() == KW_UNSIGNED) {
-                    unsigned = true;
-                    lexer.nextToken();
-                }
-                if (lexer.token() == KW_ZEROFILL) {
-                    zerofill = true;
-                    lexer.nextToken();
-                }
+                match(lexer, unsigned, zerofill);
                 break typeName;
             case KW_CHAR:
                 // | CHAR[(length)] [CHARACTER SET charset_name] [COLLATE
@@ -1141,6 +1119,9 @@ public class MySQLDDLParser extends MySQLParser {
                     match(KW_SET);
                     charSet = identifier();
                 }
+                if (lexer.token() == IDENTIFIER) {
+                    charSet = identifier();
+                }
                 if (lexer.token() == KW_COLLATE) {
                     lexer.nextToken();
                     collation = identifier();
@@ -1165,25 +1146,46 @@ public class MySQLDDLParser extends MySQLParser {
                 break typeName;
             case KW_TINYBLOB:
                 typeName = DataType.DataTypeName.TINYBLOB;
-                lexer.nextToken();
+                if (lexer.nextToken() == PUNC_LEFT_PAREN) {
+                    lexer.nextToken();
+                    length = exprParser.expression();
+                    match(PUNC_RIGHT_PAREN);
+                }
                 break typeName;
             case KW_BLOB:
                 typeName = DataType.DataTypeName.BLOB;
-                lexer.nextToken();
+                if (lexer.nextToken() == PUNC_LEFT_PAREN) {
+                    lexer.nextToken();
+                    length = exprParser.expression();
+                    match(PUNC_RIGHT_PAREN);
+                }
                 break typeName;
             case KW_MEDIUMBLOB:
                 typeName = DataType.DataTypeName.MEDIUMBLOB;
-                lexer.nextToken();
+                if (lexer.nextToken() == PUNC_LEFT_PAREN) {
+                    lexer.nextToken();
+                    length = exprParser.expression();
+                    match(PUNC_RIGHT_PAREN);
+                }
                 break typeName;
             case KW_LONGBLOB:
                 typeName = DataType.DataTypeName.LONGBLOB;
-                lexer.nextToken();
+                if (lexer.nextToken() == PUNC_LEFT_PAREN) {
+                    lexer.nextToken();
+                    length = exprParser.expression();
+                    match(PUNC_RIGHT_PAREN);
+                }
                 break typeName;
             case KW_TINYTEXT:
                 // | TINYTEXT [BINARY] [CHARACTER SET charset_name] [COLLATE
                 // collation_name]
                 typeName = DataType.DataTypeName.TINYTEXT;
-                if (lexer.nextToken() == KW_BINARY) {
+                if (lexer.nextToken() == PUNC_LEFT_PAREN) {
+                    lexer.nextToken();
+                    length = exprParser.expression();
+                    match(PUNC_RIGHT_PAREN);
+                }
+                if (lexer.token() == KW_BINARY) {
                     lexer.nextToken();
                     binary = true;
                 }
@@ -1201,7 +1203,12 @@ public class MySQLDDLParser extends MySQLParser {
                 // | MEDIUMTEXT [BINARY] [CHARACTER SET charset_name] [COLLATE
                 // collation_name]
                 typeName = DataType.DataTypeName.MEDIUMTEXT;
-                if (lexer.nextToken() == KW_BINARY) {
+                if (lexer.nextToken() == PUNC_LEFT_PAREN) {
+                    lexer.nextToken();
+                    length = exprParser.expression();
+                    match(PUNC_RIGHT_PAREN);
+                }
+                if (lexer.token() == KW_BINARY) {
                     lexer.nextToken();
                     binary = true;
                 }
@@ -1219,7 +1226,12 @@ public class MySQLDDLParser extends MySQLParser {
                 // | LONGTEXT [BINARY] [CHARACTER SET charset_name] [COLLATE
                 // collation_name]
                 typeName = DataType.DataTypeName.LONGTEXT;
-                if (lexer.nextToken() == KW_BINARY) {
+                if (lexer.nextToken() == PUNC_LEFT_PAREN) {
+                    lexer.nextToken();
+                    length = exprParser.expression();
+                    match(PUNC_RIGHT_PAREN);
+                }
+                if (lexer.token() == KW_BINARY) {
                     lexer.nextToken();
                     binary = true;
                 }
@@ -1261,6 +1273,10 @@ public class MySQLDDLParser extends MySQLParser {
                 SpecialIdentifier si = specialIdentifiers.get(lexer.stringValueUppercase());
                 if (si != null) {
                     switch (si) {
+                        case SERIAL:
+                            typeName = DataType.DataTypeName.SERIAL;
+                            lexer.nextToken();
+                            break typeName;
                         case BIT:
                             // BIT[(length)]
                             typeName = DataType.DataTypeName.BIT;
@@ -1270,31 +1286,60 @@ public class MySQLDDLParser extends MySQLParser {
                                 match(PUNC_RIGHT_PAREN);
                             }
                             break typeName;
+                        case BOOL:
+                            typeName = DataType.DataTypeName.BOOL;
+                            lexer.nextToken();
+                            break typeName;
+                        case BOOLEAN:
+                            typeName = DataType.DataTypeName.BOOLEAN;
+                            lexer.nextToken();
+                            break typeName;
                         case DATE:
                             typeName = DataType.DataTypeName.DATE;
                             lexer.nextToken();
                             break typeName;
                         case TIME:
                             typeName = DataType.DataTypeName.TIME;
-                            lexer.nextToken();
+                            if (lexer.nextToken() == PUNC_LEFT_PAREN) {
+                                lexer.nextToken();
+                                length = exprParser.expression();
+                                match(PUNC_RIGHT_PAREN);
+                            }
                             break typeName;
                         case TIMESTAMP:
                             typeName = DataType.DataTypeName.TIMESTAMP;
-                            lexer.nextToken();
+                            if (lexer.nextToken() == PUNC_LEFT_PAREN) {
+                                lexer.nextToken();
+                                length = exprParser.expression();
+                                match(PUNC_RIGHT_PAREN);
+                            }
                             break typeName;
                         case DATETIME:
                             typeName = DataType.DataTypeName.DATETIME;
-                            lexer.nextToken();
+                            if (lexer.nextToken() == PUNC_LEFT_PAREN) {
+                                lexer.nextToken();
+                                length = exprParser.expression();
+                                match(PUNC_RIGHT_PAREN);
+                            }
                             break typeName;
                         case YEAR:
                             typeName = DataType.DataTypeName.YEAR;
-                            lexer.nextToken();
+                            if (lexer.nextToken() == PUNC_LEFT_PAREN) {
+                                lexer.nextToken();
+                                length = exprParser.expression();
+                                match(PUNC_RIGHT_PAREN);
+                            }
                             break typeName;
                         case TEXT:
                             // | TEXT [BINARY] [CHARACTER SET charset_name] [COLLATE
                             // collation_name]
                             typeName = DataType.DataTypeName.TEXT;
-                            if (lexer.nextToken() == KW_BINARY) {
+                            if (lexer.nextToken() == PUNC_LEFT_PAREN) {
+                                lexer.nextToken();
+                                length = exprParser.expression();
+                                match(PUNC_RIGHT_PAREN);
+                            }
+                            if (lexer.token() == KW_BINARY) {
                                 lexer.nextToken();
                                 binary = true;
                             }
@@ -1332,6 +1377,8 @@ public class MySQLDDLParser extends MySQLParser {
                                 collation = identifier();
                             }
                             break typeName;
+                        default:
+                            break;
                     }
                 }
             default:
@@ -1339,6 +1386,21 @@ public class MySQLDDLParser extends MySQLParser {
         }
         return new DataType(typeName, unsigned, zerofill, binary, length, decimals, charSet,
                 collation, collectionVals);
+    }
+
+    private void match(MySQLLexer lexer, boolean unsigned, boolean zerofill)
+            throws SQLSyntaxErrorException {
+        if (lexer.token() == KW_SIGNED) {
+            unsigned = false;
+            lexer.nextToken();
+        } else if (lexer.token() == KW_UNSIGNED) {
+            unsigned = true;
+            lexer.nextToken();
+        }
+        if (lexer.token() == KW_ZEROFILL) {
+            zerofill = true;
+            lexer.nextToken();
+        }
     }
 
     // column_definition:
@@ -1365,16 +1427,24 @@ public class MySQLDDLParser extends MySQLParser {
         if (lexer.token() == KW_DEFAULT) {
             lexer.nextToken();
             defaultVal = exprParser.expression();
-            if (!(defaultVal instanceof Literal)) {
-                throw new SQLSyntaxErrorException("default value of column must be a literal: "
-                        + defaultVal);
-            }
+            // if (!(defaultVal instanceof Literal)&&!(defaultVal instanceof
+            // FunctionExpression)) {
+            // throw new SQLSyntaxErrorException(
+            // "default value of column must be a literal: "
+            // + defaultVal);
+            // }
         }
         if (lexer.token() == IDENTIFIER && "AUTO_INCREMENT".equals(lexer.stringValueUppercase())) {
             lexer.nextToken();
             autoIncrement = true;
         }
         switch (lexer.token()) {
+            case KW_ON:
+                if (lexer.nextToken() == KW_UPDATE) {
+                    lexer.nextToken();
+                    exprParser.expression();
+                }
+                break;
             case KW_UNIQUE:
                 if (lexer.nextToken() == KW_KEY) {
                     lexer.nextToken();
@@ -1386,6 +1456,8 @@ public class MySQLDDLParser extends MySQLParser {
             case KW_KEY:
                 match(KW_KEY);
                 sindex = ColumnDefinition.SpecialIndex.PRIMARY;
+                break;
+            default:
                 break;
         }
         if (lexer.token() == IDENTIFIER && "COMMENT".equals(lexer.stringValueUppercase())) {
@@ -1410,8 +1482,12 @@ public class MySQLDDLParser extends MySQLParser {
                                 lexer.nextToken();
                                 format = ColumnDefinition.ColumnFormat.DYNAMIC;
                                 break;
+                            default:
+                                break;
                         }
                     }
+                default:
+                    break;
             }
         }
         return new ColumnDefinition(dataType, notNull, defaultVal, autoIncrement, sindex, comment,
@@ -1493,6 +1569,8 @@ public class MySQLDDLParser extends MySQLParser {
                                     id = identifier();
                                     options.setCharSet(id);
                                     break os;
+                                default:
+                                    break;
                             }
                         }
                     default:
@@ -1754,12 +1832,16 @@ public class MySQLDDLParser extends MySQLParser {
                                                 lexer.nextToken();
                                                 options.setRowFormat(TableOptions.RowFormat.COMPACT);
                                                 break os;
+                                            default:
+                                                break;
                                         }
                                     }
                                 default:
                                     throw new SQLSyntaxErrorException(
                                             "table option of ROW_FORMAT error");
                             }
+                        default:
+                            break;
                     }
                 }
             default:

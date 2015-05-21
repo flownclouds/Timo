@@ -21,7 +21,7 @@ import fm.liu.timo.parser.visitor.Visitor;
 /**
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
-public class Identifier extends PrimaryExpression {
+public class Identifier extends PrimaryExpression implements Cloneable {
     public static String unescapeName(String name) {
         return unescapeName(name, false);
     }
@@ -58,7 +58,7 @@ public class Identifier extends PrimaryExpression {
     /** null if no parent */
     protected Identifier parent;
     /** e.g. "id1", "`id1`" */
-    protected final String idText;
+    protected String idText;
     protected final String idTextUpUnescape;
 
     public Identifier(Identifier parent, String idText) {
@@ -179,5 +179,21 @@ public class Identifier extends PrimaryExpression {
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
+    }
+
+    public void setIdText(String string) {
+        this.idText = string;
+
+    }
+
+    @Override
+    public Identifier clone() {
+        Identifier clone = null;
+        try {
+            clone = (Identifier) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e); // won't happen
+        }
+        return clone;
     }
 }

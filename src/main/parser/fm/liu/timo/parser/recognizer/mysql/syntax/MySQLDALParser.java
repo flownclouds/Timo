@@ -16,28 +16,7 @@
  */
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.IDENTIFIER;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_CHARACTER;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_COLLATE;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_DEFAULT;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_DESC;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_DESCRIBE;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_FOR;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_FROM;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_IN;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_LIKE;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_LIMIT;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_OPTION;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_READ;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_SET;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_SHOW;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_WHERE;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.OP_ASSIGN;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.OP_ASTERISK;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.OP_EQUALS;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_COMMA;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_LEFT_PAREN;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_RIGHT_PAREN;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
@@ -231,6 +210,8 @@ public class MySQLDALParser extends MySQLParser {
                                 case VIEW:
                                     showCreateType = ShowCreate.Type.VIEW;
                                     break switch1;
+                                default:
+                                    break;
                             }
                         }
                     default:
@@ -249,6 +230,8 @@ public class MySQLDALParser extends MySQLParser {
                     case KW_WHERE:
                         tempExpr = where();
                         return new ShowDatabases(tempExpr);
+                    default:
+                        break;
                 }
                 return new ShowDatabases();
             case KW_KEYS:
@@ -276,6 +259,8 @@ public class MySQLDALParser extends MySQLParser {
                                 default:
                                     return new ShowProcedureStatus();
                             }
+                        default:
+                            break;
                     }
                 }
                 throw err("unexpect token for SHOW PROCEDURE");
@@ -294,6 +279,8 @@ public class MySQLDALParser extends MySQLParser {
                     case KW_WHERE:
                         tempExpr = where();
                         return new ShowTableStatus(tempId, tempExpr);
+                    default:
+                        break;
                 }
                 return new ShowTableStatus(tempId);
             case IDENTIFIER:
@@ -342,6 +329,8 @@ public class MySQLDALParser extends MySQLParser {
                             case KW_WHERE:
                                 tempExpr = where();
                                 return new ShowCollation(tempExpr);
+                            default:
+                                break;
                         }
                         return new ShowCollation();
                     case COLUMNS:
@@ -370,6 +359,8 @@ public class MySQLDALParser extends MySQLParser {
                                                         lexer.nextToken();
                                                         return new ShowEngine(
                                                                 ShowEngine.Type.INNODB_MUTEX);
+                                                    default:
+                                                        break;
                                                 }
                                             }
                                         case PERFORMANCE_SCHEMA:
@@ -377,6 +368,8 @@ public class MySQLDALParser extends MySQLParser {
                                             matchIdentifier("STATUS");
                                             return new ShowEngine(
                                                     ShowEngine.Type.PERFORMANCE_SCHEMA_STATUS);
+                                        default:
+                                            break;
                                     }
                                 }
                             default:
@@ -407,6 +400,8 @@ public class MySQLDALParser extends MySQLParser {
                             case KW_FROM:
                                 lexer.nextToken();
                                 tempId = identifier();
+                            default:
+                                break;
                         }
                         switch (lexer.token()) {
                             case KW_LIKE:
@@ -436,6 +431,8 @@ public class MySQLDALParser extends MySQLParser {
                                         case KW_FROM:
                                             lexer.nextToken();
                                             tempId = identifier();
+                                        default:
+                                            break;
                                     }
                                     switch (lexer.token()) {
                                         case KW_LIKE:
@@ -447,6 +444,8 @@ public class MySQLDALParser extends MySQLParser {
                                         default:
                                             return new ShowTables(true, tempId);
                                     }
+                                default:
+                                    break;
                             }
                         }
                         throw err("unexpected token for SHOW FULL");
@@ -471,6 +470,8 @@ public class MySQLDALParser extends MySQLParser {
                                         default:
                                             return new ShowFunctionStatus();
                                     }
+                                default:
+                                    break;
                             }
                         }
                         throw err("unexpected token for SHOW FUNCTION");
@@ -502,6 +503,8 @@ public class MySQLDALParser extends MySQLParser {
                                         default:
                                             return new ShowVariables(VariableScope.GLOBAL);
                                     }
+                                default:
+                                    break;
                             }
                         }
                         throw err("unexpected token for SHOW GLOBAL");
@@ -524,6 +527,8 @@ public class MySQLDALParser extends MySQLParser {
                             case KW_FROM:
                                 lexer.nextToken();
                                 tempId = identifier();
+                            default:
+                                break;
                         }
                         switch (lexer.token()) {
                             case KW_LIKE:
@@ -579,6 +584,8 @@ public class MySQLDALParser extends MySQLParser {
                                         default:
                                             return new ShowVariables(VariableScope.SESSION);
                                     }
+                                default:
+                                    break;
                             }
                         }
                         throw err("unexpected token for SHOW SESSION");
@@ -594,6 +601,8 @@ public class MySQLDALParser extends MySQLParser {
                                 case STATUS:
                                     lexer.nextToken();
                                     return new ShowSlaveStatus();
+                                default:
+                                    break;
                             }
                         }
                         throw err("unexpected token for SHOW SLAVE");
@@ -619,6 +628,8 @@ public class MySQLDALParser extends MySQLParser {
                             case KW_FROM:
                                 lexer.nextToken();
                                 tempId = identifier();
+                            default:
+                                break;
                         }
                         switch (lexer.token()) {
                             case KW_LIKE:
@@ -637,6 +648,8 @@ public class MySQLDALParser extends MySQLParser {
                             case KW_FROM:
                                 lexer.nextToken();
                                 tempId = identifier();
+                            default:
+                                break;
                         }
                         switch (lexer.token()) {
                             case KW_LIKE:
@@ -663,7 +676,11 @@ public class MySQLDALParser extends MySQLParser {
                         lexer.nextToken();
                         tempLimit = limit();
                         return new ShowWarnings(false, tempLimit);
+                    default:
+                        break;
                 }
+                break;
+            default:
                 break;
         }
         throw err("unexpect token for SHOW");
@@ -749,6 +766,8 @@ public class MySQLDALParser extends MySQLParser {
                         case SWAPS:
                             lexer.nextToken();
                             return ShowProfile.Type.SWAPS;
+                        default:
+                            break;
                     }
                 }
             default:
@@ -773,6 +792,8 @@ public class MySQLDALParser extends MySQLParser {
             case KW_IN:
                 lexer.nextToken();
                 database = identifier();
+            default:
+                break;
         }
         switch (lexer.token()) {
             case KW_LIKE:
@@ -781,6 +802,8 @@ public class MySQLDALParser extends MySQLParser {
             case KW_WHERE:
                 Expression where = where();
                 return new ShowColumns(full, table, database, where);
+            default:
+                break;
         }
         return new ShowColumns(full, table, database);
     }
@@ -893,6 +916,8 @@ public class MySQLDALParser extends MySQLParser {
                             lexer.nextToken();
                             return new MTSSetTransactionStatement(scope,
                                     MTSSetTransactionStatement.IsolationLevel.READ_UNCOMMITTED);
+                        default:
+                            break;
                     }
                 }
                 throw err("unknown isolation read level: " + lexer.stringValue());
@@ -909,8 +934,12 @@ public class MySQLDALParser extends MySQLParser {
                             lexer.nextToken();
                             return new MTSSetTransactionStatement(scope,
                                     MTSSetTransactionStatement.IsolationLevel.SERIALIZABLE);
+                        default:
+                            break;
                     }
                 }
+            default:
+                break;
         }
         throw err("unknown isolation level: " + lexer.stringValue());
     }

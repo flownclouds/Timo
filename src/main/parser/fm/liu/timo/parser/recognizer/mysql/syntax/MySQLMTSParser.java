@@ -16,8 +16,7 @@
  */
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.EOF;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_RELEASE;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.HashMap;

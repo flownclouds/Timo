@@ -24,8 +24,6 @@ import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
 import fm.liu.timo.parser.ast.fragment.Limit;
 import fm.liu.timo.parser.ast.fragment.OrderBy;
-import fm.liu.timo.parser.ast.fragment.tableref.TableRefFactor;
-import fm.liu.timo.parser.ast.fragment.tableref.TableReference;
 import fm.liu.timo.parser.ast.fragment.tableref.TableReferences;
 import fm.liu.timo.parser.visitor.Visitor;
 
@@ -62,9 +60,7 @@ public class DMLDeleteStatement extends DMLStatement {
         this.ignore = ignore;
         this.tableNames = new ArrayList<Identifier>(1);
         this.tableNames.add(tableName);
-        List<TableReference> tables = new ArrayList<TableReference>();
-        tables.add(new TableRefFactor(tableName,null,null));
-        this.tableRefs = new TableReferences(tables);
+        this.tableRefs = null;
         this.whereCondition = where;
         this.orderBy = orderBy;
         this.limit = limit;

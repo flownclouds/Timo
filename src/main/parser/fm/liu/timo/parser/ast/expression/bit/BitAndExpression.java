@@ -39,4 +39,5 @@ public class BitAndExpression extends BinaryOperatorExpression {
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
+
 }

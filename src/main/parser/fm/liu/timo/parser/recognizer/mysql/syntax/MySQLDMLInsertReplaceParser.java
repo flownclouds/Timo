@@ -16,9 +16,7 @@
  */
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_COMMA;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_LEFT_PAREN;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_RIGHT_PAREN;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;

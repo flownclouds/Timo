@@ -13,10 +13,7 @@
  */
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.IDENTIFIER;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_LIMIT;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_DOT;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.SYS_VAR;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.HashMap;
@@ -83,7 +80,11 @@ public abstract class MySQLParser {
                 lexer.nextToken();
                 break;
             default:
-                throw err("expect id or * after '.'");
+                id = new Identifier(null, lexer.stringValue(), lexer.stringValueUppercase());
+                id.setCacheEvalRst(cacheEvalRst);
+                lexer.nextToken();
+                break;
+        // throw err("expect id or * after '.'");
         }
         for (; lexer.token() == PUNC_DOT;) {
             switch (lexer.nextToken()) {
@@ -98,7 +99,11 @@ public abstract class MySQLParser {
                     lexer.nextToken();
                     break;
                 default:
-                    throw err("expect id or * after '.'");
+                    id = new Identifier(null, lexer.stringValue(), lexer.stringValueUppercase());
+                    id.setCacheEvalRst(cacheEvalRst);
+                    lexer.nextToken();
+                    break;
+            // throw err("expect id or * after '.'");
             }
         }
         return id;
@@ -190,6 +195,8 @@ public abstract class MySQLParser {
                                     throw err("expect digit or ? after , for limit");
                             }
                         }
+                    default:
+                        break;
                 }
                 return new Limit(new Integer(0), num1);
             case QUESTION_MARK:
@@ -224,6 +231,8 @@ public abstract class MySQLParser {
                                     throw err("expect digit or ? after , for limit");
                             }
                         }
+                    default:
+                        break;
                 }
                 return new Limit(new Integer(0), createParam(paramIndex1));
             default:

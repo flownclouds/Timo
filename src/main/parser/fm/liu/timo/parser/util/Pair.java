@@ -18,7 +18,7 @@ package fm.liu.timo.parser.util;
  * 
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
-public final class Pair<K, V> {
+public final class Pair<K, V> implements Cloneable {
 
     private final K key;
     private final V value;
@@ -80,4 +80,15 @@ public final class Pair<K, V> {
         return o1.equals(o2);
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public Pair<K, V> clone() {
+        Pair<K, V> clone = null;
+        try {
+            clone = (Pair<K, V>) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e); // won't happen
+        }
+        return clone;
+    }
 }

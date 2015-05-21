@@ -61,4 +61,5 @@ public class ArithmeticDivideExpression extends ArithmeticBinaryOperatorExpressi
     public Number calculate(BigDecimal bigDecimal1, BigDecimal bigDecimal2) {
         throw new UnsupportedOperationException();
     }
+
 }

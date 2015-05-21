@@ -36,4 +36,5 @@ public class AssignmentExpression extends BinaryOperatorExpression {
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
+
 }

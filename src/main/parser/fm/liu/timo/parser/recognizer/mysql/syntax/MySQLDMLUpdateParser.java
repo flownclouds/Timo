@@ -16,14 +16,7 @@
  */
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_IGNORE;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_LOW_PRIORITY;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_SET;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_UPDATE;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_WHERE;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.OP_ASSIGN;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.OP_EQUALS;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_COMMA;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;

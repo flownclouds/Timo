@@ -82,4 +82,5 @@ public class ArithmeticModExpression extends ArithmeticBinaryOperatorExpression 
     public Number calculate(BigDecimal bigDecimal1, BigDecimal bigDecimal2) {
         throw new UnsupportedOperationException();
     }
+
 }

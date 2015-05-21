@@ -30,7 +30,7 @@ import fm.liu.timo.parser.visitor.Visitor;
  */
 public class DataType implements ASTNode {
     public static enum DataTypeName {
-        BIT, TINYINT, SMALLINT, MEDIUMINT, INT, BIGINT, REAL, DOUBLE, FLOAT, DECIMAL, DATE, TIME, TIMESTAMP, DATETIME, YEAR, CHAR, VARCHAR, BINARY, VARBINARY, TINYBLOB, BLOB, MEDIUMBLOB, LONGBLOB, TINYTEXT, TEXT, MEDIUMTEXT, LONGTEXT, ENUM, SET
+        GEOMETRY, POINT, LINESTRING, POLYGON, MULTIPOINT, MULTILINESTRING, GEOMETRYCOLLECTION, MULTIPOLYGON, BIT, TINYINT, SMALLINT, MEDIUMINT, INT, BIGINT, REAL, DOUBLE, FLOAT, DECIMAL, DATE, TIME, TIMESTAMP, DATETIME, YEAR, CHAR, VARCHAR, BINARY, VARBINARY, TINYBLOB, BLOB, MEDIUMBLOB, LONGBLOB, TINYTEXT, TEXT, MEDIUMTEXT, LONGTEXT, ENUM, SET, BOOL, BOOLEAN, SERIAL
     }
 
     // BIT[(length)]
@@ -45,19 +45,19 @@ public class DataType implements ASTNode {
     // | FLOAT[(length,decimals)] [UNSIGNED] [ZEROFILL]
     // | DECIMAL[(length[,decimals])] [UNSIGNED] [ZEROFILL]
     // | NUMERIC[(length[,decimals])] [UNSIGNED] [ZEROFILL] 同上
-    // | DATE
-    // | TIME
-    // | TIMESTAMP
+    // | DATE[(length)]
+    // | TIME[(length)]
+    // | TIMESTAMP[(length)]
     // | DATETIME
     // | YEAR
     // | CHAR[(length)][CHARACTER SET charset_name] [COLLATE collation_name]
     // | VARCHAR(length)[CHARACTER SET charset_name] [COLLATE collation_name]
     // | BINARY[(length)]
     // | VARBINARY(length)
-    // | TINYBLOB
-    // | BLOB
-    // | MEDIUMBLOB
-    // | LONGBLOB
+    // | TINYBLOB[(length)]
+    // | BLOB[(length)]
+    // | MEDIUMBLOB[(length)]
+    // | LONGBLOB[(length)]
     // | TINYTEXT [BINARY][CHARACTER SET charset_name] [COLLATE collation_name]
     // | TEXT [BINARY][CHARACTER SET charset_name] [COLLATE collation_name]
     // | MEDIUMTEXT [BINARY][CHARACTER SET charset_name] [COLLATE

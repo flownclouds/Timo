@@ -79,7 +79,7 @@ public class DMLSelectStatement extends DMLQueryStatement {
 
     private final SelectOption option;
     /** string: id | `id` | 'id' */
-    private final List<Pair<Expression, String>> selectExprList;
+    private List<Pair<Expression, String>> selectExprList;
     private final TableReferences tables;
     private final Expression where;
     private final GroupBy group;
@@ -161,5 +161,9 @@ public class DMLSelectStatement extends DMLQueryStatement {
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
+    }
+
+    public void setSelectExprList(List<Pair<Expression, String>> list) {
+        this.selectExprList = list;
     }
 }

@@ -208,6 +208,9 @@ public class MySQLFunctionManager {
         /** not a function */
         _DEFAULT,
         /** ordinary function */
+
+        AREA, ASBINARY, ASWKB, ASTEXT, ASWKT, BUFFER, CENTROID, CONTAINS, CROSSES, DIMENSION, DISJOINT, ENDPOINT, ENVELOPE, EQUALS, EXTERIORRING, GEOMCOLLFROMTEXT, GEOMETRYCOLLECTIONFROMTEXT, GEOMCOLLFROMWKB, GEOMETRYCOLLECTIONFROMWKB, GEOMETRYCOLLECTION, GEOMETRYN, GEOMETRYTYPE, GEOMFROMTEXT, GEOMETRYFROMTEXT, GEOMFROMWKB, GLENGTH, INTERIORRINGN, INTERSECTS, ISCLOSED, ISEMPTY, ISSIMPLE, LINEFROMTEXT, LINEFROMWKB, LINESTRINGFROMWKB, LINESTRING, MBRCONTAINS, MBRDISJOINT, MBREQUAL, MBRINTERSECTS, MBROVERLAPS, MBRTOUCHES, MBRWITHIN, MLINEFROMTEXT, MULTILINESTRINGFROMTEXT, MLINEFROMWKB, MULTILINESTRINGFROMWKB, MPOINTFROMTEXT, MULTIPOINTFROMTEXT, MPOINTFROMWKB, MULTIPOINTFROMWKB, MPOLYFROMTEXT, MULTIPOLYGONFROMTEXT, MPOLYFROMWKB, MULTIPOLYGONFROMWKB, MULTILINESTRING, MULTIPOINT, MULTIPOLYGON, NUMGEOMETRIES, NUMINTERIORRINGS, NUMPOINTS, OVERLAPS, POINT, POINTFROMTEXT, POINTFROMWKB, POINTN, POLYFROMTEXT, POLYGONFROMTEXT, POLYFROMWKB, POLYGONFROMWKB, POLYGON, SRID, ST_AREA, ST_CENTROID, ST_CONTAINS, ST_CROSSES, ST_DIFFERENCE, ST_DISJOINT, ST_DISTANCE, ST_ENVELOPE, ST_EQUALS, ST_INTERSECTION, ST_INTERSECTS, ST_OVERLAPS, ST_SYMDIFFERENCE, ST_TOUCHES, ST_UNION, ST_WITHIN, STARTPOINT, TOUCHES, WITHIN, X, Y,
+
         _ORDINARY, CAST, POSITION, SUBSTRING, TRIM, AVG, COUNT, GROUP_CONCAT, MAX, MIN, SUM, ROW, CHAR, CONVERT, EXTRACT, TIMESTAMPADD, TIMESTAMPDIFF, GET_FORMAT
     }
 
@@ -224,6 +227,104 @@ public class MySQLFunctionManager {
 
     public MySQLFunctionManager(boolean allowFuncDefChange) {
         this.allowFuncDefChange = allowFuncDefChange;
+
+        parsingStrateg.put("AREA", FunctionParsingStrategy.AREA);
+        parsingStrateg.put("ASBINARY", FunctionParsingStrategy.ASBINARY);
+        parsingStrateg.put("ASWKB", FunctionParsingStrategy.ASWKB);
+        parsingStrateg.put("ASTEXT", FunctionParsingStrategy.ASTEXT);
+        parsingStrateg.put("ASWKT", FunctionParsingStrategy.ASWKT);
+        parsingStrateg.put("BUFFER", FunctionParsingStrategy.BUFFER);
+        parsingStrateg.put("CENTROID", FunctionParsingStrategy.CENTROID);
+        parsingStrateg.put("CONTAINS", FunctionParsingStrategy.CONTAINS);
+        parsingStrateg.put("CROSSES", FunctionParsingStrategy.CROSSES);
+        parsingStrateg.put("DIMENSION", FunctionParsingStrategy.DIMENSION);
+        parsingStrateg.put("DISJOINT", FunctionParsingStrategy.DISJOINT);
+        parsingStrateg.put("ENDPOINT", FunctionParsingStrategy.ENDPOINT);
+        parsingStrateg.put("ENVELOPE", FunctionParsingStrategy.ENVELOPE);
+        parsingStrateg.put("EQUALS", FunctionParsingStrategy.EQUALS);
+        parsingStrateg.put("EXTERIORRING", FunctionParsingStrategy.EXTERIORRING);
+        parsingStrateg.put("GEOMCOLLFROMTEXT", FunctionParsingStrategy.GEOMCOLLFROMTEXT);
+        parsingStrateg.put("GEOMETRYCOLLECTIONFROMTEXT",
+                FunctionParsingStrategy.GEOMETRYCOLLECTIONFROMTEXT);
+        parsingStrateg.put("GEOMCOLLFROMWKB", FunctionParsingStrategy.GEOMCOLLFROMWKB);
+        parsingStrateg.put("GEOMETRYCOLLECTIONFROMWKB",
+                FunctionParsingStrategy.GEOMETRYCOLLECTIONFROMWKB);
+        parsingStrateg.put("GEOMETRYCOLLECTION", FunctionParsingStrategy.GEOMETRYCOLLECTION);
+        parsingStrateg.put("GEOMETRYN", FunctionParsingStrategy.GEOMETRYN);
+        parsingStrateg.put("GEOMETRYTYPE", FunctionParsingStrategy.GEOMETRYTYPE);
+        parsingStrateg.put("GEOMFROMTEXT", FunctionParsingStrategy.GEOMFROMTEXT);
+        parsingStrateg.put("GEOMETRYFROMTEXT", FunctionParsingStrategy.GEOMETRYFROMTEXT);
+        parsingStrateg.put("GEOMFROMWKB", FunctionParsingStrategy.GEOMFROMWKB);
+        parsingStrateg.put("GLENGTH", FunctionParsingStrategy.GLENGTH);
+        parsingStrateg.put("INTERIORRINGN", FunctionParsingStrategy.INTERIORRINGN);
+        parsingStrateg.put("INTERSECTS", FunctionParsingStrategy.INTERSECTS);
+        parsingStrateg.put("ISCLOSED", FunctionParsingStrategy.ISCLOSED);
+        parsingStrateg.put("ISEMPTY", FunctionParsingStrategy.ISEMPTY);
+        parsingStrateg.put("ISSIMPLE", FunctionParsingStrategy.ISSIMPLE);
+        parsingStrateg.put("LINEFROMTEXT", FunctionParsingStrategy.LINEFROMTEXT);
+        parsingStrateg.put("LINEFROMWKB", FunctionParsingStrategy.LINEFROMWKB);
+        parsingStrateg.put("LINESTRINGFROMWKB", FunctionParsingStrategy.LINESTRINGFROMWKB);
+        parsingStrateg.put("LINESTRING", FunctionParsingStrategy.LINESTRING);
+        parsingStrateg.put("MBRCONTAINS", FunctionParsingStrategy.MBRCONTAINS);
+        parsingStrateg.put("MBRDISJOINT", FunctionParsingStrategy.MBRDISJOINT);
+        parsingStrateg.put("MBREQUAL", FunctionParsingStrategy.MBREQUAL);
+        parsingStrateg.put("MBRINTERSECTS", FunctionParsingStrategy.MBRINTERSECTS);
+        parsingStrateg.put("MBROVERLAPS", FunctionParsingStrategy.MBROVERLAPS);
+        parsingStrateg.put("MBRTOUCHES", FunctionParsingStrategy.MBRTOUCHES);
+        parsingStrateg.put("MBRWITHIN", FunctionParsingStrategy.MBRWITHIN);
+        parsingStrateg.put("MLINEFROMTEXT", FunctionParsingStrategy.MLINEFROMTEXT);
+        parsingStrateg.put("MULTILINESTRINGFROMTEXT",
+                FunctionParsingStrategy.MULTILINESTRINGFROMTEXT);
+        parsingStrateg.put("MLINEFROMWKB", FunctionParsingStrategy.MLINEFROMWKB);
+        parsingStrateg
+                .put("MULTILINESTRINGFROMWKB", FunctionParsingStrategy.MULTILINESTRINGFROMWKB);
+        parsingStrateg.put("MPOINTFROMTEXT", FunctionParsingStrategy.MPOINTFROMTEXT);
+        parsingStrateg.put("MULTIPOINTFROMTEXT", FunctionParsingStrategy.MULTIPOINTFROMTEXT);
+        parsingStrateg.put("MPOINTFROMWKB", FunctionParsingStrategy.MPOINTFROMWKB);
+        parsingStrateg.put("MULTIPOINTFROMWKB", FunctionParsingStrategy.MULTIPOINTFROMWKB);
+        parsingStrateg.put("MPOLYFROMTEXT", FunctionParsingStrategy.MPOLYFROMTEXT);
+        parsingStrateg.put("MULTIPOLYGONFROMTEXT", FunctionParsingStrategy.MULTIPOLYGONFROMTEXT);
+        parsingStrateg.put("MPOLYFROMWKB", FunctionParsingStrategy.MPOLYFROMWKB);
+        parsingStrateg.put("MULTIPOLYGONFROMWKB", FunctionParsingStrategy.MULTIPOLYGONFROMWKB);
+        parsingStrateg.put("MULTILINESTRING", FunctionParsingStrategy.MULTILINESTRING);
+        parsingStrateg.put("MULTIPOINT", FunctionParsingStrategy.MULTIPOINT);
+        parsingStrateg.put("MULTIPOLYGON", FunctionParsingStrategy.MULTIPOLYGON);
+        parsingStrateg.put("NUMGEOMETRIES", FunctionParsingStrategy.NUMGEOMETRIES);
+        parsingStrateg.put("NUMINTERIORRINGS", FunctionParsingStrategy.NUMINTERIORRINGS);
+        parsingStrateg.put("NUMPOINTS", FunctionParsingStrategy.NUMPOINTS);
+        parsingStrateg.put("OVERLAPS", FunctionParsingStrategy.OVERLAPS);
+        parsingStrateg.put("POINT", FunctionParsingStrategy.POINT);
+        parsingStrateg.put("POINTFROMTEXT", FunctionParsingStrategy.POINTFROMTEXT);
+        parsingStrateg.put("POINTFROMWKB", FunctionParsingStrategy.POINTFROMWKB);
+        parsingStrateg.put("POINTN", FunctionParsingStrategy.POINTN);
+        parsingStrateg.put("POLYFROMTEXT", FunctionParsingStrategy.POLYFROMTEXT);
+        parsingStrateg.put("POLYGONFROMTEXT", FunctionParsingStrategy.POLYGONFROMTEXT);
+        parsingStrateg.put("POLYFROMWKB", FunctionParsingStrategy.POLYFROMWKB);
+        parsingStrateg.put("POLYGONFROMWKB", FunctionParsingStrategy.POLYGONFROMWKB);
+        parsingStrateg.put("POLYGON", FunctionParsingStrategy.POLYGON);
+        parsingStrateg.put("SRID", FunctionParsingStrategy.SRID);
+        parsingStrateg.put("ST_AREA", FunctionParsingStrategy.ST_AREA);
+        parsingStrateg.put("ST_CENTROID", FunctionParsingStrategy.ST_CENTROID);
+        parsingStrateg.put("ST_CONTAINS", FunctionParsingStrategy.ST_CONTAINS);
+        parsingStrateg.put("ST_CROSSES", FunctionParsingStrategy.ST_CROSSES);
+        parsingStrateg.put("ST_DIFFERENCE", FunctionParsingStrategy.ST_DIFFERENCE);
+        parsingStrateg.put("ST_DISJOINT", FunctionParsingStrategy.ST_DISJOINT);
+        parsingStrateg.put("ST_DISTANCE", FunctionParsingStrategy.ST_DISTANCE);
+        parsingStrateg.put("ST_ENVELOPE", FunctionParsingStrategy.ST_ENVELOPE);
+        parsingStrateg.put("ST_EQUALS", FunctionParsingStrategy.ST_EQUALS);
+        parsingStrateg.put("ST_INTERSECTION", FunctionParsingStrategy.ST_INTERSECTION);
+        parsingStrateg.put("ST_INTERSECTS", FunctionParsingStrategy.ST_INTERSECTS);
+        parsingStrateg.put("ST_OVERLAPS", FunctionParsingStrategy.ST_OVERLAPS);
+        parsingStrateg.put("ST_SYMDIFFERENCE", FunctionParsingStrategy.ST_SYMDIFFERENCE);
+        parsingStrateg.put("ST_TOUCHES", FunctionParsingStrategy.ST_TOUCHES);
+        parsingStrateg.put("ST_UNION", FunctionParsingStrategy.ST_UNION);
+        parsingStrateg.put("ST_WITHIN", FunctionParsingStrategy.ST_WITHIN);
+        parsingStrateg.put("STARTPOINT", FunctionParsingStrategy.STARTPOINT);
+        parsingStrateg.put("TOUCHES", FunctionParsingStrategy.TOUCHES);
+        parsingStrateg.put("WITHIN", FunctionParsingStrategy.WITHIN);
+        parsingStrateg.put("X", FunctionParsingStrategy.X);
+        parsingStrateg.put("Y", FunctionParsingStrategy.Y);
+
         parsingStrateg.put("CAST", FunctionParsingStrategy.CAST);
         parsingStrateg.put("POSITION", FunctionParsingStrategy.POSITION);
         parsingStrateg.put("SUBSTR", FunctionParsingStrategy.SUBSTRING);

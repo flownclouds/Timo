@@ -16,33 +16,7 @@
  */
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.EOF;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.IDENTIFIER;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_AND;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_AS;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_ASC;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_BY;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_COLLATE;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_DESC;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_DISTINCT;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_FROM;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_IN;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_INTEGER;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_LIKE;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_NOT;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_SELECT;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_SEPARATOR;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_THEN;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_USING;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_WHEN;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_WITH;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.LITERAL_CHARS;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.OP_ASSIGN;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_COMMA;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_DOT;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_LEFT_PAREN;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_RIGHT_PAREN;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.USR_VAR;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
@@ -93,10 +67,12 @@ import fm.liu.timo.parser.ast.expression.primary.RowExpression;
 import fm.liu.timo.parser.ast.expression.primary.UsrDefVarPrimary;
 import fm.liu.timo.parser.ast.expression.primary.Wildcard;
 import fm.liu.timo.parser.ast.expression.primary.MatchExpression.Modifier;
+import fm.liu.timo.parser.ast.expression.primary.function.DefaultFunction;
 import fm.liu.timo.parser.ast.expression.primary.function.FunctionExpression;
 import fm.liu.timo.parser.ast.expression.primary.function.cast.Cast;
 import fm.liu.timo.parser.ast.expression.primary.function.cast.Convert;
 import fm.liu.timo.parser.ast.expression.primary.function.comparison.Interval;
+import fm.liu.timo.parser.ast.expression.primary.function.datetime.CurTimestamp;
 import fm.liu.timo.parser.ast.expression.primary.function.datetime.Curdate;
 import fm.liu.timo.parser.ast.expression.primary.function.datetime.Curtime;
 import fm.liu.timo.parser.ast.expression.primary.function.datetime.Extract;
@@ -114,6 +90,31 @@ import fm.liu.timo.parser.ast.expression.primary.function.groupby.Max;
 import fm.liu.timo.parser.ast.expression.primary.function.groupby.Min;
 import fm.liu.timo.parser.ast.expression.primary.function.groupby.Sum;
 import fm.liu.timo.parser.ast.expression.primary.function.info.CurrentUser;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.Area;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.AsText;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.AsWKT;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.Centroid;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.Contains;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.Equals;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.ExteriorRing;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.GeomFromText;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.GeometryFromText;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.IsClosed;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.IsEmpty;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.MBRContains;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.MBREqual;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.MBRWithin;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.Point;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.SRID;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.ST_Area;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.ST_Centroid;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.ST_Contains;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.ST_Distance;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.ST_Equals;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.ST_Within;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.Within;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.X;
+import fm.liu.timo.parser.ast.expression.primary.function.spatial.Y;
 import fm.liu.timo.parser.ast.expression.primary.function.string.Char;
 import fm.liu.timo.parser.ast.expression.primary.function.string.Locate;
 import fm.liu.timo.parser.ast.expression.primary.function.string.Substring;
@@ -692,6 +693,8 @@ public class MySQLExprParser extends MySQLParser {
                     lexer.nextToken();
                     expr = unaryOpExpression(null, null);
                     return new CastBinaryExpression(expr).setCacheEvalRst(cacheEvalRst);
+                default:
+                    break;
             }
         }
         return collateExpression(consumed, consumedUp);
@@ -812,9 +815,10 @@ public class MySQLExprParser extends MySQLParser {
                 tempStr = lexer.stringValue();
                 tempExpr = new UsrDefVarPrimary(tempStr).setCacheEvalRst(cacheEvalRst);
                 if (lexer.nextToken() == OP_ASSIGN) {
-                    lexer.nextToken();
-                    tempExpr2 = expression();
-                    return new AssignmentExpression(tempExpr, tempExpr2);
+                    throw new SQLSyntaxErrorException("Unsupported operation ':='");
+                    // lexer.nextToken();
+                    // tempExpr2 = expression();
+                    // return new AssignmentExpression(tempExpr, tempExpr2);
                 }
                 return tempExpr;
             case SYS_VAR:
@@ -879,6 +883,15 @@ public class MySQLExprParser extends MySQLParser {
                 }
                 return new Curtime().setCacheEvalRst(cacheEvalRst);
             case KW_CURRENT_TIMESTAMP:
+                lexer.nextToken();
+                if (lexer.token() == PUNC_LEFT_PAREN) {
+                    lexer.nextToken();
+                    if (lexer.token() == LITERAL_NUM_PURE_DIGIT) {
+                        lexer.nextToken();
+                    }
+                    match(PUNC_RIGHT_PAREN);
+                }
+                return new CurTimestamp().setCacheEvalRst(cacheEvalRst);
             case KW_LOCALTIME:
             case KW_LOCALTIMESTAMP:
                 lexer.nextToken();
@@ -935,16 +948,15 @@ public class MySQLExprParser extends MySQLParser {
                 lexer.nextToken();
                 match(PUNC_LEFT_PAREN);
                 return functionConvert();
+            case OP_ASTERISK:
+                lexer.nextToken();
+                return new Wildcard(null).setCacheEvalRst(cacheEvalRst);
             case IDENTIFIER:
+            default:
                 tempStr = lexer.stringValue();
                 tempStrUp = lexer.stringValueUppercase();
                 lexer.nextToken();
                 return startedFromIdentifier(tempStr, tempStrUp);
-            case OP_ASTERISK:
-                lexer.nextToken();
-                return new Wildcard(null).setCacheEvalRst(cacheEvalRst);
-            default:
-                throw err("unrecognized token as first token of primary: " + lexer.token());
         }
     }
 
@@ -1104,6 +1116,137 @@ public class MySQLExprParser extends MySQLParser {
             case PUNC_LEFT_PAREN:
                 consumedUp = Identifier.unescapeName(consumedUp);
                 switch (functionManager.getParsingStrategy(consumedUp)) {
+                    case AREA:
+                        tempExpr = expression();
+                        return new Area(tempExpr).setCacheEvalRst(cacheEvalRst);
+                    case ASTEXT:
+                        tempExpr = expression();
+                        return new AsText(tempExpr).setCacheEvalRst(cacheEvalRst);
+                    case ASWKT:
+                        tempExpr = expression();
+                        return new AsWKT(tempExpr).setCacheEvalRst(cacheEvalRst);
+                    case CENTROID:
+                        tempExpr = expression();
+                        return new Centroid(tempExpr).setCacheEvalRst(cacheEvalRst);
+                    case CONTAINS:
+                        lexer.nextToken();
+                        tempExprList = new ArrayList<Expression>(2);
+                        tempExprList.add(expression());
+                        match(PUNC_COMMA);
+                        tempExprList.add(expression());
+                        match(PUNC_RIGHT_PAREN);
+                        return new Contains(tempExprList).setCacheEvalRst(cacheEvalRst);
+                    case EQUALS:
+                        lexer.nextToken();
+                        tempExprList = new ArrayList<Expression>(2);
+                        tempExprList.add(expression());
+                        match(PUNC_COMMA);
+                        tempExprList.add(expression());
+                        match(PUNC_RIGHT_PAREN);
+                        return new Equals(tempExprList).setCacheEvalRst(cacheEvalRst);
+                    case EXTERIORRING:
+                        tempExpr = expression();
+                        return new ExteriorRing(tempExpr).setCacheEvalRst(cacheEvalRst);
+                    case GEOMFROMTEXT:
+                        tempExpr = expression();
+                        return new GeomFromText(tempExpr).setCacheEvalRst(cacheEvalRst);
+                    case GEOMETRYFROMTEXT:
+                        tempExpr = expression();
+                        return new GeometryFromText(tempExpr).setCacheEvalRst(cacheEvalRst);
+                    case ISCLOSED:
+                        tempExpr = expression();
+                        return new IsClosed(tempExpr).setCacheEvalRst(cacheEvalRst);
+                    case ISEMPTY:
+                        tempExpr = expression();
+                        return new IsEmpty(tempExpr).setCacheEvalRst(cacheEvalRst);
+                    case MBRCONTAINS:
+                        lexer.nextToken();
+                        tempExprList = new ArrayList<Expression>(2);
+                        tempExprList.add(expression());
+                        match(PUNC_COMMA);
+                        tempExprList.add(expression());
+                        match(PUNC_RIGHT_PAREN);
+                        return new MBRContains(tempExprList).setCacheEvalRst(cacheEvalRst);
+                    case MBREQUAL:
+                        lexer.nextToken();
+                        tempExprList = new ArrayList<Expression>(2);
+                        tempExprList.add(expression());
+                        match(PUNC_COMMA);
+                        tempExprList.add(expression());
+                        match(PUNC_RIGHT_PAREN);
+                        return new MBREqual(tempExprList).setCacheEvalRst(cacheEvalRst);
+                    case MBRWITHIN:
+                        lexer.nextToken();
+                        tempExprList = new ArrayList<Expression>(2);
+                        tempExprList.add(expression());
+                        match(PUNC_COMMA);
+                        tempExprList.add(expression());
+                        match(PUNC_RIGHT_PAREN);
+                        return new MBRWithin(tempExprList).setCacheEvalRst(cacheEvalRst);
+                    case SRID:
+                        tempExpr = expression();
+                        return new SRID(tempExpr).setCacheEvalRst(cacheEvalRst);
+                    case ST_AREA:
+                        tempExpr = expression();
+                        return new ST_Area(tempExpr).setCacheEvalRst(cacheEvalRst);
+                    case ST_CENTROID:
+                        tempExpr = expression();
+                        return new ST_Centroid(tempExpr).setCacheEvalRst(cacheEvalRst);
+                    case ST_CONTAINS:
+                        lexer.nextToken();
+                        tempExprList = new ArrayList<Expression>(2);
+                        tempExprList.add(expression());
+                        match(PUNC_COMMA);
+                        tempExprList.add(expression());
+                        match(PUNC_RIGHT_PAREN);
+                        return new ST_Contains(tempExprList).setCacheEvalRst(cacheEvalRst);
+                    case ST_DISTANCE:
+                        lexer.nextToken();
+                        tempExprList = new ArrayList<Expression>(2);
+                        tempExprList.add(expression());
+                        match(PUNC_COMMA);
+                        tempExprList.add(expression());
+                        match(PUNC_RIGHT_PAREN);
+                        return new ST_Distance(tempExprList).setCacheEvalRst(cacheEvalRst);
+                    case ST_EQUALS:
+                        lexer.nextToken();
+                        tempExprList = new ArrayList<Expression>(2);
+                        tempExprList.add(expression());
+                        match(PUNC_COMMA);
+                        tempExprList.add(expression());
+                        match(PUNC_RIGHT_PAREN);
+                        return new ST_Equals(tempExprList).setCacheEvalRst(cacheEvalRst);
+                    case ST_WITHIN:
+                        lexer.nextToken();
+                        tempExprList = new ArrayList<Expression>(2);
+                        tempExprList.add(expression());
+                        match(PUNC_COMMA);
+                        tempExprList.add(expression());
+                        match(PUNC_RIGHT_PAREN);
+                        return new ST_Within(tempExprList).setCacheEvalRst(cacheEvalRst);
+                    case WITHIN:
+                        lexer.nextToken();
+                        tempExprList = new ArrayList<Expression>(2);
+                        tempExprList.add(expression());
+                        match(PUNC_COMMA);
+                        tempExprList.add(expression());
+                        match(PUNC_RIGHT_PAREN);
+                        return new Within(tempExprList).setCacheEvalRst(cacheEvalRst);
+                    case X:
+                        tempExpr = expression();
+                        return new X(tempExpr).setCacheEvalRst(cacheEvalRst);
+                    case Y:
+                        tempExpr = expression();
+                        return new Y(tempExpr).setCacheEvalRst(cacheEvalRst);
+                    case POINT:
+                        lexer.nextToken();
+                        tempExprList = new ArrayList<Expression>(2);
+                        tempExprList.add(expression());
+                        match(PUNC_COMMA);
+                        tempExprList.add(expression());
+                        match(PUNC_RIGHT_PAREN);
+                        return new Point(tempExprList).setCacheEvalRst(cacheEvalRst);
+
                     case GET_FORMAT:
                         // GET_FORMAT({DATE|TIME|DATETIME},
                         // {'EUR'|'USA'|'JIS'|'ISO'|'INTERNAL'})
@@ -1302,6 +1445,8 @@ public class MySQLExprParser extends MySQLParser {
                                 tempStr = LiteralString.getUnescapedString(tempSb.toString());
                                 match(LITERAL_CHARS);
                                 break;
+                            default:
+                                break;
                         }
                         match(PUNC_RIGHT_PAREN);
                         return new GroupConcat(tempGroupDistinct, tempExprList, tempExpr, isDesc,
@@ -1324,10 +1469,31 @@ public class MySQLExprParser extends MySQLParser {
                     case _ORDINARY:
                         return ordinaryFunction(consumed, consumedUp);
                     case _DEFAULT:
-                        return new Identifier(null, consumed, consumedUp)
-                                .setCacheEvalRst(cacheEvalRst);
                     default:
-                        throw err("unexpected function parsing strategy for id of " + consumed);
+                        lexer.nextToken();
+                        tempExprList = new ArrayList<Expression>();
+                        while (lexer.token() != PUNC_RIGHT_PAREN) {
+                            tempExprList.add(expression());
+                            if (lexer.token() == PUNC_RIGHT_PAREN) {
+                                break;
+                            } else if (lexer.token() == PUNC_COMMA) {
+                                match(PUNC_COMMA);
+                                while (lexer.token() != PUNC_RIGHT_PAREN) {
+                                    tempExprList.add(expression());
+                                }
+                                break;
+                            } else if (lexer.token() == EOF) {
+                                break;
+                            }
+                        }
+                        lexer.nextToken();
+                        return new DefaultFunction(consumedUp, tempExprList)
+                                .setCacheEvalRst(cacheEvalRst);
+                        // return new Identifier(null, consumed, consumedUp)
+                        // .setCacheEvalRst(cacheEvalRst);
+                        // default:
+                        // throw err("unexpected function parsing strategy for id of "
+                        // + consumed);
                 }
             default:
                 return new Identifier(null, consumed, consumedUp).setCacheEvalRst(cacheEvalRst);
@@ -1368,6 +1534,12 @@ public class MySQLExprParser extends MySQLParser {
                     match(PUNC_RIGHT_PAREN);
                 }
                 return constructTypePair(typeName, exp1, exp2);
+            case KW_SIGNED:
+                typeName = MySQLToken.keyWordToString(lexer.token());
+                if (lexer.nextToken() == KW_INTEGER) {
+                    lexer.nextToken();
+                }
+                return constructTypePair(typeName, null, null);
             case KW_UNSIGNED:
                 typeName = MySQLToken.keyWordToString(lexer.token());
                 if (lexer.nextToken() == KW_INTEGER) {
@@ -1461,6 +1633,8 @@ public class MySQLExprParser extends MySQLParser {
                         modifier = Modifier.IN_BOOLEAN_MODE;
                         break;
                 }
+            default:
+                break;
         }
         match(PUNC_RIGHT_PAREN);
         return new MatchExpression(colList, pattern, modifier).setCacheEvalRst(cacheEvalRst);

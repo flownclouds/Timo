@@ -16,20 +16,7 @@
  */
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.IDENTIFIER;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_AS;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_BY;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_FOR;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_GROUP;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_JOIN;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_ORDER;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_OUTER;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_UNION;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_WITH;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.LITERAL_CHARS;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_COMMA;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_LEFT_PAREN;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_RIGHT_PAREN;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
@@ -160,6 +147,8 @@ public abstract class MySQLDMLParser extends MySQLParser {
                     order = SortOrder.DESC;
                 case KW_ASC:
                     lexer.nextToken();
+                default:
+                    break;
             }
             orderBy.addOrderByItem(expr, order);
         }
@@ -391,7 +380,7 @@ public abstract class MySQLDMLParser extends MySQLParser {
         StringBuilder alias = new StringBuilder();
         boolean id = false;
         if (lexer.token() == IDENTIFIER) {
-            alias.append(lexer.stringValueUppercase());
+            alias.append(lexer.stringValue());
             id = true;
             lexer.nextToken();
         }
@@ -549,6 +538,8 @@ public abstract class MySQLDMLParser extends MySQLParser {
                     isAll = true;
                 case KW_DISTINCT:
                     lexer.nextToken();
+                    break;
+                default:
                     break;
             }
             select = selectPrimary();

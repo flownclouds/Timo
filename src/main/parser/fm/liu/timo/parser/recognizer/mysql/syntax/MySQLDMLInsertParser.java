@@ -16,16 +16,7 @@
  */
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_IGNORE;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_INSERT;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_INTO;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_KEY;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_ON;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_UPDATE;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.OP_ASSIGN;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.OP_EQUALS;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_COMMA;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_RIGHT_PAREN;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
@@ -82,6 +73,8 @@ public class MySQLDMLInsertParser extends MySQLDMLInsertReplaceParser {
             case KW_HIGH_PRIORITY:
                 lexer.nextToken();
                 mode = DMLInsertStatement.InsertMode.HIGH;
+                break;
+            default:
                 break;
         }
         if (lexer.token() == KW_IGNORE) {
@@ -145,6 +138,8 @@ public class MySQLDMLInsertParser extends MySQLDMLInsertReplaceParser {
                         dupUpdate = onDuplicateUpdate();
                         return new DMLInsertStatement(mode, ignore, table, columnNameList, select,
                                 dupUpdate);
+                    default:
+                        break;
                 }
                 columnNameList = idList();
                 match(PUNC_RIGHT_PAREN);
@@ -165,6 +160,8 @@ public class MySQLDMLInsertParser extends MySQLDMLInsertReplaceParser {
                 dupUpdate = onDuplicateUpdate();
                 return new DMLInsertStatement(mode, ignore, table, columnNameList, rowList,
                         dupUpdate);
+            default:
+                break;
         }
         throw err("unexpected token for insert: " + lexer.token());
     }

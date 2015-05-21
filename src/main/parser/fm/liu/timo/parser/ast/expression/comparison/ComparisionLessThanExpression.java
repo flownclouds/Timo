@@ -39,4 +39,5 @@ public class ComparisionLessThanExpression extends BinaryOperatorExpression {
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
+
 }

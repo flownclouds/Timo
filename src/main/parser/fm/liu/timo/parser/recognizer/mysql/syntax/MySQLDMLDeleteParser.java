@@ -16,11 +16,7 @@
  */
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_DELETE;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_FROM;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_LIMIT;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_ORDER;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_WHERE;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;

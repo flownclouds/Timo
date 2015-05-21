@@ -1,19 +1,3 @@
-/*
- * Copyright 1999-2012 Alibaba Group.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
- */
-/**
- * (created at 2011-11-9)
- */
 package fm.liu.timo.parser.visitor;
 
 import java.util.Collection;
@@ -24,7 +8,11 @@ import fm.liu.timo.parser.ast.expression.PolyadicOperatorExpression;
 import fm.liu.timo.parser.ast.expression.UnaryOperatorExpression;
 import fm.liu.timo.parser.ast.expression.comparison.BetweenAndExpression;
 import fm.liu.timo.parser.ast.expression.comparison.ComparisionEqualsExpression;
+import fm.liu.timo.parser.ast.expression.comparison.ComparisionGreaterThanExpression;
+import fm.liu.timo.parser.ast.expression.comparison.ComparisionGreaterThanOrEqualsExpression;
 import fm.liu.timo.parser.ast.expression.comparison.ComparisionIsExpression;
+import fm.liu.timo.parser.ast.expression.comparison.ComparisionLessThanExpression;
+import fm.liu.timo.parser.ast.expression.comparison.ComparisionLessThanOrEqualsExpression;
 import fm.liu.timo.parser.ast.expression.comparison.ComparisionNullSafeEqualsExpression;
 import fm.liu.timo.parser.ast.expression.comparison.InExpression;
 import fm.liu.timo.parser.ast.expression.logical.LogicalAndExpression;
@@ -143,10 +131,7 @@ import fm.liu.timo.parser.ast.stmt.mts.MTSSavepointStatement;
 import fm.liu.timo.parser.ast.stmt.mts.MTSSetTransactionStatement;
 import fm.liu.timo.parser.util.Pair;
 
-/**
- * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
- */
-public class Visitor {
+public abstract class Visitor {
 
     @SuppressWarnings({"rawtypes"})
     protected void visitChild(Object obj) {
@@ -219,6 +204,26 @@ public class Visitor {
 
     public void visit(ComparisionNullSafeEqualsExpression node) {
         visit((BinaryOperatorExpression) node);
+    }
+
+    public void visit(ComparisionGreaterThanExpression node) {
+        visitChild(node.getLeftOprand());
+        visitChild(node.getRightOprand());
+    }
+
+    public void visit(ComparisionGreaterThanOrEqualsExpression node) {
+        visitChild(node.getLeftOprand());
+        visitChild(node.getRightOprand());
+    }
+
+    public void visit(ComparisionLessThanExpression node) {
+        visitChild(node.getLeftOprand());
+        visitChild(node.getRightOprand());
+    }
+
+    public void visit(ComparisionLessThanOrEqualsExpression node) {
+        visitChild(node.getLeftOprand());
+        visitChild(node.getRightOprand());
     }
 
     public void visit(InExpression node) {

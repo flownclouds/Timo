@@ -54,4 +54,5 @@ public class LogicalXORExpression extends BinaryOperatorExpression {
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
+
 }

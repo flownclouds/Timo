@@ -16,12 +16,7 @@
  */
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_INTO;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_REPLACE;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.OP_ASSIGN;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.OP_EQUALS;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_COMMA;
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_RIGHT_PAREN;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
@@ -70,6 +65,8 @@ public class MySQLDMLReplaceParser extends MySQLDMLInsertReplaceParser {
             case KW_DELAYED:
                 lexer.nextToken();
                 mode = DMLReplaceStatement.ReplaceMode.DELAY;
+                break;
+            default:
                 break;
         }
         if (lexer.token() == KW_INTO) {
@@ -120,6 +117,8 @@ public class MySQLDMLReplaceParser extends MySQLDMLInsertReplaceParser {
                         select = selectPrimary();
                         match(PUNC_RIGHT_PAREN);
                         return new DMLReplaceStatement(mode, table, columnNameList, select);
+                    default:
+                        break;
                 }
                 columnNameList = idList();
                 match(PUNC_RIGHT_PAREN);
@@ -136,6 +135,8 @@ public class MySQLDMLReplaceParser extends MySQLDMLInsertReplaceParser {
                 }
                 rowList = rowList();
                 return new DMLReplaceStatement(mode, table, columnNameList, rowList);
+            default:
+                break;
         }
         throw err("unexpected token for replace: " + lexer.token());
     }
