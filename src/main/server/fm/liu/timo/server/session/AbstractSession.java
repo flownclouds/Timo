@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import fm.liu.timo.TimoConfig;
 import fm.liu.timo.TimoServer;
+import fm.liu.timo.merger.Merger;
 import fm.liu.timo.mysql.handler.MySQLMultiNodeHandler;
 import fm.liu.timo.mysql.handler.MySQLSingleNodeHandler;
 import fm.liu.timo.net.backend.Node;
@@ -29,8 +30,7 @@ import fm.liu.timo.server.ServerConnection;
 import fm.liu.timo.server.session.handler.ResultHandler;
 
 /**
- * @author Liu Huanting
- * 2015年5月9日
+ * @author Liu Huanting 2015年5月9日
  */
 public class AbstractSession {
     protected final ServerConnection front;
@@ -52,15 +52,15 @@ public class AbstractSession {
     public Collection<BackendConnection> getConnections() {
         return connections.values();
     }
-    
-    public final void offer(BackendConnection con){
+
+    public final void offer(BackendConnection con) {
         connections.put(con.getDatanodeID(), con);
     }
-    
-    public void execute(Outlets outs,int type){
-        ResultHandler handler = chooseHandler(outs,type);
+
+    public void execute(Outlets outs, int type) {
+        ResultHandler handler = chooseHandler(outs, type);
         TimoConfig config = TimoServer.getInstance().getConfig();
-        for(Outlet out:outs.getResult()){
+        for (Outlet out : outs.getResult()) {
             Node node = config.getNodes().get(out.getID());
             BackendConnection con = node.getSource().get();
             con.query(out, handler);
@@ -72,6 +72,6 @@ public class AbstractSession {
         if (1 == size) {
             return new MySQLSingleNodeHandler(this);
         }
-        return new MySQLMultiNodeHandler(this, size);
+        return new MySQLMultiNodeHandler(this, new Merger(outs), size);
     }
 }

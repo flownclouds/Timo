@@ -43,12 +43,20 @@ public class Router {
             return outlets;
         }
         Set<Object> values = visitor.getValues();
+        int info = visitor.getInfo();
+        outlets.setInfo(info);
         switch (type) {
             case ServerParse.SELECT:
                 if (TableType.GLOBAL.equals(table.getType())) {
                     Outlet out = new Outlet(table.getRandomNode(), sql);
                     outlets.add(out);
                     return outlets;
+                }
+                if ((info&Info.HAS_GROUPBY)==Info.HAS_GROUPBY){
+                    outlets.setGroupBy(visitor.getGroupBy());
+                }
+                if((info&Info.HAS_ORDERBY)==Info.HAS_ORDERBY){
+                    outlets.setOrderBy(visitor.getOrderBy());
                 }
         }
         return route(outlets, table, values, sql);

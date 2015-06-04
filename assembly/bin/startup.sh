@@ -33,7 +33,7 @@ JAVA_OPTS="-server -Xms2G -Xmx2G -XX:PermSize=64M -XX:MaxDirectMemorySize=4G"
 #JAVA_OPTS="$JAVA_OPTS -XX:+UseG1GC"
 
 #GC Log Options
-#JAVA_OPTS="$JAVA_OPTS -Xverbosegc:file=/$TIMO_HOME/logs/hotdb.vgc"
+#JAVA_OPTS="$JAVA_OPTS -Xverbosegc:file=/$TIMO_HOME/logs/timo.vgc"
 #JAVA_OPTS="$JAVA_OPTS -Xloggc:/$TIMO_HOME/logs/gc.log"
 #JAVA_OPTS="$JAVA_OPTS -XX:+PrintGCApplicationStoppedTime"
 #JAVA_OPTS="$JAVA_OPTS -XX:+PrintGCTimeStamps"

@@ -13,30 +13,38 @@
  */
 package fm.liu.timo.mysql.handler;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import fm.liu.timo.config.ErrorCode;
+import fm.liu.timo.merger.ColumnInfo;
+import fm.liu.timo.merger.Merger;
 import fm.liu.timo.net.connection.BackendConnection;
 import fm.liu.timo.net.mysql.ErrorPacket;
+import fm.liu.timo.net.mysql.FieldPacket;
 import fm.liu.timo.net.mysql.OkPacket;
+import fm.liu.timo.net.mysql.RowDataPacket;
 import fm.liu.timo.server.ServerConnection;
 import fm.liu.timo.server.session.AbstractSession;
 import fm.liu.timo.server.session.handler.SessionResultHandler;
 import fm.liu.timo.util.StringUtil;
 
 /**
- * @author Liu Huanting
- * 2015年5月9日
+ * @author Liu Huanting 2015年5月9日
  */
 public class MySQLMultiNodeHandler extends SessionResultHandler {
     protected long affectedRows = 0;
     protected long insertId = 0;
     protected boolean returned = false;
+    protected Merger merger;
 
-    public MySQLMultiNodeHandler(AbstractSession session, int size) {
+    public MySQLMultiNodeHandler(AbstractSession session, Merger merger, int size) {
         super.session = session;
         super.count = new AtomicInteger(size);
+        this.merger = merger;
     }
 
     @Override
@@ -101,16 +109,23 @@ public class MySQLMultiNodeHandler extends SessionResultHandler {
                 return;
             }
             returned = true;
+            Map<String, ColumnInfo> columnInfos = new HashMap<String, ColumnInfo>();
             header[3] = ++packetId;
-            ServerConnection source = session.getFront();
-            buffer = source.writeToBuffer(header, allocBuffer());
-            for (int i = 0, len = fields.size(); i < len; ++i) {
+            ServerConnection front = session.getFront();
+            buffer = front.writeToBuffer(header, allocBuffer());
+            int fieldCount = fields.size();
+            for (int i = 0, len = fieldCount; i < len; ++i) {
                 byte[] field = fields.get(i);
+                FieldPacket packet = new FieldPacket();
+                packet.read(field);
+                String column = new String(packet.name).toUpperCase();
+                columnInfos.put(column, new ColumnInfo(i, packet.type));
                 field[3] = ++packetId;
-                buffer = source.writeToBuffer(field, buffer);
+                buffer = front.writeToBuffer(field, buffer);
             }
+            merger.init(columnInfos, fieldCount);
             eof[3] = ++packetId;
-            buffer = source.writeToBuffer(eof, buffer);
+            buffer = front.writeToBuffer(eof, buffer);
         } finally {
             lock.unlock();
         }
@@ -123,8 +138,7 @@ public class MySQLMultiNodeHandler extends SessionResultHandler {
         }
         lock.lock();
         try {
-            row[3] = ++packetId;
-            buffer = session.getFront().writeToBuffer(row, allocBuffer());
+            merger.offer(row);
         } finally {
             lock.unlock();
         }
@@ -139,6 +153,13 @@ public class MySQLMultiNodeHandler extends SessionResultHandler {
                 return;
             }
             ServerConnection front = session.getFront();
+            Iterator<RowDataPacket> itor = merger.getResult().iterator();
+            while(itor.hasNext()){
+                RowDataPacket row = itor.next();
+                itor.remove();
+                row.packetId = ++packetId;
+                buffer = row.write(buffer, front);
+            }
             eof[3] = ++packetId;
             buffer = front.writeToBuffer(eof, allocBuffer());
             front.write(buffer);
@@ -147,12 +168,11 @@ public class MySQLMultiNodeHandler extends SessionResultHandler {
 
     @Override
     public void close(BackendConnection con, String reason) {
-        if(decrement()){
+        if (decrement()) {
             ErrorPacket err = new ErrorPacket();
             err.packetId = ++packetId;
             err.errno = ErrorCode.ER_YES;
-            err.message = StringUtil.encode(reason, session.getFront()
-                    .getCharset());
+            err.message = StringUtil.encode(reason, session.getFront().getCharset());
             err.write(session.getFront());
         }
     }

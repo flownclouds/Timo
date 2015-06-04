@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2012 Alibaba Group.
+ * Copyright 2015 Liu Huanting.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -11,28 +11,19 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package fm.liu.timo.route;
+package fm.liu.timo.merger;
 
 /**
- * @author xianmao.hexm
+ * 字段信息
+ * 
+ * @author Liu Huanting 2015年6月4日
  */
-public class RouteException extends Exception {
-    private static final long serialVersionUID = -5859343132692693104L;
+public class ColumnInfo {
+    public final int index;
+    public final int type;
 
-    public RouteException() {
-        super();
+    public ColumnInfo(int index, int type) {
+        this.index = index;
+        this.type = type;
     }
-
-    public RouteException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public RouteException(String message) {
-        super(message);
-    }
-
-    public RouteException(Throwable cause) {
-        super(cause);
-    }
-
 }

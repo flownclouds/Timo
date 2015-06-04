@@ -14,14 +14,17 @@
 package fm.liu.timo.route;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
- * @author Liu Huanting
- * 2015年5月10日
+ * @author Liu Huanting 2015年5月10日
  */
 public class Outlets {
     private Set<Outlet> outlets;
+    private int info;
+    private Set<String> groupBy;
+    private Map<String, Integer> orderBy;
 
     public Outlets() {
         this.outlets = new HashSet<Outlet>();
@@ -34,8 +37,33 @@ public class Outlets {
     public Set<Outlet> getResult() {
         return outlets;
     }
-    
-    public int size(){
+
+    public int size() {
         return outlets.size();
     }
+
+    public int getInfo() {
+        return info;
+    }
+
+    public void setInfo(int info) {
+        this.info = info;
+    }
+
+    public Set<String> getGroupBy() {
+        return groupBy;
+    }
+
+    public void setGroupBy(Set<String> groupBy) {
+        this.groupBy = groupBy;
+    }
+
+    public Map<String, Integer> getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(Map<String, Integer> orderBy) {
+        this.orderBy = orderBy;
+    }
+
 }
