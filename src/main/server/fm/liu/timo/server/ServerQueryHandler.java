@@ -13,7 +13,7 @@
  */
 package fm.liu.timo.server;
 
-import org.apache.log4j.Logger;
+import org.pmw.tinylog.Logger;
 
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.net.handler.FrontendQueryHandler;
@@ -32,7 +32,6 @@ import fm.liu.timo.server.parser.ServerParse;
  * @author xianmao.hexm
  */
 public class ServerQueryHandler implements FrontendQueryHandler {
-    private static final Logger LOGGER = Logger.getLogger(ServerQueryHandler.class);
 
     private final ServerConnection source;
 
@@ -43,8 +42,8 @@ public class ServerQueryHandler implements FrontendQueryHandler {
     @Override
     public void query(String sql) {
         ServerConnection c = this.source;
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(new StringBuilder().append(c).append(sql).toString());
+        if (Logger.isDebugEnabled()) {
+            Logger.debug(new StringBuilder().append(c).append(sql).toString());
         }
         int rs = ServerParse.parse(sql);
         switch (rs & 0xff) {

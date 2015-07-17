@@ -15,7 +15,7 @@ package fm.liu.timo.manager.response;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.log4j.Logger;
+import org.pmw.tinylog.Logger;
 
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.ErrorCode;
@@ -26,7 +26,6 @@ import fm.liu.timo.net.mysql.OkPacket;
  * @author xianmao.hexm
  */
 public final class RollbackConfig {
-    private static final Logger LOGGER = Logger.getLogger(RollbackConfig.class);
 
     public static void execute(ManagerConnection c) {
         final ReentrantLock lock = TimoServer.getInstance().getConfig().getLock();
@@ -35,7 +34,7 @@ public final class RollbackConfig {
             if (rollback()) {
                 StringBuilder s = new StringBuilder();
                 s.append(c).append("Rollback config success by manager");
-                LOGGER.warn(s.toString());
+                Logger.warn(s.toString());
                 OkPacket ok = new OkPacket();
                 ok.packetId = 1;
                 ok.affectedRows = 1;

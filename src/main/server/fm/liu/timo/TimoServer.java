@@ -21,8 +21,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.helpers.LogLog;
+import org.pmw.tinylog.Logger;
 
 import fm.liu.timo.config.model.SystemConfig;
 import fm.liu.timo.manager.ManagerConnectionFactory;
@@ -45,7 +44,6 @@ public class TimoServer {
     private static final long LOG_WATCH_DELAY = 60000L;
     private static final long TIME_UPDATE_PERIOD = 20L;
     private static final TimoServer INSTANCE = new TimoServer();
-    private static final Logger LOGGER = Logger.getLogger(TimoServer.class);
 
     public static final TimoServer getInstance() {
         return INSTANCE;
@@ -79,22 +77,20 @@ public class TimoServer {
         String home = System.getProperty("TIMO_HOME");
         if (home == null) {
             SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-            LogLog.warn(sdf.format(new Date()) + " [TIMO_HOME] is not set.");
-        } else {
-            Log4jInitializer.configureAndWatch(home + "/conf/log4j.xml", LOG_WATCH_DELAY);
+            Logger.warn(sdf.format(new Date()) + " [TIMO_HOME] is not set.");
         }
     }
 
     public void startup() throws IOException {
         // server startup
-        LOGGER.info("===============================================");
-        LOGGER.info(NAME + " is ready to startup ...");
+        Logger.info("===============================================");
+        Logger.info(NAME + " is ready to startup ...");
         SystemConfig system = config.getSystem();
         timer.schedule(updateTime(), 0L, TIME_UPDATE_PERIOD);
         Variables variables = new Variables();
         variables.setCharset(system.getCharset());
         // startup processors
-        LOGGER.info("Startup processors ...");
+        Logger.info("Startup processors ...");
         int handler = system.getProcessorHandler();
         int executor = system.getProcessorExecutor();
         processors = new NIOProcessor[system.getProcessors()];
@@ -105,17 +101,17 @@ public class TimoServer {
 //        timer.schedule(processorCheck(), 0L, system.getProcessorCheckPeriod());
 
         // startup connector
-        LOGGER.info("Startup connector ...");
+        Logger.info("Startup connector ...");
         connector = new NIOConnector(NAME + "Connector");
         connector.setProcessors(processors);
         connector.start();
 
         // init dataNodes
         Map<Integer, Node> nodes = config.getNodes();
-        LOGGER.info("Initialize dataNodes ...");
+        Logger.info("Initialize dataNodes ...");
         for (Node node : nodes.values()) {
             if(!node.init()){
-                LOGGER.error("node init failed, check your config");
+                Logger.error("node init failed, check your config");
                 System.exit(-1);
             }
         }
@@ -127,7 +123,7 @@ public class TimoServer {
         mf.setIdleTimeout(system.getIdleTimeout());
         manager = new NIOAcceptor(NAME + "Manager", system.getManagerPort(), mf);
         manager.start();
-        LOGGER.info(manager.getName() + " is started and listening on " + manager.getPort());
+        Logger.info(manager.getName() + " is started and listening on " + manager.getPort());
 
         // startup server
         ServerConnectionFactory sf = new ServerConnectionFactory(variables);
@@ -136,8 +132,8 @@ public class TimoServer {
         server.start();
 
         // server started
-        LOGGER.info(server.getName() + " is started and listening on " + server.getPort());
-        LOGGER.info("===============================================");
+        Logger.info(server.getName() + " is started and listening on " + server.getPort());
+        Logger.info("===============================================");
     }
 
     public NIOProcessor[] getProcessors() {

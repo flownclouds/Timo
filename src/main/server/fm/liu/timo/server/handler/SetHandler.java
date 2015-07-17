@@ -18,7 +18,7 @@ import static fm.liu.timo.server.parser.ServerParseSet.CHARACTER_SET_CONNECTION;
 import static fm.liu.timo.server.parser.ServerParseSet.CHARACTER_SET_RESULTS;
 import static fm.liu.timo.server.parser.ServerParseSet.NAMES;
 
-import org.apache.log4j.Logger;
+import org.pmw.tinylog.Logger;
 
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.net.mysql.OkPacket;
@@ -33,7 +33,6 @@ import fm.liu.timo.server.response.CharacterSet;
  */
 public final class SetHandler {
 
-    private static final Logger logger = Logger.getLogger(SetHandler.class);
     private static final byte[] AC_OFF = new byte[] {7, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0};
 
     public static void handle(String stmt, ServerConnection c, int offset) {
@@ -90,7 +89,7 @@ public final class SetHandler {
                 break;
             default:
                 StringBuilder s = new StringBuilder();
-                logger.warn(s.append(c).append(stmt).append(" is not executed").toString());
+                Logger.warn(s.append(c).append(stmt).append(" is not executed").toString());
                 c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));
         }
     }

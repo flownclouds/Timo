@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.apache.log4j.Logger;
+import org.pmw.tinylog.Logger;
 
 import fm.liu.timo.mysql.connection.MySQLConnection;
 import fm.liu.timo.net.connection.AbstractConnection;
@@ -32,7 +32,6 @@ import fm.liu.timo.net.connection.BackendConnection;
  * @author xianmao.hexm
  */
 public final class NIOConnector extends Thread {
-    private static final Logger LOGGER = Logger.getLogger(NIOConnector.class);
     private static final ConnectIdGenerator ID_GENERATOR = new ConnectIdGenerator();
 
     private final String name;
@@ -84,7 +83,7 @@ public final class NIOConnector extends Thread {
                     keys.clear();
                 }
             } catch (Throwable e) {
-                LOGGER.warn(name, e);
+                Logger.warn(name, e);
             }
         }
     }

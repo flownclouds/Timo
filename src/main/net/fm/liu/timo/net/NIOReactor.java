@@ -20,7 +20,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.apache.log4j.Logger;
+import org.pmw.tinylog.Logger;
 
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.net.connection.AbstractConnection;
@@ -31,7 +31,6 @@ import fm.liu.timo.net.connection.AbstractConnection;
  * @author xianmao.hexm
  */
 public final class NIOReactor {
-    private static final Logger LOGGER = Logger.getLogger(NIOReactor.class);
 
     private final String name;
     private final Refactor reactor;
@@ -92,7 +91,7 @@ public final class NIOReactor {
                         }
                     }
                 } catch (Throwable e) {
-                    LOGGER.warn(name, e);
+                    Logger.warn(name, e);
                 } finally {
                     if (keys != null) {
                         keys.clear();

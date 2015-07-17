@@ -16,7 +16,7 @@ package fm.liu.timo.manager.response;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.pmw.tinylog.Logger;
 
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.manager.ManagerConnection;
@@ -31,15 +31,13 @@ import fm.liu.timo.util.SplitUtil;
  */
 public final class KillConnection {
 
-    private static final Logger logger = Logger.getLogger(KillConnection.class);
-
     public static void response(String stmt, int offset, ManagerConnection mc) {
         int count = 0;
         List<FrontendConnection> list = getList(stmt, offset, mc);
         if (list != null)
             for (NIOConnection c : list) {
                 StringBuilder s = new StringBuilder();
-                logger.warn(s.append(c).append("killed by manager").toString());
+                Logger.warn(s.append(c).append("killed by manager").toString());
                 c.close();
                 count++;
             }

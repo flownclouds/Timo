@@ -22,7 +22,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.pmw.tinylog.Logger;
 
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.net.connection.FrontendConnection;
@@ -32,7 +32,6 @@ import fm.liu.timo.net.factory.FrontendConnectionFactory;
  * @author xianmao.hexm
  */
 public final class NIOAcceptor extends Thread {
-    private static final Logger LOGGER = Logger.getLogger(NIOAcceptor.class);
     private static final AcceptIdGenerator ID_GENERATOR = new AcceptIdGenerator();
 
     private final int port;
@@ -80,7 +79,7 @@ public final class NIOAcceptor extends Thread {
                     keys.clear();
                 }
             } catch (Throwable e) {
-                LOGGER.warn(getName(), e);
+                Logger.warn(getName(), e);
             }
         }
     }
@@ -98,7 +97,7 @@ public final class NIOAcceptor extends Thread {
             processor.postRegister(c);
         } catch (Throwable e) {
             closeChannel(channel);
-            LOGGER.warn(getName(), e);
+            Logger.warn(getName(), e);
         }
     }
 

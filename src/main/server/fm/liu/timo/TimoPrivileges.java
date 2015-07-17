@@ -15,8 +15,6 @@ package fm.liu.timo;
 
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 import fm.liu.timo.config.model.User;
 import fm.liu.timo.net.handler.FrontendPrivileges;
 
@@ -24,7 +22,6 @@ import fm.liu.timo.net.handler.FrontendPrivileges;
  * @author xianmao.hexm
  */
 public class TimoPrivileges implements FrontendPrivileges {
-    private static final Logger ALARM = Logger.getLogger("alarm");
 
     @Override
     public boolean schemaExists(String db) {

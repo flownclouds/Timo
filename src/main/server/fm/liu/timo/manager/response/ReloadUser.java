@@ -13,7 +13,7 @@
  */
 package fm.liu.timo.manager.response;
 
-import org.apache.log4j.Logger;
+import org.pmw.tinylog.Logger;
 
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.manager.ManagerConnection;
@@ -24,14 +24,12 @@ import fm.liu.timo.net.mysql.OkPacket;
  */
 public final class ReloadUser {
 
-    private static final Logger logger = Logger.getLogger(ReloadUser.class);
-
     public static void execute(ManagerConnection c) {
         boolean status = false;
         if (status) {
             StringBuilder s = new StringBuilder();
             s.append(c).append("Reload userConfig success by manager");
-            logger.warn(s.toString());
+            Logger.warn(s.toString());
             OkPacket ok = new OkPacket();
             ok.packetId = 1;
             ok.affectedRows = 1;

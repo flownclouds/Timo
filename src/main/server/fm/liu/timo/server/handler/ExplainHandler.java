@@ -19,7 +19,7 @@ package fm.liu.timo.server.handler;
 import java.nio.ByteBuffer;
 import java.sql.SQLNonTransientException;
 
-import org.apache.log4j.Logger;
+import org.pmw.tinylog.Logger;
 
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.ErrorCode;
@@ -42,7 +42,6 @@ import fm.liu.timo.util.StringUtil;
  */
 public class ExplainHandler {
 
-    private static final Logger logger = Logger.getLogger(ExplainHandler.class);
     private static final int FIELD_COUNT = 2;
     private static final FieldPacket[] fields = new FieldPacket[FIELD_COUNT];
     static {
@@ -116,7 +115,7 @@ public class ExplainHandler {
             return Router.route(database, stmt, c.getCharset(), sqlType);
         } catch (SQLNonTransientException e) {
             StringBuilder s = new StringBuilder();
-            logger.warn(s.append(c).append(stmt).toString(), e);
+            Logger.warn(s.append(c).append(stmt).toString(), e);
             String msg = e.getMessage();
             c.writeErrMessage(ErrorCode.ER_PARSE_ERROR, msg == null ? e.getClass().getSimpleName()
                     : msg);

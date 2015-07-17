@@ -13,7 +13,7 @@
  */
 package fm.liu.timo.server.response;
 
-import org.apache.log4j.Logger;
+import org.pmw.tinylog.Logger;
 
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.ErrorCode;
@@ -25,7 +25,6 @@ import fm.liu.timo.util.TimeUtil;
 
 public class Heartbeat {
 
-    private static final Logger HEARTBEAT = Logger.getLogger("heartbeat");
 
     public static void response(ServerConnection c, byte[] data) {
         HeartbeatPacket hp = new HeartbeatPacket();
@@ -36,8 +35,8 @@ public class Heartbeat {
             ok.affectedRows = hp.id;
             ok.serverStatus = 2;
             ok.write(c);
-            if (HEARTBEAT.isInfoEnabled()) {
-                HEARTBEAT.info(responseMessage("OK", c, hp.id));
+            if (Logger.isInfoEnabled()) {
+                Logger.info(responseMessage("OK", c, hp.id));
             }
         } else {
             ErrorPacket error = new ErrorPacket();
@@ -45,8 +44,8 @@ public class Heartbeat {
             error.errno = ErrorCode.ER_SERVER_SHUTDOWN;
             error.message = String.valueOf(hp.id).getBytes();
             error.write(c);
-            if (HEARTBEAT.isInfoEnabled()) {
-                HEARTBEAT.info(responseMessage("ERROR", c, hp.id));
+            if (Logger.isInfoEnabled()) {
+                Logger.info(responseMessage("ERROR", c, hp.id));
             }
         }
     }

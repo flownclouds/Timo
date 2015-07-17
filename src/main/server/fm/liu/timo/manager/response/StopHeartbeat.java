@@ -13,8 +13,6 @@
  */
 package fm.liu.timo.manager.response;
 
-import org.apache.log4j.Logger;
-
 import fm.liu.timo.manager.ManagerConnection;
 import fm.liu.timo.net.mysql.OkPacket;
 
@@ -24,8 +22,6 @@ import fm.liu.timo.net.mysql.OkPacket;
  * @author xianmao.hexm
  */
 public final class StopHeartbeat {
-
-    private static final Logger logger = Logger.getLogger(StopHeartbeat.class);
 
     public static void execute(String stmt, ManagerConnection c) {
         int count = 0;

@@ -16,7 +16,7 @@ package fm.liu.timo;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.log4j.helpers.LogLog;
+import org.pmw.tinylog.Logger;
 
 /**
  * @author xianmao.hexm 2011-4-22 下午09:43:05
@@ -34,7 +34,7 @@ public final class TimoStartup {
             server.startup();
         } catch (Throwable e) {
             SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-            LogLog.error(sdf.format(new Date()) + " startup error", e);
+            Logger.error(sdf.format(new Date()) + " startup error", e);
             System.exit(-1);
         }
     }

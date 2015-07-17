@@ -17,7 +17,7 @@ import static fm.liu.timo.server.parser.ServerParseSet.CHARACTER_SET_CLIENT;
 import static fm.liu.timo.server.parser.ServerParseSet.CHARACTER_SET_CONNECTION;
 import static fm.liu.timo.server.parser.ServerParseSet.CHARACTER_SET_RESULTS;
 
-import org.apache.log4j.Logger;
+import org.pmw.tinylog.Logger;
 
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.net.mysql.OkPacket;
@@ -29,8 +29,6 @@ import fm.liu.timo.util.SplitUtil;
  * 字符集属性设置
  */
 public class CharacterSet {
-
-    private static final Logger logger = Logger.getLogger(CharacterSet.class);
 
     public static void response(String stmt, ServerConnection c, int rs) {
         if (-1 == stmt.indexOf(',')) {
@@ -97,7 +95,7 @@ public class CharacterSet {
                     break;
                 default:
                     StringBuilder s = new StringBuilder();
-                    logger.warn(s.append(c).append(sql).append(" is not executed").toString());
+                    Logger.warn(s.append(c).append(sql).append(" is not executed").toString());
             }
         }
 

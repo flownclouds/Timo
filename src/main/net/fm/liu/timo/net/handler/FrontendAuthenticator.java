@@ -17,7 +17,7 @@ import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.pmw.tinylog.Logger;
 
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.mysql.SecurityUtil;
@@ -33,7 +33,6 @@ import fm.liu.timo.net.mysql.QuitPacket;
  * @author xianmao.hexm
  */
 public class FrontendAuthenticator implements NIOHandler {
-    private static final Logger LOGGER = Logger.getLogger(FrontendAuthenticator.class);
     private static final byte[] AUTH_OK = new byte[] {7, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0};
 
     protected final FrontendConnection source;
@@ -105,7 +104,7 @@ public class FrontendAuthenticator implements NIOHandler {
         try {
             encryptPass = SecurityUtil.scramble411(pass.getBytes(), source.getSeed());
         } catch (NoSuchAlgorithmException e) {
-            LOGGER.warn(source.toString(), e);
+            Logger.warn(source.toString(), e);
             return false;
         }
         if (encryptPass != null && (encryptPass.length == password.length)) {
@@ -144,21 +143,21 @@ public class FrontendAuthenticator implements NIOHandler {
         source.setDB(auth.database);
         source.setCharsetIndex(auth.charsetIndex);
         source.setHandler(new FrontendCommandHandler(source));
-        if (LOGGER.isInfoEnabled()) {
+        if (Logger.isInfoEnabled()) {
             StringBuilder s = new StringBuilder();
             s.append(source).append('\'').append(auth.user).append("' login success");
             byte[] extra = auth.extra;
             if (extra != null && extra.length > 0) {
                 s.append(",extra:").append(new String(extra));
             }
-            LOGGER.info(s.toString());
+            Logger.info(s.toString());
         }
         ByteBuffer buffer = source.allocate();
         source.write(source.writeToBuffer(AUTH_OK, buffer));
     }
 
     protected void failure(int errno, String info) {
-        LOGGER.error(source.toString() + info);
+        Logger.error(source.toString() + info);
         source.writeErrMessage((byte) 2, errno, info);
     }
 

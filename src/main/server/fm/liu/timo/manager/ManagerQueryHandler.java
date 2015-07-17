@@ -13,7 +13,7 @@
  */
 package fm.liu.timo.manager;
 
-import org.apache.log4j.Logger;
+import org.pmw.tinylog.Logger;
 
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.manager.handler.ClearHandler;
@@ -34,7 +34,6 @@ import fm.liu.timo.net.mysql.OkPacket;
  * @author xianmao.hexm
  */
 public class ManagerQueryHandler implements FrontendQueryHandler {
-    private static final Logger LOGGER = Logger.getLogger(ManagerQueryHandler.class);
 
     private final ManagerConnection source;
 
@@ -45,8 +44,8 @@ public class ManagerQueryHandler implements FrontendQueryHandler {
     @Override
     public void query(String sql) {
         ManagerConnection c = this.source;
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(new StringBuilder().append(c).append(sql).toString());
+        if (Logger.isDebugEnabled()) {
+            Logger.debug(new StringBuilder().append(c).append(sql).toString());
         }
         int rs = ManagerParse.parse(sql);
         switch (rs & 0xff) {
