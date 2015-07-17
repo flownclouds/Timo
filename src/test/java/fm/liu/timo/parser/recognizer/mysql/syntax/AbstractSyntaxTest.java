@@ -14,7 +14,7 @@
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
 import fm.liu.timo.parser.ast.ASTNode;
-import fm.liu.timo.parser.visitor.MySQLOutputASTVisitor;
+import fm.liu.timo.parser.visitor.OutputVisitor;
 import junit.framework.TestCase;
 
 public abstract class AbstractSyntaxTest extends TestCase {
@@ -22,7 +22,7 @@ public abstract class AbstractSyntaxTest extends TestCase {
 
     protected String output2MySQL(ASTNode node, String sql) {
         StringBuilder sb = new StringBuilder(sql.length());
-        node.accept(new MySQLOutputASTVisitor(sb));
+        node.accept(new OutputVisitor(sb, false));
         if (debug) {
             System.out.println(getClass().getName() + "'s testcase: ");
             System.out.println("    " + sql);

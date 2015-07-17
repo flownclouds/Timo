@@ -25,8 +25,6 @@ import fm.liu.timo.parser.ast.expression.misc.QueryExpression;
 import fm.liu.timo.parser.ast.stmt.dml.DMLSelectStatement;
 import fm.liu.timo.parser.ast.stmt.dml.DMLSelectUnionStatement;
 import fm.liu.timo.parser.recognizer.mysql.lexer.MySQLLexer;
-import fm.liu.timo.parser.recognizer.mysql.syntax.MySQLDMLSelectParser;
-import fm.liu.timo.parser.recognizer.mysql.syntax.MySQLExprParser;
 
 /**
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
