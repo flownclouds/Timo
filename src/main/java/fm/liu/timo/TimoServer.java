@@ -14,8 +14,6 @@
 package fm.liu.timo;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -41,7 +39,6 @@ import fm.liu.timo.util.TimeUtil;
  */
 public class TimoServer {
     public static final String NAME = "Timo";
-    private static final long LOG_WATCH_DELAY = 60000L;
     private static final long TIME_UPDATE_PERIOD = 20L;
     private static final TimoServer INSTANCE = new TimoServer();
 
@@ -71,14 +68,6 @@ public class TimoServer {
 
     public TimoConfig getConfig() {
         return config;
-    }
-
-    public void beforeStart(String dateFormat) {
-        String home = System.getProperty("TIMO_HOME");
-        if (home == null) {
-            SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-            Logger.warn(sdf.format(new Date()) + " [TIMO_HOME] is not set.");
-        }
     }
 
     public void startup() throws IOException {

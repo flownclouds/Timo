@@ -28,8 +28,6 @@ public final class TimoStartup {
         try {
             // init
             TimoServer server = TimoServer.getInstance();
-            server.beforeStart(dateFormat);
-
             // startup
             server.startup();
         } catch (Throwable e) {
