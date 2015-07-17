@@ -150,8 +150,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
         Assert.assertEquals("insert into wp_image (member_id,gmt) values ('pavarotti17',now())",
                 rrs.getNodes()[0].getStatement());
 
-        sql =
-                "insert low_priority into offer set offer_id=123,  group_id=234,gmt=now() on duplicate key update `dual`=1";
+        sql = "insert low_priority into offer set offer_id=123,  group_id=234,gmt=now() on duplicate key update `dual`=1";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(1, rrs.getNodes().length);
@@ -174,8 +173,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
         Assert.assertEquals("update ignore wp_image set name='abc',gmt=now()where `select`='abc'",
                 rrs.getNodes()[0].getStatement());
 
-        sql =
-                "delete from offer.*,wp_image.* using offer a,wp_image b where a.member_id=b.member_id and a.member_id='abc' ";
+        sql = "delete from offer.*,wp_image.* using offer a,wp_image b where a.member_id=b.member_id and a.member_id='abc' ";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(1, rrs.getNodes().length);
@@ -313,8 +311,8 @@ public class ServerRouteTest extends AbstractAliasConvert {
             return this;
         }
 
-        public SimpleSQLAsserter addExpectSQL(int nodeIndex, String prefix,
-                PermutationGenerator pg, String suffix) {
+        public SimpleSQLAsserter addExpectSQL(int nodeIndex, String prefix, PermutationGenerator pg,
+                String suffix) {
             Set<String> ss = pg.permutateSQL();
             for (String s : ss) {
                 addExpectSQL(nodeIndex, prefix + s + suffix);
@@ -389,9 +387,9 @@ public class ServerRouteTest extends AbstractAliasConvert {
         NodeNameAsserter nameAsserter = new NodeNameAsserter("offer_dn[123]", "offer_dn[66]");
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         SimpleSQLAsserter sqlAsserter = new SimpleSQLAsserter();
-        sqlAsserter.addExpectSQL(0,
-                "SELECT * FROM wp_image WHERE member_id = 'pavarotti17' OR FALSE").addExpectSQL(1,
-                "SELECT * FROM wp_image WHERE FALSE OR member_id = '1qq'");
+        sqlAsserter
+                .addExpectSQL(0, "SELECT * FROM wp_image WHERE member_id = 'pavarotti17' OR FALSE")
+                .addExpectSQL(1, "SELECT * FROM wp_image WHERE FALSE OR member_id = '1qq'");
         RouteNodeAsserter asserter = new RouteNodeAsserter(nameAsserter, sqlAsserter);
         for (RouteResultsetNode node : nodeMap.values()) {
             asserter.assertNode(node);
@@ -435,7 +433,8 @@ public class ServerRouteTest extends AbstractAliasConvert {
         Assert.assertEquals((int) RouteResultsetNode.DEFAULT_REPLICA_INDEX,
                 rrs.getNodes()[0].getReplicaIndex());
         Assert.assertEquals("cndb_dn", rrs.getNodes()[0].getName());
-        Assert.assertEquals("select * from tb where member='abc'", rrs.getNodes()[0].getStatement());
+        Assert.assertEquals("select * from tb where member='abc'",
+                rrs.getNodes()[0].getStatement());
 
         sql = "select * from offer.wp_image where member_id is null";
         schema = schemaMap.get("cndb");
@@ -448,8 +447,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
         Assert.assertEquals("SELECT * FROM wp_image WHERE member_id IS NULL",
                 rrs.getNodes()[0].getStatement());
 
-        sql =
-                "select * from offer.wp_image where member_id between 'pavarotti17' and 'pavarotti17'";
+        sql = "select * from offer.wp_image where member_id between 'pavarotti17' and 'pavarotti17'";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(1, rrs.getNodes().length);
@@ -461,8 +459,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
                 "SELECT * FROM wp_image WHERE member_id BETWEEN 'pavarotti17' AND 'pavarotti17'",
                 rrs.getNodes()[0].getStatement());
 
-        sql =
-                "select * from  offer A where a.member_id='abc' union select * from product_visit b where B.offer_id =123";
+        sql = "select * from  offer A where a.member_id='abc' union select * from product_visit b where B.offer_id =123";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(128, rrs.getNodes().length);
@@ -476,8 +473,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
                     rrs.getNodes()[i].getStatement());
         }
 
-        sql =
-                "update offer.offer a join offer_detail b set id=123 where a.offer_id=b.offer_id and a.offer_id=123 and group_id=234";
+        sql = "update offer.offer a join offer_detail b set id=123 where a.offer_id=b.offer_id and a.offer_id=123 and group_id=234";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(1, rrs.getNodes().length);
@@ -486,15 +482,12 @@ public class ServerRouteTest extends AbstractAliasConvert {
                 rrs.getNodes()[0].getReplicaIndex());
         Assert.assertEquals("offer_dn[44]", rrs.getNodes()[0].getName());
         Assert.assertEquals(
-                "UPDATE offer AS "
-                        + aliasConvert("a")
-                        + " INNER JOIN offer_detail AS "
+                "UPDATE offer AS " + aliasConvert("a") + " INNER JOIN offer_detail AS "
                         + aliasConvert("b")
                         + " SET id = 123 WHERE a.offer_id = b.offer_id AND a.offer_id = 123 AND group_id = 234",
                 rrs.getNodes()[0].getStatement());
 
-        sql =
-                "update    offer./*kjh*/offer a join offer_detail B set id:=123 where A.offer_id=b.offer_id and b.offer_id=123 and group_id=234";
+        sql = "update    offer./*kjh*/offer a join offer_detail B set id:=123 where A.offer_id=b.offer_id and b.offer_id=123 and group_id=234";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(1, rrs.getNodes().length);
@@ -503,15 +496,12 @@ public class ServerRouteTest extends AbstractAliasConvert {
                 rrs.getNodes()[0].getReplicaIndex());
         Assert.assertEquals("detail_dn[15]", rrs.getNodes()[0].getName());
         Assert.assertEquals(
-                "UPDATE offer AS "
-                        + aliasConvert("a")
-                        + " INNER JOIN offer_detail AS "
+                "UPDATE offer AS " + aliasConvert("a") + " INNER JOIN offer_detail AS "
                         + aliasConvert("b")
                         + " SET id = 123 WHERE A.offer_id = b.offer_id AND b.offer_id = 123 AND group_id = 234",
                 rrs.getNodes()[0].getStatement());
 
-        sql =
-                "select * from offer.wp_image where member_id in ('pavarotti17', 'qaa') or offer.wp_image.member_id='1qq'";
+        sql = "select * from offer.wp_image where member_id in ('pavarotti17', 'qaa') or offer.wp_image.member_id='1qq'";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1l, rrs.getLimitSize());
@@ -523,14 +513,14 @@ public class ServerRouteTest extends AbstractAliasConvert {
                 .addExpectSQL(0,
                         "SELECT * FROM wp_image WHERE member_id IN ('pavarotti17') OR FALSE")
                 .addExpectSQL(1, "SELECT * FROM wp_image WHERE member_id IN ('qaa') OR FALSE")
-                .addExpectSQL(2, "SELECT * FROM wp_image WHERE FALSE OR wp_image.member_id = '1qq'");
+                .addExpectSQL(2,
+                        "SELECT * FROM wp_image WHERE FALSE OR wp_image.member_id = '1qq'");
         asserter = new RouteNodeAsserter(nameAsserter, sqlAsserter);
         for (RouteResultsetNode node : nodeMap.values()) {
             asserter.assertNode(node);
         }
 
-        sql =
-                "select * from offer.wp_image,tb2 as t2 where member_id in ('pavarotti17', 'qaa') or offer.wp_image.member_id='1qq'";
+        sql = "select * from offer.wp_image,tb2 as t2 where member_id in ('pavarotti17', 'qaa') or offer.wp_image.member_id='1qq'";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(3, rrs.getNodes().length);
@@ -541,60 +531,48 @@ public class ServerRouteTest extends AbstractAliasConvert {
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         sqlAsserter
-                .addExpectSQL(
-                        0,
+                .addExpectSQL(0,
                         "SELECT * FROM wp_image, tb2 AS " + aliasConvert("t2")
                                 + " WHERE member_id IN ('pavarotti17') OR FALSE")
-                .addExpectSQL(
-                        1,
+                .addExpectSQL(1,
                         "SELECT * FROM wp_image, tb2 AS " + aliasConvert("t2")
                                 + " WHERE member_id IN ('qaa') OR FALSE")
-                .addExpectSQL(
-                        2,
-                        "SELECT * FROM wp_image, tb2 AS " + aliasConvert("t2")
-                                + " WHERE FALSE OR wp_image.member_id = '1qq'");
+                .addExpectSQL(2, "SELECT * FROM wp_image, tb2 AS " + aliasConvert("t2")
+                        + " WHERE FALSE OR wp_image.member_id = '1qq'");
         asserter = new RouteNodeAsserter(nameAsserter, sqlAsserter);
         for (RouteResultsetNode node : nodeMap.values()) {
             asserter.assertNode(node);
         }
 
-        sql =
-                "select * from offer.wp_image,tb2 as t2 where member_id in ('pavarotti17', 'sf', 's22f', 'sdddf', 'sd') ";
+        sql = "select * from offer.wp_image,tb2 as t2 where member_id in ('pavarotti17', 'sf', 's22f', 'sdddf', 'sd') ";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1l, rrs.getLimitSize());
         nodeMap = getNodeMap(rrs, 4);
-        nameAsserter =
-                new NodeNameAsserter("offer_dn[123]", "offer_dn[126]", "offer_dn[74]",
-                        "offer_dn[26]");
+        nameAsserter = new NodeNameAsserter("offer_dn[123]", "offer_dn[126]", "offer_dn[74]",
+                "offer_dn[26]");
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         sqlAsserter
-                .addExpectSQL(
-                        0,
+                .addExpectSQL(0,
                         "SELECT * FROM wp_image, tb2 AS " + aliasConvert("t2")
                                 + " WHERE member_id IN ('pavarotti17')")
-                .addExpectSQL(
-                        1,
+                .addExpectSQL(1,
                         "SELECT * FROM wp_image, tb2 AS " + aliasConvert("t2")
                                 + " WHERE member_id IN ('sdddf')")
-                .addExpectSQL(
-                        2,
+                .addExpectSQL(2,
                         "SELECT * FROM wp_image, tb2 AS " + aliasConvert("t2")
                                 + " WHERE member_id IN ('sf', 'sd')",
                         "SELECT * FROM wp_image, tb2 AS " + aliasConvert("t2")
                                 + " WHERE member_id IN ('sd', 'sf')")
-                .addExpectSQL(
-                        3,
-                        "SELECT * FROM wp_image, tb2 AS " + aliasConvert("t2")
-                                + " WHERE member_id IN ('s22f')");
+                .addExpectSQL(3, "SELECT * FROM wp_image, tb2 AS " + aliasConvert("t2")
+                        + " WHERE member_id IN ('s22f')");
         asserter = new RouteNodeAsserter(nameAsserter, sqlAsserter);
         for (RouteResultsetNode node : nodeMap.values()) {
             asserter.assertNode(node);
         }
 
-        sql =
-                "select * from tb2 as t2 ,offer.wp_image where member_id in ('pavarotti17', 'qaa') or offer.wp_image.member_id='1qq'";
+        sql = "select * from tb2 as t2 ,offer.wp_image where member_id in ('pavarotti17', 'qaa') or offer.wp_image.member_id='1qq'";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1l, rrs.getLimitSize());
@@ -603,25 +581,20 @@ public class ServerRouteTest extends AbstractAliasConvert {
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         sqlAsserter
-                .addExpectSQL(
-                        0,
+                .addExpectSQL(0,
                         "SELECT * FROM tb2 AS " + aliasConvert("t2")
                                 + ", wp_image WHERE member_id IN ('pavarotti17') OR FALSE")
-                .addExpectSQL(
-                        1,
+                .addExpectSQL(1,
                         "SELECT * FROM tb2 AS " + aliasConvert("t2")
                                 + ", wp_image WHERE member_id IN ('qaa') OR FALSE")
-                .addExpectSQL(
-                        2,
-                        "SELECT * FROM tb2 AS " + aliasConvert("t2")
-                                + ", wp_image WHERE FALSE OR wp_image.member_id = '1qq'");
+                .addExpectSQL(2, "SELECT * FROM tb2 AS " + aliasConvert("t2")
+                        + ", wp_image WHERE FALSE OR wp_image.member_id = '1qq'");
         asserter = new RouteNodeAsserter(nameAsserter, sqlAsserter);
         for (RouteResultsetNode node : nodeMap.values()) {
             asserter.assertNode(node);
         }
 
-        sql =
-                "select * from tb2 as t2 ,offer.wp_image where member_id in ('pavarotti17', 'qaa') or offer.wp_image.member_id='1qq' and t2.member_id='123'";
+        sql = "select * from tb2 as t2 ,offer.wp_image where member_id in ('pavarotti17', 'qaa') or offer.wp_image.member_id='1qq' and t2.member_id='123'";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1l, rrs.getLimitSize());
@@ -630,28 +603,20 @@ public class ServerRouteTest extends AbstractAliasConvert {
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         sqlAsserter
-                .addExpectSQL(
-                        0,
-                        "SELECT * FROM tb2 AS "
-                                + aliasConvert("t2")
+                .addExpectSQL(0,
+                        "SELECT * FROM tb2 AS " + aliasConvert("t2")
                                 + ", wp_image WHERE member_id IN ('pavarotti17') OR FALSE AND t2.member_id = '123'")
-                .addExpectSQL(
-                        1,
-                        "SELECT * FROM tb2 AS "
-                                + aliasConvert("t2")
+                .addExpectSQL(1,
+                        "SELECT * FROM tb2 AS " + aliasConvert("t2")
                                 + ", wp_image WHERE member_id IN ('qaa') OR FALSE AND t2.member_id = '123'")
-                .addExpectSQL(
-                        2,
-                        "SELECT * FROM tb2 AS "
-                                + aliasConvert("t2")
-                                + ", wp_image WHERE FALSE OR wp_image.member_id = '1qq' AND t2.member_id = '123'");
+                .addExpectSQL(2, "SELECT * FROM tb2 AS " + aliasConvert("t2")
+                        + ", wp_image WHERE FALSE OR wp_image.member_id = '1qq' AND t2.member_id = '123'");
         asserter = new RouteNodeAsserter(nameAsserter, sqlAsserter);
         for (RouteResultsetNode node : nodeMap.values()) {
             asserter.assertNode(node);
         }
 
-        sql =
-                "select * from wp_image wB inner join offer.offer o on wB.member_id=O.member_ID where wB.member_iD='pavarotti17' and o.id=3";
+        sql = "select * from wp_image wB inner join offer.offer o on wB.member_id=O.member_ID where wB.member_iD='pavarotti17' and o.id=3";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1l, rrs.getLimitSize());
@@ -659,13 +624,13 @@ public class ServerRouteTest extends AbstractAliasConvert {
         Assert.assertEquals((int) RouteResultsetNode.DEFAULT_REPLICA_INDEX,
                 rrs.getNodes()[0].getReplicaIndex());
         Assert.assertEquals("offer_dn[123]", rrs.getNodes()[0].getName());
-        Assert.assertEquals("SELECT * FROM wp_image AS " + aliasConvert("wB")
-                + " INNER JOIN offer AS " + aliasConvert("o")
-                + " ON wB.member_id = O.member_ID WHERE wB.member_iD = 'pavarotti17' AND o.id = 3",
+        Assert.assertEquals(
+                "SELECT * FROM wp_image AS " + aliasConvert("wB") + " INNER JOIN offer AS "
+                        + aliasConvert("o")
+                        + " ON wB.member_id = O.member_ID WHERE wB.member_iD = 'pavarotti17' AND o.id = 3",
                 rrs.getNodes()[0].getStatement());
 
-        sql =
-                "select * from wp_image w inner join offer o on w.member_id=O.member_ID where w.member_iD in ('pavarotti17','13') and o.id=3";
+        sql = "select * from wp_image w inner join offer o on w.member_id=O.member_ID where w.member_iD in ('pavarotti17','13') and o.id=3";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1l, rrs.getLimitSize());
@@ -674,20 +639,15 @@ public class ServerRouteTest extends AbstractAliasConvert {
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         sqlAsserter
-                .addExpectSQL(
-                        0,
-                        "SELECT * FROM wp_image AS "
-                                + aliasConvert("w")
-                                + " INNER JOIN offer AS "
+                .addExpectSQL(0,
+                        "SELECT * FROM wp_image AS " + aliasConvert("w") + " INNER JOIN offer AS "
                                 + aliasConvert("o")
                                 + " ON w.member_id = O.member_ID WHERE w.member_iD IN ('pavarotti17') AND o.id = 3")
-                .addExpectSQL(
-                        1,
-                        "SELECT * FROM wp_image AS "
-                                + aliasConvert("w")
-                                + " INNER JOIN offer AS "
-                                + aliasConvert("o")
-                                + " ON w.member_id = O.member_ID WHERE w.member_iD IN ('13') AND o.id = 3");
+                .addExpectSQL(1,
+                        "SELECT * FROM wp_image AS " + aliasConvert("w") + " INNER JOIN offer AS "
+                                + aliasConvert(
+                                        "o")
+                        + " ON w.member_id = O.member_ID WHERE w.member_iD IN ('13') AND o.id = 3");
         asserter = new RouteNodeAsserter(nameAsserter, sqlAsserter);
         for (RouteResultsetNode node : nodeMap.values()) {
             asserter.assertNode(node);
@@ -701,8 +661,9 @@ public class ServerRouteTest extends AbstractAliasConvert {
         nameAsserter = new NodeNameAsserter("offer_dn[123]", "offer_dn[70]");
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
-        sqlAsserter.addExpectSQL(0,
-                "INSERT INTO wp_image (member_id, gmt) VALUES ('pavarotti17', NOW())")
+        sqlAsserter
+                .addExpectSQL(0,
+                        "INSERT INTO wp_image (member_id, gmt) VALUES ('pavarotti17', NOW())")
                 .addExpectSQL(1, "INSERT INTO wp_image (member_id, gmt) VALUES ('123', NOW())");
         asserter = new RouteNodeAsserter(nameAsserter, sqlAsserter);
         for (RouteResultsetNode node : nodeMap.values()) {
@@ -733,8 +694,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "insert into wp_image (id, member_id, gmt) values (1,'pavarotti17',now()),(2,'pavarotti17',now()),(3,'qaa',now())";
+        sql = "insert into wp_image (id, member_id, gmt) values (1,'pavarotti17',now()),(2,'pavarotti17',now()),(3,'qaa',now())";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1l, rrs.getLimitSize());
@@ -743,8 +703,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         sqlAsserter
-                .addExpectSQL(
-                        0,
+                .addExpectSQL(0,
                         "INSERT INTO wp_image (id, member_id, gmt) VALUES (2, 'pavarotti17', NOW()), (1, 'pavarotti17', NOW())",
                         "INSERT INTO wp_image (id, member_id, gmt) VALUES (1, 'pavarotti17', NOW()), (2, 'pavarotti17', NOW())")
                 .addExpectSQL(1,
@@ -754,8 +713,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "select * from offer.wp_image where member_id in ('pavarotti17','pavarotti17', 'qaa') or offer.wp_image.member_id='pavarotti17'";
+        sql = "select * from offer.wp_image where member_id in ('pavarotti17','pavarotti17', 'qaa') or offer.wp_image.member_id='pavarotti17'";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1l, rrs.getLimitSize());
@@ -765,8 +723,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         sqlAsserter
-                .addExpectSQL(
-                        0,
+                .addExpectSQL(0,
                         "SELECT * FROM wp_image WHERE member_id IN ('pavarotti17', 'pavarotti17') OR wp_image.member_id = 'pavarotti17'")
                 .addExpectSQL(1, "SELECT * FROM wp_image WHERE member_id IN ('qaa') OR FALSE");
         asserter = new RouteNodeAsserter(nameAsserter, sqlAsserter);
@@ -774,8 +731,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "select * from offer.`wp_image` where `member_id` in ('pavarotti17','pavarotti17', 'qaa') or member_id in ('pavarotti17','1qq','pavarotti17') or offer.wp_image.member_id='pavarotti17'";
+        sql = "select * from offer.`wp_image` where `member_id` in ('pavarotti17','pavarotti17', 'qaa') or member_id in ('pavarotti17','1qq','pavarotti17') or offer.wp_image.member_id='pavarotti17'";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1l, rrs.getLimitSize());
@@ -785,8 +741,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         sqlAsserter
-                .addExpectSQL(
-                        0,
+                .addExpectSQL(0,
                         "SELECT * FROM `wp_image` WHERE `member_id` IN ('pavarotti17', 'pavarotti17') OR member_id IN ('pavarotti17', 'pavarotti17') OR wp_image.member_id = 'pavarotti17'")
                 .addExpectSQL(1,
                         "SELECT * FROM `wp_image` WHERE `member_id` IN ('qaa') OR FALSE OR FALSE")
@@ -797,74 +752,63 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "insert into offer_detail (offer_id, gmt) values (123,now()),(123,now()+1),(234,now()),(123,now()),(345,now()),(122+1,now()),(456,now())";
+        sql = "insert into offer_detail (offer_id, gmt) values (123,now()),(123,now()+1),(234,now()),(123,now()),(345,now()),(122+1,now()),(456,now())";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1l, rrs.getLimitSize());
         nodeMap = getNodeMap(rrs, 4);
-        nameAsserter =
-                new NodeNameAsserter("detail_dn[29]", "detail_dn[43]", "detail_dn[57]",
-                        "detail_dn[15]");
+        nameAsserter = new NodeNameAsserter("detail_dn[29]", "detail_dn[43]", "detail_dn[57]",
+                "detail_dn[15]");
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
-        sqlAsserter
-                .addExpectSQL(0, "INSERT INTO offer_detail (offer_id, gmt) VALUES (234, NOW())")
+        sqlAsserter.addExpectSQL(0, "INSERT INTO offer_detail (offer_id, gmt) VALUES (234, NOW())")
                 .addExpectSQL(1, "INSERT INTO offer_detail (offer_id, gmt) VALUES (345, NOW())")
                 .addExpectSQL(2, "INSERT INTO offer_detail (offer_id, gmt) VALUES (456, NOW())")
-                .addExpectSQL(
-                        3,
-                        "INSERT INTO offer_detail (offer_id, gmt) VALUES ",
+                .addExpectSQL(3, "INSERT INTO offer_detail (offer_id, gmt) VALUES ",
                         new PermutationGenerator("(123, NOW())", "(123, NOW() + 1)",
-                                "(122 + 1, NOW())", "(123, NOW())").setDelimiter(", "), "");
+                                "(122 + 1, NOW())", "(123, NOW())").setDelimiter(", "),
+                        "");
         asserter = new RouteNodeAsserter(nameAsserter, sqlAsserter);
         for (RouteResultsetNode node : nodeMap.values()) {
             asserter.assertNode(node);
         }
 
-        sql =
-                "insert into offer (offer_id, group_id, gmt) values "
-                        + "(123, 123, now()),(123, 234, now()),(123, 345, now()),(123, 456, now())"
-                        + ",(234, 123, now()),(234, 234, now()),(234, 345, now()),(234, 456, now())"
-                        + ",(345, 123, now()),(345, 234, now()),(345, 345, now()),(345, 456, now())"
-                        + ",(456, 123, now()),(456, 234, now()),(456, 345, now()),(456, 456, now())";
+        sql = "insert into offer (offer_id, group_id, gmt) values "
+                + "(123, 123, now()),(123, 234, now()),(123, 345, now()),(123, 456, now())"
+                + ",(234, 123, now()),(234, 234, now()),(234, 345, now()),(234, 456, now())"
+                + ",(345, 123, now()),(345, 234, now()),(345, 345, now()),(345, 456, now())"
+                + ",(456, 123, now()),(456, 234, now()),(456, 345, now()),(456, 456, now())";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1l, rrs.getLimitSize());
         nodeMap = getNodeMap(rrs, 7);
-        nameAsserter =
-                new NodeNameAsserter("offer_dn[58]", "offer_dn[100]", "offer_dn[86]",
-                        "offer_dn[72]", "offer_dn[114]", "offer_dn[44]", "offer_dn[30]");
+        nameAsserter = new NodeNameAsserter("offer_dn[58]", "offer_dn[100]", "offer_dn[86]",
+                "offer_dn[72]", "offer_dn[114]", "offer_dn[44]", "offer_dn[30]");
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         sqlAsserter
-                .addExpectSQL(
-                        0,
-                        "INSERT INTO offer (offer_id, group_id, gmt) VALUES ",
+                .addExpectSQL(0, "INSERT INTO offer (offer_id, group_id, gmt) VALUES ",
                         new PermutationGenerator("(345, 123, NOW())", "(123, 345, NOW())",
-                                "(234, 234, NOW())").setDelimiter(", "), "")
-                .addExpectSQL(
-                        1,
-                        "INSERT INTO offer (offer_id, group_id, gmt) VALUES ",
+                                "(234, 234, NOW())").setDelimiter(", "),
+                        "")
+                .addExpectSQL(1, "INSERT INTO offer (offer_id, group_id, gmt) VALUES ",
                         new PermutationGenerator("(345, 456, NOW())", "(456, 345, NOW())")
-                                .setDelimiter(", "), "")
-                .addExpectSQL(
-                        2,
-                        "INSERT INTO offer (offer_id, group_id, gmt) VALUES ",
+                                .setDelimiter(", "),
+                        "")
+                .addExpectSQL(2, "INSERT INTO offer (offer_id, group_id, gmt) VALUES ",
                         new PermutationGenerator("(456, 234, NOW())", "(234, 456, NOW())",
-                                "(345, 345, NOW())").setDelimiter(", "), "")
-                .addExpectSQL(
-                        3,
-                        "INSERT INTO offer (offer_id, group_id, gmt) VALUES ",
+                                "(345, 345, NOW())").setDelimiter(", "),
+                        "")
+                .addExpectSQL(3, "INSERT INTO offer (offer_id, group_id, gmt) VALUES ",
                         new PermutationGenerator("(123, 456, NOW())", "(345, 234, NOW())",
-                                "(234, 345, NOW())", "(456, 123, NOW())").setDelimiter(", "), "")
+                                "(234, 345, NOW())", "(456, 123, NOW())").setDelimiter(", "),
+                        "")
                 .addExpectSQL(4, "INSERT INTO offer (offer_id, group_id, gmt) VALUES ",
                         new PermutationGenerator("(456, 456, NOW())").setDelimiter(", "), "")
-                .addExpectSQL(
-                        5,
-                        "INSERT INTO offer (offer_id, group_id, gmt) VALUES ",
+                .addExpectSQL(5, "INSERT INTO offer (offer_id, group_id, gmt) VALUES ",
                         new PermutationGenerator("(234, 123, NOW())", "(123, 234, NOW())")
-                                .setDelimiter(", "), "")
+                                .setDelimiter(", "),
+                        "")
                 .addExpectSQL(6, "INSERT INTO offer (offer_id, group_id, gmt) VALUES ",
                         new PermutationGenerator("(123, 123, NOW())").setDelimiter(", "), "");
         asserter = new RouteNodeAsserter(nameAsserter, sqlAsserter);
@@ -897,21 +841,19 @@ public class ServerRouteTest extends AbstractAliasConvert {
                 rrs.getNodes()[0].getStatement());
 
         // WITHOUT SQL CHANGE unless schema is appeared
-        sql =
-                "select * from  cndb.offer where false"
-                        + " or offer_id=123 and group_id=123 or offer_id=123 and group_id=234 or offer_id=123 and group_id=345 or offer_id=123 and group_id=456  "
-                        + " or offer_id=234 and group_id=123 or offer_id=234 and group_id=234 or offer_id=234 and group_id=345 or offer_id=234 and group_id=456  "
-                        + " or offer_id=345 and group_id=123 or offer_id=345 and group_id=234 or offer_id=345 and group_id=345 or offer_id=345 and group_id=456  "
-                        + " or offer_id=456 and group_id=123 or offer_id=456 and group_id=234 or offer_id=456 and group_id=345 or offer_id=456 and group_id=456  ";
+        sql = "select * from  cndb.offer where false"
+                + " or offer_id=123 and group_id=123 or offer_id=123 and group_id=234 or offer_id=123 and group_id=345 or offer_id=123 and group_id=456  "
+                + " or offer_id=234 and group_id=123 or offer_id=234 and group_id=234 or offer_id=234 and group_id=345 or offer_id=234 and group_id=456  "
+                + " or offer_id=345 and group_id=123 or offer_id=345 and group_id=234 or offer_id=345 and group_id=345 or offer_id=345 and group_id=456  "
+                + " or offer_id=456 and group_id=123 or offer_id=456 and group_id=234 or offer_id=456 and group_id=345 or offer_id=456 and group_id=456  ";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1l, rrs.getLimitSize());
         String sqlTemp =
                 "SELECT * FROM offer WHERE FALSE OR offer_id = 123 AND group_id = 123 OR offer_id = 123 AND group_id = 234 OR offer_id = 123 AND group_id = 345 OR offer_id = 123 AND group_id = 456 OR offer_id = 234 AND group_id = 123 OR offer_id = 234 AND group_id = 234 OR offer_id = 234 AND group_id = 345 OR offer_id = 234 AND group_id = 456 OR offer_id = 345 AND group_id = 123 OR offer_id = 345 AND group_id = 234 OR offer_id = 345 AND group_id = 345 OR offer_id = 345 AND group_id = 456 OR offer_id = 456 AND group_id = 123 OR offer_id = 456 AND group_id = 234 OR offer_id = 456 AND group_id = 345 OR offer_id = 456 AND group_id = 456";
         nodeMap = getNodeMap(rrs, 7);
-        nameAsserter =
-                new NodeNameAsserter("offer_dn[58]", "offer_dn[100]", "offer_dn[86]",
-                        "offer_dn[72]", "offer_dn[114]", "offer_dn[44]", "offer_dn[30]");
+        nameAsserter = new NodeNameAsserter("offer_dn[58]", "offer_dn[100]", "offer_dn[86]",
+                "offer_dn[72]", "offer_dn[114]", "offer_dn[44]", "offer_dn[30]");
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         sqlAsserter.addExpectSQL(0, sqlTemp).addExpectSQL(1, sqlTemp).addExpectSQL(2, sqlTemp)
@@ -922,18 +864,17 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "select * from  offer where false" + " or offer_id=123 and group_id=123"
-                        + " or group_id=123 and offer_id=234" + " or offer_id=123 and group_id=345"
-                        + " or offer_id=123 and group_id=456  ";
+        sql = "select * from  offer where false" + " or offer_id=123 and group_id=123"
+                + " or group_id=123 and offer_id=234" + " or offer_id=123 and group_id=345"
+                + " or offer_id=123 and group_id=456  ";
         schema = schemaMap.get("cndb");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1l, rrs.getLimitSize());
         sqlTemp =
                 "select * from  offer where false or offer_id=123 and group_id=123 or group_id=123 and offer_id=234 or offer_id=123 and group_id=345 or offer_id=123 and group_id=456  ";
         nodeMap = getNodeMap(rrs, 4);
-        nameAsserter =
-                new NodeNameAsserter("offer_dn[72]", "offer_dn[58]", "offer_dn[44]", "offer_dn[30]");
+        nameAsserter = new NodeNameAsserter("offer_dn[72]", "offer_dn[58]", "offer_dn[44]",
+                "offer_dn[30]");
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         sqlAsserter.addExpectSQL(0, sqlTemp).addExpectSQL(1, sqlTemp).addExpectSQL(2, sqlTemp)
@@ -967,9 +908,9 @@ public class ServerRouteTest extends AbstractAliasConvert {
         NodeNameAsserter nameAsserter = new NodeNameAsserter("offer_dn[123]", "offer_dn[10]");
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         SimpleSQLAsserter sqlAsserter = new SimpleSQLAsserter();
-        sqlAsserter.addExpectSQL(0,
-                "SELECT COUNT(*) FROM wp_image WHERE member_id IN ('pavarotti17')").addExpectSQL(1,
-                "SELECT COUNT(*) FROM wp_image WHERE member_id IN ('qaa')");
+        sqlAsserter
+                .addExpectSQL(0, "SELECT COUNT(*) FROM wp_image WHERE member_id IN ('pavarotti17')")
+                .addExpectSQL(1, "SELECT COUNT(*) FROM wp_image WHERE member_id IN ('qaa')");
         RouteNodeAsserter asserter = new RouteNodeAsserter(nameAsserter, sqlAsserter);
         for (RouteResultsetNode node : nodeMap.values()) {
             asserter.assertNode(node);
@@ -985,8 +926,9 @@ public class ServerRouteTest extends AbstractAliasConvert {
         nameAsserter = new NodeNameAsserter("offer_dn[123]", "offer_dn[10]");
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
-        sqlAsserter.addExpectSQL(0,
-                "SELECT MIN(id) FROM wp_image WHERE member_id IN ('pavarotti17') LIMIT 0, 99")
+        sqlAsserter
+                .addExpectSQL(0,
+                        "SELECT MIN(id) FROM wp_image WHERE member_id IN ('pavarotti17') LIMIT 0, 99")
                 .addExpectSQL(1,
                         "SELECT MIN(id) FROM wp_image WHERE member_id IN ('qaa') LIMIT 0, 99");
         asserter = new RouteNodeAsserter(nameAsserter, sqlAsserter);
@@ -994,8 +936,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "select max(offer_id) from offer.wp_image where member_id in ('pavarotti17','pavarotti17', 'qaa') or member_id in ('pavarotti17','1qq','pavarotti17') or offer.wp_image.member_id='pavarotti17' limit 99 offset 1";
+        sql = "select max(offer_id) from offer.wp_image where member_id in ('pavarotti17','pavarotti17', 'qaa') or member_id in ('pavarotti17','1qq','pavarotti17') or offer.wp_image.member_id='pavarotti17' limit 99 offset 1";
         rrs = ServerRouter.route(schema, sql, null, null);
         if (rrs.getNodes().length > 1)
             Assert.assertEquals(RouteResultset.MAX_FLAG, rrs.getFlag());
@@ -1006,8 +947,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         sqlAsserter
-                .addExpectSQL(
-                        0,
+                .addExpectSQL(0,
                         "SELECT MAX(offer_id) FROM wp_image WHERE member_id IN ('pavarotti17', 'pavarotti17') OR member_id IN ('pavarotti17', 'pavarotti17') OR wp_image.member_id = 'pavarotti17' LIMIT 1, 99")
                 .addExpectSQL(1,
                         "SELECT MAX(offer_id) FROM wp_image WHERE member_id IN ('qaa') OR FALSE OR FALSE LIMIT 1, 99")
@@ -1018,9 +958,8 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "select count(*) from (select * from wp_image) w, (select * from offer) o "
-                        + " where o.member_id=w.member_id and o.member_id='pavarotti17' limit 99";
+        sql = "select count(*) from (select * from wp_image) w, (select * from offer) o "
+                + " where o.member_id=w.member_id and o.member_id='pavarotti17' limit 99";
         rrs = ServerRouter.route(schema, sql, null, null);
         if (rrs.getNodes().length > 1)
             Assert.assertEquals(RouteResultset.SUM_FLAG, rrs.getFlag());
@@ -1031,19 +970,16 @@ public class ServerRouteTest extends AbstractAliasConvert {
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         for (int i = 0; i < 128; ++i) {
-            sqlAsserter
-                    .addExpectSQL(
-                            i,
-                            "select count(*) from (select * from wp_image) w, (select * from offer) o  where o.member_id=w.member_id and o.member_id='pavarotti17' limit 99");
+            sqlAsserter.addExpectSQL(i,
+                    "select count(*) from (select * from wp_image) w, (select * from offer) o  where o.member_id=w.member_id and o.member_id='pavarotti17' limit 99");
         }
         asserter = new RouteNodeAsserter(nameAsserter, sqlAsserter);
         for (RouteResultsetNode node : nodeMap.values()) {
             asserter.assertNode(node);
         }
 
-        sql =
-                "select count(*) from (select * from wp_image) w, (select * from offer limit 99) o "
-                        + " where o.member_id=w.member_id and o.member_id='pavarotti17' ";
+        sql = "select count(*) from (select * from wp_image) w, (select * from offer limit 99) o "
+                + " where o.member_id=w.member_id and o.member_id='pavarotti17' ";
         rrs = ServerRouter.route(schema, sql, null, null);
         if (rrs.getNodes().length > 1)
             Assert.assertEquals(RouteResultset.SUM_FLAG, rrs.getFlag());
@@ -1054,19 +990,16 @@ public class ServerRouteTest extends AbstractAliasConvert {
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         for (int i = 0; i < 128; ++i) {
-            sqlAsserter
-                    .addExpectSQL(
-                            i,
-                            "select count(*) from (select * from wp_image) w, (select * from offer limit 99) o  where o.member_id=w.member_id and o.member_id='pavarotti17' ");
+            sqlAsserter.addExpectSQL(i,
+                    "select count(*) from (select * from wp_image) w, (select * from offer limit 99) o  where o.member_id=w.member_id and o.member_id='pavarotti17' ");
         }
         asserter = new RouteNodeAsserter(nameAsserter, sqlAsserter);
         for (RouteResultsetNode node : nodeMap.values()) {
             asserter.assertNode(node);
         }
 
-        sql =
-                "select count(*) from (select * from wp_image where member_id='abc' or member_id='pavarotti17' limit 100) w, (select * from offer_detail where offer_id='123') o "
-                        + " where o.member_id=w.member_id and o.member_id='pavarotti17' limit 99";
+        sql = "select count(*) from (select * from wp_image where member_id='abc' or member_id='pavarotti17' limit 100) w, (select * from offer_detail where offer_id='123') o "
+                + " where o.member_id=w.member_id and o.member_id='pavarotti17' limit 99";
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(RouteResultset.SUM_FLAG, rrs.getFlag());
         Assert.assertEquals(100L, rrs.getLimitSize());
@@ -1075,15 +1008,13 @@ public class ServerRouteTest extends AbstractAliasConvert {
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         sqlAsserter
-                .addExpectSQL(
-                        0,
+                .addExpectSQL(0,
                         "SELECT COUNT(*) FROM (SELECT * FROM wp_image WHERE member_id = 'abc' OR FALSE LIMIT 0, 100) AS "
                                 + aliasConvert("w")
                                 + ", (SELECT * FROM offer_detail WHERE offer_id = '123') AS "
                                 + aliasConvert("o")
                                 + " WHERE o.member_id = w.member_id AND o.member_id = 'pavarotti17' LIMIT 0, 99")
-                .addExpectSQL(
-                        1,
+                .addExpectSQL(1,
                         "SELECT COUNT(*) FROM (SELECT * FROM wp_image WHERE FALSE OR member_id = 'pavarotti17' LIMIT 0, 100) AS "
                                 + aliasConvert("w")
                                 + ", (SELECT * FROM offer_detail WHERE offer_id = '123') AS "
@@ -1094,9 +1025,8 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "select count(*) from (select * from(select * from offer_detail where offer_id='123' or offer_id='234' limit 88)offer  where offer.member_id='abc' limit 60) w "
-                        + " where w.member_id ='pavarotti17' limit 99";
+        sql = "select count(*) from (select * from(select * from offer_detail where offer_id='123' or offer_id='234' limit 88)offer  where offer.member_id='abc' limit 60) w "
+                + " where w.member_id ='pavarotti17' limit 99";
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(88L, rrs.getLimitSize());
         Assert.assertEquals(RouteResultset.SUM_FLAG, rrs.getFlag());
@@ -1104,16 +1034,11 @@ public class ServerRouteTest extends AbstractAliasConvert {
         nameAsserter = new NodeNameAsserter("detail_dn[29]", "detail_dn[15]");
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
-        sqlAsserter
-                .addExpectSQL(
-                        0,
-                        "SELECT COUNT(*) FROM (SELECT * FROM (SELECT * FROM offer_detail WHERE FALSE OR offer_id = '234' LIMIT 0, 88) AS "
-                                + aliasConvert("offer")
-                                + " WHERE offer.member_id = 'abc' LIMIT 0, 60) AS "
-                                + aliasConvert("w")
-                                + " WHERE w.member_id = 'pavarotti17' LIMIT 0, 99")
-                .addExpectSQL(
-                        1,
+        sqlAsserter.addExpectSQL(0,
+                "SELECT COUNT(*) FROM (SELECT * FROM (SELECT * FROM offer_detail WHERE FALSE OR offer_id = '234' LIMIT 0, 88) AS "
+                        + aliasConvert("offer") + " WHERE offer.member_id = 'abc' LIMIT 0, 60) AS "
+                        + aliasConvert("w") + " WHERE w.member_id = 'pavarotti17' LIMIT 0, 99")
+                .addExpectSQL(1,
                         "SELECT COUNT(*) FROM (SELECT * FROM (SELECT * FROM offer_detail WHERE offer_id = '123' OR FALSE LIMIT 0, 88) AS "
                                 + aliasConvert("offer")
                                 + " WHERE offer.member_id = 'abc' LIMIT 0, 60) AS "
@@ -1124,9 +1049,8 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "select count(*) from (select * from(select max(id) from offer_detail where offer_id='123' or offer_id='234' limit 88)offer  where offer.member_id='abc' limit 60) w "
-                        + " where w.member_id ='pavarotti17' limit 99";
+        sql = "select count(*) from (select * from(select max(id) from offer_detail where offer_id='123' or offer_id='234' limit 88)offer  where offer.member_id='abc' limit 60) w "
+                + " where w.member_id ='pavarotti17' limit 99";
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(88L, rrs.getLimitSize());
         Assert.assertEquals(0, rrs.getFlag());
@@ -1134,16 +1058,11 @@ public class ServerRouteTest extends AbstractAliasConvert {
         nameAsserter = new NodeNameAsserter("detail_dn[29]", "detail_dn[15]");
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
-        sqlAsserter
-                .addExpectSQL(
-                        0,
-                        "SELECT COUNT(*) FROM (SELECT * FROM (SELECT MAX(id) FROM offer_detail WHERE FALSE OR offer_id = '234' LIMIT 0, 88) AS "
-                                + aliasConvert("offer")
-                                + " WHERE offer.member_id = 'abc' LIMIT 0, 60) AS "
-                                + aliasConvert("w")
-                                + " WHERE w.member_id = 'pavarotti17' LIMIT 0, 99")
-                .addExpectSQL(
-                        1,
+        sqlAsserter.addExpectSQL(0,
+                "SELECT COUNT(*) FROM (SELECT * FROM (SELECT MAX(id) FROM offer_detail WHERE FALSE OR offer_id = '234' LIMIT 0, 88) AS "
+                        + aliasConvert("offer") + " WHERE offer.member_id = 'abc' LIMIT 0, 60) AS "
+                        + aliasConvert("w") + " WHERE w.member_id = 'pavarotti17' LIMIT 0, 99")
+                .addExpectSQL(1,
                         "SELECT COUNT(*) FROM (SELECT * FROM (SELECT MAX(id) FROM offer_detail WHERE offer_id = '123' OR FALSE LIMIT 0, 88) AS "
                                 + aliasConvert("offer")
                                 + " WHERE offer.member_id = 'abc' LIMIT 0, 60) AS "
@@ -1154,9 +1073,8 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "select * from (select * from(select max(id) from offer_detail where offer_id='123' or offer_id='234' limit 88)offer  where offer.member_id='abc' limit 60) w "
-                        + " where w.member_id ='pavarotti17' limit 99";
+        sql = "select * from (select * from(select max(id) from offer_detail where offer_id='123' or offer_id='234' limit 88)offer  where offer.member_id='abc' limit 60) w "
+                + " where w.member_id ='pavarotti17' limit 99";
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(88L, rrs.getLimitSize());
         Assert.assertEquals(RouteResultset.MAX_FLAG, rrs.getFlag());
@@ -1164,16 +1082,11 @@ public class ServerRouteTest extends AbstractAliasConvert {
         nameAsserter = new NodeNameAsserter("detail_dn[29]", "detail_dn[15]");
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
-        sqlAsserter
-                .addExpectSQL(
-                        0,
-                        "SELECT * FROM (SELECT * FROM (SELECT MAX(id) FROM offer_detail WHERE FALSE OR offer_id = '234' LIMIT 0, 88) AS "
-                                + aliasConvert("offer")
-                                + " WHERE offer.member_id = 'abc' LIMIT 0, 60) AS "
-                                + aliasConvert("w")
-                                + " WHERE w.member_id = 'pavarotti17' LIMIT 0, 99")
-                .addExpectSQL(
-                        1,
+        sqlAsserter.addExpectSQL(0,
+                "SELECT * FROM (SELECT * FROM (SELECT MAX(id) FROM offer_detail WHERE FALSE OR offer_id = '234' LIMIT 0, 88) AS "
+                        + aliasConvert("offer") + " WHERE offer.member_id = 'abc' LIMIT 0, 60) AS "
+                        + aliasConvert("w") + " WHERE w.member_id = 'pavarotti17' LIMIT 0, 99")
+                .addExpectSQL(1,
                         "SELECT * FROM (SELECT * FROM (SELECT MAX(id) FROM offer_detail WHERE offer_id = '123' OR FALSE LIMIT 0, 88) AS "
                                 + aliasConvert("offer")
                                 + " WHERE offer.member_id = 'abc' LIMIT 0, 60) AS "
@@ -1184,9 +1097,8 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "select * from (select count(*) from(select * from offer_detail where offer_id='123' or offer_id='234' limit 88)offer  where offer.member_id='abc' limit 60) w "
-                        + " where w.member_id ='pavarotti17' limit 99";
+        sql = "select * from (select count(*) from(select * from offer_detail where offer_id='123' or offer_id='234' limit 88)offer  where offer.member_id='abc' limit 60) w "
+                + " where w.member_id ='pavarotti17' limit 99";
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(88L, rrs.getLimitSize());
         Assert.assertEquals(RouteResultset.SUM_FLAG, rrs.getFlag());
@@ -1194,16 +1106,11 @@ public class ServerRouteTest extends AbstractAliasConvert {
         nameAsserter = new NodeNameAsserter("detail_dn[29]", "detail_dn[15]");
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
-        sqlAsserter
-                .addExpectSQL(
-                        0,
-                        "SELECT * FROM (SELECT COUNT(*) FROM (SELECT * FROM offer_detail WHERE FALSE OR offer_id = '234' LIMIT 0, 88) AS "
-                                + aliasConvert("offer")
-                                + " WHERE offer.member_id = 'abc' LIMIT 0, 60) AS "
-                                + aliasConvert("w")
-                                + " WHERE w.member_id = 'pavarotti17' LIMIT 0, 99")
-                .addExpectSQL(
-                        1,
+        sqlAsserter.addExpectSQL(0,
+                "SELECT * FROM (SELECT COUNT(*) FROM (SELECT * FROM offer_detail WHERE FALSE OR offer_id = '234' LIMIT 0, 88) AS "
+                        + aliasConvert("offer") + " WHERE offer.member_id = 'abc' LIMIT 0, 60) AS "
+                        + aliasConvert("w") + " WHERE w.member_id = 'pavarotti17' LIMIT 0, 99")
+                .addExpectSQL(1,
                         "SELECT * FROM (SELECT COUNT(*) FROM (SELECT * FROM offer_detail WHERE offer_id = '123' OR FALSE LIMIT 0, 88) AS "
                                 + aliasConvert("offer")
                                 + " WHERE offer.member_id = 'abc' LIMIT 0, 60) AS "
@@ -1256,9 +1163,8 @@ public class ServerRouteTest extends AbstractAliasConvert {
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1l, rrs.getLimitSize());
         nodeMap = getNodeMap(rrs, 8);
-        nameAsserter =
-                new NodeNameAsserter("offer_dn[0]", "offer_dn[4]", "offer_dn[8]", "offer_dn[12]",
-                        "offer_dn[16]", "offer_dn[20]", "offer_dn[24]", "offer_dn[28]");
+        nameAsserter = new NodeNameAsserter("offer_dn[0]", "offer_dn[4]", "offer_dn[8]",
+                "offer_dn[12]", "offer_dn[16]", "offer_dn[20]", "offer_dn[24]", "offer_dn[28]");
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         sqlAsserter.addExpectSQL(0, "SELECT * FROM product_visit WHERE member_id = 'abc'")
@@ -1274,16 +1180,14 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "delete from product_visit where member_id='pavarotti17' or Member_id between 'abc' and 'abc'";
+        sql = "delete from product_visit where member_id='pavarotti17' or Member_id between 'abc' and 'abc'";
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1l, rrs.getLimitSize());
         nodeMap = getNodeMap(rrs, 16);
-        nameAsserter =
-                new NodeNameAsserter("offer_dn[0]", "offer_dn[4]", "offer_dn[8]", "offer_dn[12]",
-                        "offer_dn[16]", "offer_dn[20]", "offer_dn[24]", "offer_dn[28]",
-                        "offer_dn[1]", "offer_dn[5]", "offer_dn[9]", "offer_dn[13]",
-                        "offer_dn[17]", "offer_dn[21]", "offer_dn[25]", "offer_dn[29]");
+        nameAsserter = new NodeNameAsserter("offer_dn[0]", "offer_dn[4]", "offer_dn[8]",
+                "offer_dn[12]", "offer_dn[16]", "offer_dn[20]", "offer_dn[24]", "offer_dn[28]",
+                "offer_dn[1]", "offer_dn[5]", "offer_dn[9]", "offer_dn[13]", "offer_dn[17]",
+                "offer_dn[21]", "offer_dn[25]", "offer_dn[29]");
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         sqlAsserter
@@ -1362,9 +1266,8 @@ public class ServerRouteTest extends AbstractAliasConvert {
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1l, rrs.getLimitSize());
         nodeMap = getNodeMap(rrs, 8);
-        nameAsserter =
-                new NodeNameAsserter("offer_dn[4]", "offer_dn[5]", "offer_dn[6]", "offer_dn[7]",
-                        "offer_dn[8]", "offer_dn[9]", "offer_dn[10]", "offer_dn[11]");
+        nameAsserter = new NodeNameAsserter("offer_dn[4]", "offer_dn[5]", "offer_dn[6]",
+                "offer_dn[7]", "offer_dn[8]", "offer_dn[9]", "offer_dn[10]", "offer_dn[11]");
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         sqlAsserter.addExpectSQL(0, "SELECT * FROM product_visit WHERE product_id = 1234 OR FALSE")
@@ -1384,9 +1287,8 @@ public class ServerRouteTest extends AbstractAliasConvert {
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1l, rrs.getLimitSize());
         nodeMap = getNodeMap(rrs, 8);
-        nameAsserter =
-                new NodeNameAsserter("offer_dn[4]", "offer_dn[5]", "offer_dn[6]", "offer_dn[7]",
-                        "offer_dn[8]", "offer_dn[9]", "offer_dn[10]", "offer_dn[11]");
+        nameAsserter = new NodeNameAsserter("offer_dn[4]", "offer_dn[5]", "offer_dn[6]",
+                "offer_dn[7]", "offer_dn[8]", "offer_dn[9]", "offer_dn[10]", "offer_dn[11]");
         nameAsserter.assertRouteNodeNames(nodeMap.keySet());
         sqlAsserter = new SimpleSQLAsserter();
         sqlAsserter.addExpectSQL(0, "SELECT * FROM product_visit WHERE product_id IN (1234)")
@@ -1557,8 +1459,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "/*!timo: $dataNodeId   = [ 1,2,5.2]  , $table =  'offer'  , $replica =1 */ select * from `dual`";
+        sql = "/*!timo: $dataNodeId   = [ 1,2,5.2]  , $table =  'offer'  , $replica =1 */ select * from `dual`";
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1L, rrs.getLimitSize());
         Assert.assertEquals(3, rrs.getNodes().length);
@@ -1581,8 +1482,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "/*!timo: $partitionOperand=( 'member_id' = 'pavarotti17'), $table='offer'*/ select * from `dual`";
+        sql = "/*!timo: $partitionOperand=( 'member_id' = 'pavarotti17'), $table='offer'*/ select * from `dual`";
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1L, rrs.getLimitSize());
         Assert.assertEquals(1, rrs.getNodes().length);
@@ -1591,8 +1491,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
         Assert.assertEquals("offer_dn[123]", rrs.getNodes()[0].getName());
         Assert.assertEquals(" select * from `dual`", rrs.getNodes()[0].getStatement());
 
-        sql =
-                "/*!timo:$partitionOperand =   ( 'member_id' = ['pavarotti17'  ,   'qaa' ]  ), $table='offer'  , $replica =  2*/  select * from `dual`";
+        sql = "/*!timo:$partitionOperand =   ( 'member_id' = ['pavarotti17'  ,   'qaa' ]  ), $table='offer'  , $replica =  2*/  select * from `dual`";
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1L, rrs.getLimitSize());
         nodeMap = getNodeMap(rrs, 2);
@@ -1611,8 +1510,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "/*!timo:$partitionOperand = ( ['group_id','offer_id'] = [234,4]), $table='offer'*/ select * from `dual`";
+        sql = "/*!timo:$partitionOperand = ( ['group_id','offer_id'] = [234,4]), $table='offer'*/ select * from `dual`";
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1L, rrs.getLimitSize());
         Assert.assertEquals(1, rrs.getNodes().length);
@@ -1621,8 +1519,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
         Assert.assertEquals("offer_dn[29]", rrs.getNodes()[0].getName());
         Assert.assertEquals(" select * from `dual`", rrs.getNodes()[0].getStatement());
 
-        sql =
-                "/*!timo:$partitionOperand=(['offer_id','group_id']=[[123,3],[234,4]]), $table='offer'  , $replica =2*/ select * from `dual`";
+        sql = "/*!timo:$partitionOperand=(['offer_id','group_id']=[[123,3],[234,4]]), $table='offer'  , $replica =2*/ select * from `dual`";
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1L, rrs.getLimitSize());
         nodeMap = getNodeMap(rrs, 2);
@@ -1641,8 +1538,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "/*!timo:$partitionOperand=(['group_id','offer_id']=[[123,3], [ 234,4 ] ]), $table='offer'  */ select * from `dual`";
+        sql = "/*!timo:$partitionOperand=(['group_id','offer_id']=[[123,3], [ 234,4 ] ]), $table='offer'  */ select * from `dual`";
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1L, rrs.getLimitSize());
         nodeMap = getNodeMap(rrs, 2);
@@ -1661,8 +1557,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "/*!timo:$partitionOperand=(['offer_id','NON_EXistence']=[[123,3],[234,4]]), $table='offer'  , $replica =2*/ select * from `dual`";
+        sql = "/*!timo:$partitionOperand=(['offer_id','NON_EXistence']=[[123,3],[234,4]]), $table='offer'  , $replica =2*/ select * from `dual`";
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1L, rrs.getLimitSize());
         nodeMap = getNodeMap(rrs, 128);
@@ -1767,8 +1662,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "/*!timo:$partitionOperand=(['member_id','NON_EXistence']=[['pavarotti17'],['qaa',4]]), $table='offer'  , $replica=2*/ select * from `dual`";
+        sql = "/*!timo:$partitionOperand=(['member_id','NON_EXistence']=[['pavarotti17'],['qaa',4]]), $table='offer'  , $replica=2*/ select * from `dual`";
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1L, rrs.getLimitSize());
         nodeMap = getNodeMap(rrs, 2);
@@ -1787,8 +1681,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
             asserter.assertNode(node);
         }
 
-        sql =
-                "/*!timo:$partitionOperand=(['offer_id','NON_EXistence']=[[123,3],[234,4]]), $table='non_existence'  , $replica=2*/ select * from `dual`";
+        sql = "/*!timo:$partitionOperand=(['offer_id','NON_EXistence']=[[123,3],[234,4]]), $table='non_existence'  , $replica=2*/ select * from `dual`";
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1L, rrs.getLimitSize());
         Assert.assertEquals(1, rrs.getNodes().length);
@@ -1796,8 +1689,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
         Assert.assertEquals("cndb_dn", rrs.getNodes()[0].getName());
         Assert.assertEquals(" select * from `dual`", rrs.getNodes()[0].getStatement());
 
-        sql =
-                "/*!timo:$partitionOperand=(['offer_id','group_id']=[[123,3],[234,4]]), $table='non_existence'  , $replica=2*/ select * from `dual`";
+        sql = "/*!timo:$partitionOperand=(['offer_id','group_id']=[[123,3],[234,4]]), $table='non_existence'  , $replica=2*/ select * from `dual`";
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(-1L, rrs.getLimitSize());
         Assert.assertEquals(1, rrs.getNodes().length);
@@ -1870,8 +1762,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
         sql = "select * from ignoreSchemaTest2.offer where ignoreSchemaTest2.offer.offer_id=1";
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(sql, rrs.getNodes()[0].getStatement());
-        sql =
-                "select * from ignoreSchemaTest2.offer a,ignoreSchemaTest.offer b  where ignoreSchemaTest2.offer.offer_id=1";
+        sql = "select * from ignoreSchemaTest2.offer a,ignoreSchemaTest.offer b  where ignoreSchemaTest2.offer.offer_id=1";
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(
                 "SELECT * FROM ignoreSchemaTest2.offer AS " + aliasConvert("a") + ", offer AS "
@@ -1896,8 +1787,7 @@ public class ServerRouteTest extends AbstractAliasConvert {
         Assert.assertEquals("offer_dn[44]", rrs.getNodes()[0].getName());
         Assert.assertEquals("insert into offer (group_id, offer_id, gmt) values (234,123,now())",
                 rrs.getNodes()[0].getStatement());
-        sql =
-                "insert into ignoreSchemaTest0.offer (group_id, offer_id, gmt) values (234,123,now())";
+        sql = "insert into ignoreSchemaTest0.offer (group_id, offer_id, gmt) values (234,123,now())";
         schema = schemaMap.get("ignoreSchemaTest0");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals(1, rrs.getNodes().length);
@@ -1907,14 +1797,12 @@ public class ServerRouteTest extends AbstractAliasConvert {
         Assert.assertEquals("offer_dn[44]", rrs.getNodes()[0].getName());
         Assert.assertEquals("INSERT INTO offer (group_id, offer_id, gmt) VALUES (234, 123, NOW())",
                 rrs.getNodes()[0].getStatement());
-        sql =
-                "insert into ignoreSchemaTest2.offer (group_id, offer_id, gmt) values (234,123,now())";
+        sql = "insert into ignoreSchemaTest2.offer (group_id, offer_id, gmt) values (234,123,now())";
         schema = schemaMap.get("ignoreSchemaTest0");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals("cndb_dn", rrs.getNodes()[0].getName());
         Assert.assertEquals(sql, rrs.getNodes()[0].getStatement());
-        sql =
-                "insert into ignoreSchemaTest2.offer (ignoreSchemaTest0.offer.group_id, offer_id, gmt) values (234,123,now())";
+        sql = "insert into ignoreSchemaTest2.offer (ignoreSchemaTest0.offer.group_id, offer_id, gmt) values (234,123,now())";
         schema = schemaMap.get("ignoreSchemaTest0");
         rrs = ServerRouter.route(schema, sql, null, null);
         Assert.assertEquals("cndb_dn", rrs.getNodes()[0].getName());

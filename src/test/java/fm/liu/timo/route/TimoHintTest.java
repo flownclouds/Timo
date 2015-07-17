@@ -67,8 +67,7 @@ public class TimoHintTest extends TestCase {
         Assert.assertEquals("m1", pair.getValue()[0][0]);
         Assert.assertNull(hint.getDataNodes());
 
-        sql =
-                "/*!timo:$partitionOperand =   ( 'member_id' = ['m1'  ,   'm2' ]  ), $table='offer'  , $replica=  2*/ select * ";
+        sql = "/*!timo:$partitionOperand =   ( 'member_id' = ['m1'  ,   'm2' ]  ), $table='offer'  , $replica=  2*/ select * ";
         hint = TimoHint.parserTimoHint(sql, 0);
         Assert.assertEquals(" select * ", hint.getOutputSql());
         Assert.assertEquals("OFFER", hint.getTable());
@@ -82,8 +81,7 @@ public class TimoHintTest extends TestCase {
         Assert.assertEquals("m2", pair.getValue()[1][0]);
         Assert.assertNull(hint.getDataNodes());
 
-        sql =
-                "/*!timo:$partitionOperand=('member_id'=['m1', 'm2']),$table='offer',$replica=2*/ select * ";
+        sql = "/*!timo:$partitionOperand=('member_id'=['m1', 'm2']),$table='offer',$replica=2*/ select * ";
         hint = TimoHint.parserTimoHint(sql, 0);
         Assert.assertEquals(" select * ", hint.getOutputSql());
         Assert.assertEquals("OFFER", hint.getTable());
@@ -97,8 +95,7 @@ public class TimoHintTest extends TestCase {
         Assert.assertEquals("m2", pair.getValue()[1][0]);
         Assert.assertNull(hint.getDataNodes());
 
-        sql =
-                "/*!timo:$partitionOperand = ( ['offer_id','group_id'] = [123,'3c']), $table='offer'*/ select * ";
+        sql = "/*!timo:$partitionOperand = ( ['offer_id','group_id'] = [123,'3c']), $table='offer'*/ select * ";
         hint = TimoHint.parserTimoHint(sql, 0);
         Assert.assertEquals(" select * ", hint.getOutputSql());
         Assert.assertEquals("OFFER", hint.getTable());
@@ -113,8 +110,7 @@ public class TimoHintTest extends TestCase {
         Assert.assertEquals("3c", pair.getValue()[0][1]);
         Assert.assertNull(hint.getDataNodes());
 
-        sql =
-                "/*!timo:$partitionOperand=(['offer_id' , 'group_iD' ]=[ 123 , '3c' ]) ,$table = 'offer'*/ select * ";
+        sql = "/*!timo:$partitionOperand=(['offer_id' , 'group_iD' ]=[ 123 , '3c' ]) ,$table = 'offer'*/ select * ";
         hint = TimoHint.parserTimoHint(sql, 0);
         Assert.assertEquals(" select * ", hint.getOutputSql());
         Assert.assertEquals("OFFER", hint.getTable());
@@ -129,8 +125,7 @@ public class TimoHintTest extends TestCase {
         Assert.assertEquals("3c", pair.getValue()[0][1]);
         Assert.assertNull(hint.getDataNodes());
 
-        sql =
-                "/*!timo:$partitionOperand=(['offer_id','group_id']=[123,'3c']),$table='offer'*/ select * ";
+        sql = "/*!timo:$partitionOperand=(['offer_id','group_id']=[123,'3c']),$table='offer'*/ select * ";
         hint = TimoHint.parserTimoHint(sql, 0);
         Assert.assertEquals(" select * ", hint.getOutputSql());
         Assert.assertEquals("OFFER", hint.getTable());
@@ -145,8 +140,7 @@ public class TimoHintTest extends TestCase {
         Assert.assertEquals("3c", pair.getValue()[0][1]);
         Assert.assertNull(hint.getDataNodes());
 
-        sql =
-                "/*!timo:$partitionOperand=(['offer_id','group_id']=[[123,'3c'],[234,'food']]), $table='offer'*/ select * ";
+        sql = "/*!timo:$partitionOperand=(['offer_id','group_id']=[[123,'3c'],[234,'food']]), $table='offer'*/ select * ";
         hint = TimoHint.parserTimoHint(sql, 0);
         Assert.assertEquals(" select * ", hint.getOutputSql());
         Assert.assertEquals("OFFER", hint.getTable());
@@ -164,8 +158,7 @@ public class TimoHintTest extends TestCase {
         Assert.assertEquals("food", pair.getValue()[1][1]);
         Assert.assertNull(hint.getDataNodes());
 
-        sql =
-                "/*!timo:$partitionOperand= ( [ 'ofFER_id','groUp_id' ]= [ [123,'3c'],[ 234,'food']]  ), $table='offer'*/select * ";
+        sql = "/*!timo:$partitionOperand= ( [ 'ofFER_id','groUp_id' ]= [ [123,'3c'],[ 234,'food']]  ), $table='offer'*/select * ";
         hint = TimoHint.parserTimoHint(sql, 0);
         Assert.assertEquals("select * ", hint.getOutputSql());
         Assert.assertEquals("OFFER", hint.getTable());

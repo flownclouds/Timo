@@ -180,9 +180,9 @@ public class SoloParser extends MySQLParser {
         String sql =
                 "   ( ( select union select union select)  as j join    (((select union (select)) as t    )   join t2 ) ,(select)as d), t3)";
         // String sql =
-        // "((select) as s1, ((((   select  union select          ) as t2)) join (((t2),t4 as t))) ), t1 aS T1";
+        // "((select) as s1, (((( select union select ) as t2)) join (((t2),t4 as t))) ), t1 aS T1";
         // String sql =
-        // "  (( select union select union select)  as j  ,(select)as d), t3";
+        // " (( select union select union select) as j ,(select)as d), t3";
         System.out.println(sql);
         MySQLLexer lexer = new MySQLLexer(sql);
         lexer.nextToken();

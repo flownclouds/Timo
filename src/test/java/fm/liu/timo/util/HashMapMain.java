@@ -35,8 +35,8 @@ public class HashMapMain {
                 m.remove(key);
             }
         }
-        System.out.println((System.currentTimeMillis() - t) * 1000 * 1000
-                / (count * keys.length * 2) + " ns");
+        System.out.println(
+                (System.currentTimeMillis() - t) * 1000 * 1000 / (count * keys.length * 2) + " ns");
     }
 
 }

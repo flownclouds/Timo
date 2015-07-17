@@ -23,7 +23,7 @@ import fm.liu.timo.parser.ast.stmt.dml.DMLSelectStatement;
  */
 public class StubDMLSelectStatementCreater {
     public static DMLSelectStatement createDMLSelectStatement() {
-        return new DMLSelectStatement(new DMLSelectStatement.SelectOption(), null, null, null,
-                null, null, null, null);
+        return new DMLSelectStatement(new DMLSelectStatement.SelectOption(), null, null, null, null,
+                null, null, null);
     }
 }

@@ -41,8 +41,8 @@ public class QueueSimpleMain {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    System.out.println("put:" + (putCount - put) / 5 + " take:"
-                            + (takeCount - take) / 5);
+                    System.out.println(
+                            "put:" + (putCount - put) / 5 + " take:" + (takeCount - take) / 5);
                 }
             }
         }.start();

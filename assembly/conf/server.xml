@@ -4,7 +4,6 @@
 	<system>
 		<property name="serverPort">8066</property>
 		<property name="managerPort">9066</property>
-		<property name="initExecutor">16</property>
 		<property name="timerExecutor">2</property>
 		<property name="processors">4</property>
 		<property name="processorExecutor">8</property>

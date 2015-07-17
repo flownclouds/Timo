@@ -46,8 +46,7 @@ public class MySQLDMLDeleteParserTest extends AbstractSyntaxTest {
         output = output2MySQL(delete, sql);
         Assert.assertEquals("DELETE id1.id FROM t1", output);
 
-        sql =
-                "delete from offer.*,wp_image.* using offer a,wp_image b where a.member_id=b.member_id and a.member_id='abc' ";
+        sql = "delete from offer.*,wp_image.* using offer a,wp_image b where a.member_id=b.member_id and a.member_id='abc' ";
         lexer = new MySQLLexer(sql);
         parser = new MySQLDMLDeleteParser(lexer, new MySQLExprParser(lexer));
         delete = parser.delete();

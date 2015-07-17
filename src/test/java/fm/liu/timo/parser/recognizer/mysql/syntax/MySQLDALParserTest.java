@@ -703,9 +703,8 @@ public class MySQLDALParserTest extends AbstractSyntaxTest {
         output = output2MySQL(show, sql);
         Assert.assertEquals("SHOW PROFILES", output);
 
-        sql =
-                "SHOW profile all,block io,context switches,cpu,ipc,memory,"
-                        + "page faults,source,swaps for query 2 limit 1 offset 2";
+        sql = "SHOW profile all,block io,context switches,cpu,ipc,memory,"
+                + "page faults,source,swaps for query 2 limit 1 offset 2";
         lexer = new MySQLLexer(sql);
         parser = new MySQLDALParser(lexer, new MySQLExprParser(lexer));
         show = (DALShowStatement) parser.show();
@@ -722,9 +721,8 @@ public class MySQLDALParserTest extends AbstractSyntaxTest {
         output = output2MySQL(show, sql);
         Assert.assertEquals("SHOW PROFILE", output);
 
-        sql =
-                "SHOW profile all,block io,context switches,cpu,ipc,"
-                        + "memory,page faults,source,swaps for query 2";
+        sql = "SHOW profile all,block io,context switches,cpu,ipc,"
+                + "memory,page faults,source,swaps for query 2";
         lexer = new MySQLLexer(sql);
         parser = new MySQLDALParser(lexer, new MySQLExprParser(lexer));
         show = (DALShowStatement) parser.show();

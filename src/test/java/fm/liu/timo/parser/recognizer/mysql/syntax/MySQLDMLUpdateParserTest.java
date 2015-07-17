@@ -59,7 +59,8 @@ public class MySQLDMLUpdateParserTest extends AbstractSyntaxTest {
         parser = new MySQLDMLUpdateParser(lexer, new MySQLExprParser(lexer));
         update = parser.update();
         output = output2MySQL(update, sql);
-        Assert.assertEquals("UPDATE test.t1 SET col2 = DEFAULT ORDER BY t1.col2 LIMIT 1, ?", output);
+        Assert.assertEquals("UPDATE test.t1 SET col2 = DEFAULT ORDER BY t1.col2 LIMIT 1, ?",
+                output);
 
         sql = "upDate LOW_PRIORITY  t1, test.t2 SET col2=DefaulT , col2='123''4'";
         lexer = new MySQLLexer(sql);
