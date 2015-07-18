@@ -37,8 +37,6 @@ public final class NIOConnector extends Thread {
     private final String name;
     private final Selector selector;
     private final BlockingQueue<BackendConnection> connectQueue;
-    private NIOProcessor[] processors;
-    private int nextProcessor;
     private long connectCount;
 
     public NIOConnector(String name) throws IOException {
@@ -50,10 +48,6 @@ public final class NIOConnector extends Thread {
 
     public long getConnectCount() {
         return connectCount;
-    }
-
-    public void setProcessors(NIOProcessor[] processors) {
-        this.processors = processors;
     }
 
     public void postConnect(BackendConnection c) {
@@ -83,7 +77,7 @@ public final class NIOConnector extends Thread {
                     keys.clear();
                 }
             } catch (Throwable e) {
-                Logger.warn(name, e);
+                Logger.warn("Thread {} exception:{}", name, e);
             }
         }
     }
@@ -137,13 +131,6 @@ public final class NIOConnector extends Thread {
             key.attach(null);
             key.cancel();
         }
-    }
-
-    private NIOProcessor nextProcessor() {
-        if (++nextProcessor == processors.length) {
-            nextProcessor = 0;
-        }
-        return processors[nextProcessor];
     }
 
     /**

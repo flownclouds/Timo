@@ -73,7 +73,7 @@ public class TimoServer {
     public void startup() throws IOException {
         // server startup
         Logger.info("===============================================");
-        Logger.info(NAME + " is ready to startup ...");
+        Logger.info("{} is ready to startup ...", NAME);
         SystemConfig system = config.getSystem();
         timer.schedule(updateTime(), 0L, TIME_UPDATE_PERIOD);
         Variables variables = new Variables();
@@ -92,7 +92,6 @@ public class TimoServer {
         // startup connector
         Logger.info("Startup connector ...");
         connector = new NIOConnector(NAME + "Connector");
-        connector.setProcessors(processors);
         connector.start();
 
         // init dataNodes
@@ -100,7 +99,7 @@ public class TimoServer {
         Logger.info("Initialize dataNodes ...");
         for (Node node : nodes.values()) {
             if (!node.init()) {
-                Logger.error("node init failed, check your config");
+                Logger.error("Node init failed, check your config");
                 System.exit(-1);
             }
         }
@@ -112,7 +111,7 @@ public class TimoServer {
         mf.setIdleTimeout(system.getIdleTimeout());
         manager = new NIOAcceptor(NAME + "Manager", system.getManagerPort(), mf);
         manager.start();
-        Logger.info(manager.getName() + " is started and listening on " + manager.getPort());
+        Logger.info("{} is started and listening on {}", manager.getName(), manager.getPort());
 
         // startup server
         ServerConnectionFactory sf = new ServerConnectionFactory(variables);
@@ -121,7 +120,7 @@ public class TimoServer {
         server.start();
 
         // server started
-        Logger.info(server.getName() + " is started and listening on " + server.getPort());
+        Logger.info("{} is started and listening on {}", server.getName(), server.getPort());
         Logger.info("===============================================");
     }
 

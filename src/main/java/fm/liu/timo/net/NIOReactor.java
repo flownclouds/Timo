@@ -14,6 +14,7 @@
 package fm.liu.timo.net;
 
 import java.io.IOException;
+import java.nio.channels.CancelledKeyException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.util.Queue;
@@ -91,7 +92,9 @@ public final class NIOReactor {
                         }
                     }
                 } catch (Throwable e) {
-                    Logger.warn(name, e);
+                    if (!(e instanceof CancelledKeyException)) {
+                        Logger.warn("Thread:{} Error:{}", name, e);
+                    }
                 } finally {
                     if (keys != null) {
                         keys.clear();

@@ -33,8 +33,6 @@ import fm.liu.timo.server.response.CharacterSet;
  */
 public final class SetHandler {
 
-    private static final byte[] AC_OFF = new byte[] {7, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0};
-
     public static void handle(String stmt, ServerConnection c, int offset) {
         int rs = ServerParseSet.parse(stmt, offset);
         switch (rs & 0xff) {
@@ -88,8 +86,7 @@ public final class SetHandler {
                 CharacterSet.response(stmt, c, rs);
                 break;
             default:
-                StringBuilder s = new StringBuilder();
-                Logger.warn(s.append(c).append(stmt).append(" is not executed").toString());
+                Logger.warn("SQL:'{}' from {} is not executed", stmt, c);
                 c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));
         }
     }

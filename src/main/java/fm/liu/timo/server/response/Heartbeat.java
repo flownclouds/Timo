@@ -13,15 +13,12 @@
  */
 package fm.liu.timo.server.response;
 
-import org.pmw.tinylog.Logger;
-
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.net.mysql.ErrorPacket;
 import fm.liu.timo.net.mysql.HeartbeatPacket;
 import fm.liu.timo.net.mysql.OkPacket;
 import fm.liu.timo.server.ServerConnection;
-import fm.liu.timo.util.TimeUtil;
 
 public class Heartbeat {
 
@@ -35,25 +32,13 @@ public class Heartbeat {
             ok.affectedRows = hp.id;
             ok.serverStatus = 2;
             ok.write(c);
-            if (Logger.isInfoEnabled()) {
-                Logger.info(responseMessage("OK", c, hp.id));
-            }
         } else {
             ErrorPacket error = new ErrorPacket();
             error.packetId = 1;
             error.errno = ErrorCode.ER_SERVER_SHUTDOWN;
             error.message = String.valueOf(hp.id).getBytes();
             error.write(c);
-            if (Logger.isInfoEnabled()) {
-                Logger.info(responseMessage("ERROR", c, hp.id));
-            }
         }
-    }
-
-    private static String responseMessage(String action, ServerConnection c, long id) {
-        return new StringBuilder("RESPONSE:").append(action).append(", id=").append(id)
-                .append(", host=").append(c.getHost()).append(", port=").append(c.getPort())
-                .append(", time=").append(TimeUtil.currentTimeMillis()).toString();
     }
 
 }

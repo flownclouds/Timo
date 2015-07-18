@@ -32,9 +32,7 @@ public final class RollbackConfig {
         lock.lock();
         try {
             if (rollback()) {
-                StringBuilder s = new StringBuilder();
-                s.append(c).append("Rollback config success by manager");
-                Logger.warn(s.toString());
+                Logger.info("Rollback config success by manager");
                 OkPacket ok = new OkPacket();
                 ok.packetId = 1;
                 ok.affectedRows = 1;

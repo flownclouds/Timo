@@ -43,7 +43,7 @@ public class ServerQueryHandler implements FrontendQueryHandler {
     public void query(String sql) {
         ServerConnection c = this.source;
         if (Logger.isDebugEnabled()) {
-            Logger.debug(new StringBuilder().append(c).append(sql).toString());
+            Logger.debug("SQL:'{}' from {}", sql, c);
         }
         int rs = ServerParse.parse(sql);
         switch (rs & 0xff) {

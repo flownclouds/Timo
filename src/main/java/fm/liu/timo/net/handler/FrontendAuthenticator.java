@@ -103,7 +103,7 @@ public class FrontendAuthenticator implements NIOHandler {
         try {
             encryptPass = SecurityUtil.scramble411(pass.getBytes(), source.getSeed());
         } catch (NoSuchAlgorithmException e) {
-            Logger.warn(source.toString(), e);
+            Logger.warn("FrontConnection:{} Exception:{}", source.toString(), e);
             return false;
         }
         if (encryptPass != null && (encryptPass.length == password.length)) {
@@ -142,21 +142,15 @@ public class FrontendAuthenticator implements NIOHandler {
         source.setDB(auth.database);
         source.setCharsetIndex(auth.charsetIndex);
         source.setHandler(new FrontendCommandHandler(source));
-        if (Logger.isInfoEnabled()) {
-            StringBuilder s = new StringBuilder();
-            s.append(source).append('\'').append(auth.user).append("' login success");
-            byte[] extra = auth.extra;
-            if (extra != null && extra.length > 0) {
-                s.append(",extra:").append(new String(extra));
-            }
-            Logger.info(s.toString());
+        if (Logger.isDebugEnabled()) {
+            Logger.debug("Login success for {}/{}", source, auth.user);
         }
         ByteBuffer buffer = source.allocate();
         source.write(source.writeToBuffer(AUTH_OK, buffer));
     }
 
     protected void failure(int errno, String info) {
-        Logger.error(source.toString() + info);
+        Logger.warn("Login failure for {} by {}", source, info);
         source.writeErrMessage((byte) 2, errno, info);
     }
 

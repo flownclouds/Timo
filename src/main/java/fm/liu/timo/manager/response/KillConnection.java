@@ -36,8 +36,7 @@ public final class KillConnection {
         List<FrontendConnection> list = getList(stmt, offset, mc);
         if (list != null)
             for (NIOConnection c : list) {
-                StringBuilder s = new StringBuilder();
-                Logger.warn(s.append(c).append("killed by manager").toString());
+                Logger.info("{} is killed by manager", c);
                 c.close();
                 count++;
             }

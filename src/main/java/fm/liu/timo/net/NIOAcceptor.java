@@ -80,7 +80,7 @@ public final class NIOAcceptor extends Thread {
                     keys.clear();
                 }
             } catch (Throwable e) {
-                Logger.warn(getName(), e);
+                Logger.warn("Thread {} exception:{}", getName(), e);
             }
         }
     }
@@ -98,7 +98,7 @@ public final class NIOAcceptor extends Thread {
             processor.postRegister(c);
         } catch (Throwable e) {
             closeChannel(channel);
-            Logger.warn(getName(), e);
+            Logger.warn("Thread {} exception:{}", getName(), e);
         }
     }
 

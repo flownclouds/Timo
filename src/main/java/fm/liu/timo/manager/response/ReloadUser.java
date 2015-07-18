@@ -27,9 +27,7 @@ public final class ReloadUser {
     public static void execute(ManagerConnection c) {
         boolean status = false;
         if (status) {
-            StringBuilder s = new StringBuilder();
-            s.append(c).append("Reload userConfig success by manager");
-            Logger.warn(s.toString());
+            Logger.info("Reload userConfig success by manager");
             OkPacket ok = new OkPacket();
             ok.packetId = 1;
             ok.affectedRows = 1;

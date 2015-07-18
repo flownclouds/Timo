@@ -95,7 +95,7 @@ public class CharacterSet {
                     break;
                 default:
                     StringBuilder s = new StringBuilder();
-                    Logger.warn(s.append(c).append(sql).append(" is not executed").toString());
+                    Logger.warn("SQL:'{}' from {} is not executed", sql, c);
             }
         }
 

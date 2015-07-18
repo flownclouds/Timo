@@ -32,9 +32,7 @@ public final class ReloadConfig {
         lock.lock();
         try {
             if (reload()) {
-                StringBuilder s = new StringBuilder();
-                s.append(c).append("Reload config success by manager");
-                Logger.warn(s.toString());
+                Logger.info("Reload config success by manager");
                 OkPacket ok = new OkPacket();
                 ok.packetId = 1;
                 ok.affectedRows = 1;
