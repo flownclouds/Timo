@@ -26,6 +26,7 @@ import fm.liu.timo.route.Router;
 import fm.liu.timo.server.response.Heartbeat;
 import fm.liu.timo.server.response.Ping;
 import fm.liu.timo.server.session.AbstractSession;
+import fm.liu.timo.server.session.Session;
 import fm.liu.timo.util.TimeUtil;
 
 /**
@@ -34,7 +35,7 @@ import fm.liu.timo.util.TimeUtil;
 public class ServerConnection extends FrontendConnection {
     private static final long AUTH_TIMEOUT = 15 * 1000L;
 
-    private AbstractSession session;
+    private Session session;
 
     public ServerConnection(SocketChannel channel, NIOProcessor processor) {
         super(channel, processor);

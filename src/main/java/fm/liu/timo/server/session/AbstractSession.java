@@ -32,7 +32,7 @@ import fm.liu.timo.server.session.handler.ResultHandler;
 /**
  * @author Liu Huanting 2015年5月9日
  */
-public class AbstractSession {
+public class AbstractSession implements Session {
     protected final ServerConnection front;
     protected final ConcurrentHashMap<Integer, BackendConnection> connections;
     protected final Variables variables;
@@ -45,18 +45,22 @@ public class AbstractSession {
         this.variables.setIsolationLevel(front.getVariables().getIsolationLevel());
     }
 
+    @Override
     public ServerConnection getFront() {
         return front;
     }
 
+    @Override
     public Collection<BackendConnection> getConnections() {
         return connections.values();
     }
 
+    @Override
     public final void offer(BackendConnection con) {
         connections.put(con.getDatanodeID(), con);
     }
 
+    @Override
     public void execute(Outlets outs, int type) {
         ResultHandler handler = chooseHandler(outs, type);
         TimoConfig config = TimoServer.getInstance().getConfig();

@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2012 Alibaba Group.
+ * Copyright 2015 Liu Huanting.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,49 +13,44 @@
  */
 package fm.liu.timo.server.session;
 
-import fm.liu.timo.net.connection.FrontendConnection;
+import java.util.Collection;
+
+import fm.liu.timo.net.connection.BackendConnection;
 import fm.liu.timo.route.Outlets;
+import fm.liu.timo.server.ServerConnection;
+
 
 /**
- * @author xianmao.hexm 2012-7-11
+ * @author Liu Huanting
+ *
+ *         2015年7月18日
  */
 public interface Session {
 
     /**
-     * 取得源端连接
-     */
-    FrontendConnection getSource();
-
-    /**
-     * 取得当前目标端数量
-     */
-    int getTargetCount();
-
-    /**
-     * 开启一个会话执行
-     */
-    void execute(Outlets outcomes, int type);
-
-    /**
-     * 提交一个会话执行
-     */
-    void commit();
-
-    /**
-     * 回滚一个会话执行
-     */
-    void rollback();
-
-    /**
-     * 取消一个正在执行中的会话
      * 
-     * @param sponsor 如果发起者为null，则表示由自己发起。
+     * @return 前端连接
      */
-    void cancel(FrontendConnection sponsor);
+    ServerConnection getFront();
 
     /**
-     * 终止会话，必须在关闭源端连接后执行该方法。
+     * 
+     * @return 后端所有连接
      */
-    void terminate();
+    Collection<BackendConnection> getConnections();
+
+    /**
+     * 
+     * @param con 绑定后端连接到会话
+     */
+    void offer(BackendConnection con);
+
+    /**
+     * 执行SQL语句
+     * 
+     * @param outs 路由结果
+     * @param type SQL类型
+     */
+    void execute(Outlets outs, int type);
 
 }

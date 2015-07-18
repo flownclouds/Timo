@@ -52,7 +52,7 @@ public class StringUtil {
         for (int i = start; i < end; ++i) {
             h = (h << 5) - h + s.charAt(i);
         }
-        return h;
+        return h & Long.MAX_VALUE;
     }
 
     public static long hash(String key) {

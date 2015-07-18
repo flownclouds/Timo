@@ -18,13 +18,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
-import fm.liu.timo.server.session.AbstractSession;
+import fm.liu.timo.server.session.Session;
 
 /**
  * @author Liu Huanting 2015年5月9日
  */
 public abstract class SessionResultHandler implements ResultHandler {
-    public AbstractSession session;
+    public Session session;
     protected volatile byte packetId = 0;
     protected volatile ByteBuffer buffer = null;
     protected volatile AtomicInteger count;

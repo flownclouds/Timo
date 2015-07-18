@@ -20,7 +20,7 @@ import fm.liu.timo.net.connection.BackendConnection;
 import fm.liu.timo.net.mysql.ErrorPacket;
 import fm.liu.timo.net.mysql.OkPacket;
 import fm.liu.timo.server.ServerConnection;
-import fm.liu.timo.server.session.AbstractSession;
+import fm.liu.timo.server.session.Session;
 import fm.liu.timo.server.session.handler.SessionResultHandler;
 import fm.liu.timo.util.StringUtil;
 
@@ -28,7 +28,7 @@ import fm.liu.timo.util.StringUtil;
  * @author Liu Huanting 2015年5月9日
  */
 public class MySQLSingleNodeHandler extends SessionResultHandler {
-    public MySQLSingleNodeHandler(AbstractSession session) {
+    public MySQLSingleNodeHandler(Session session) {
         super.session = session;
     }
 

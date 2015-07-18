@@ -28,7 +28,7 @@ import fm.liu.timo.net.mysql.FieldPacket;
 import fm.liu.timo.net.mysql.OkPacket;
 import fm.liu.timo.net.mysql.RowDataPacket;
 import fm.liu.timo.server.ServerConnection;
-import fm.liu.timo.server.session.AbstractSession;
+import fm.liu.timo.server.session.Session;
 import fm.liu.timo.server.session.handler.SessionResultHandler;
 import fm.liu.timo.util.StringUtil;
 
@@ -41,7 +41,7 @@ public class MySQLMultiNodeHandler extends SessionResultHandler {
     protected boolean returned = false;
     protected Merger merger;
 
-    public MySQLMultiNodeHandler(AbstractSession session, Merger merger, int size) {
+    public MySQLMultiNodeHandler(Session session, Merger merger, int size) {
         super.session = session;
         super.count = new AtomicInteger(size);
         this.merger = merger;
