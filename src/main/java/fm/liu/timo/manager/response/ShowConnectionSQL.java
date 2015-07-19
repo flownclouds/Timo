@@ -27,7 +27,6 @@ import fm.liu.timo.net.mysql.ResultSetHeaderPacket;
 import fm.liu.timo.net.mysql.RowDataPacket;
 import fm.liu.timo.util.LongUtil;
 import fm.liu.timo.util.StringUtil;
-import fm.liu.timo.util.TimeUtil;
 
 /**
  * @author xianmao.hexm

@@ -16,7 +16,6 @@ package fm.liu.timo.manager.response;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +30,6 @@ import fm.liu.timo.net.mysql.EOFPacket;
 import fm.liu.timo.net.mysql.FieldPacket;
 import fm.liu.timo.net.mysql.ResultSetHeaderPacket;
 import fm.liu.timo.net.mysql.RowDataPacket;
-import fm.liu.timo.parser.util.Pair;
-import fm.liu.timo.parser.util.PairUtil;
-import fm.liu.timo.util.IntegerUtil;
-import fm.liu.timo.util.LongUtil;
 
 /**
  * @author xianmao.hexm
@@ -159,19 +154,6 @@ public class ShowHeartbeat {
             }
         }
         return list;
-    }
-
-    private static final class Comparators<T> implements Comparator<String> {
-        @Override
-        public int compare(String s1, String s2) {
-            Pair<String, Integer> p1 = PairUtil.splitIndex(s1, '[', ']');
-            Pair<String, Integer> p2 = PairUtil.splitIndex(s2, '[', ']');
-            if (p1.getKey().compareTo(p2.getKey()) == 0) {
-                return p1.getValue() - p2.getValue();
-            } else {
-                return p1.getKey().compareTo(p2.getKey());
-            }
-        }
     }
 
 }

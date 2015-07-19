@@ -28,7 +28,6 @@ import fm.liu.timo.net.mysql.RowDataPacket;
 import fm.liu.timo.util.IntegerUtil;
 import fm.liu.timo.util.LongUtil;
 import fm.liu.timo.util.StringUtil;
-import fm.liu.timo.util.TimeUtil;
 
 /**
  * 查询后端连接

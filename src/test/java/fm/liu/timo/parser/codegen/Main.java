@@ -60,6 +60,7 @@ public class Main {
         InputStream fileInputStream = null;
         try {
             fileInputStream = new FileInputStream(file);
+            @SuppressWarnings("resource")
             BufferedReader fin = new BufferedReader(new InputStreamReader(fileInputStream, "gbk"));
             File tmp = getTmpFile(file);
             PrintWriter tout = null;

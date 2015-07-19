@@ -16,7 +16,6 @@ package fm.liu.timo.mysql;
 import java.io.UnsupportedEncodingException;
 
 import fm.liu.timo.config.ErrorCode;
-import fm.liu.timo.net.mysql.BinaryPacket;
 import fm.liu.timo.net.mysql.ErrorPacket;
 import fm.liu.timo.net.mysql.FieldPacket;
 import fm.liu.timo.net.mysql.ResultSetHeaderPacket;

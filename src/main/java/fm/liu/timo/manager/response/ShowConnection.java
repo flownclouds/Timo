@@ -20,17 +20,14 @@ import fm.liu.timo.config.Fields;
 import fm.liu.timo.manager.ManagerConnection;
 import fm.liu.timo.mysql.PacketUtil;
 import fm.liu.timo.net.NIOProcessor;
-import fm.liu.timo.net.buffer.BufferQueue;
 import fm.liu.timo.net.connection.FrontendConnection;
 import fm.liu.timo.net.mysql.EOFPacket;
 import fm.liu.timo.net.mysql.FieldPacket;
 import fm.liu.timo.net.mysql.ResultSetHeaderPacket;
 import fm.liu.timo.net.mysql.RowDataPacket;
-import fm.liu.timo.server.ServerConnection;
 import fm.liu.timo.util.IntegerUtil;
 import fm.liu.timo.util.LongUtil;
 import fm.liu.timo.util.StringUtil;
-import fm.liu.timo.util.TimeUtil;
 
 /**
  * 查看当前有效连接信息

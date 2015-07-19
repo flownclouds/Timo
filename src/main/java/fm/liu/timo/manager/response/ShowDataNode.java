@@ -18,7 +18,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -34,12 +33,8 @@ import fm.liu.timo.net.mysql.EOFPacket;
 import fm.liu.timo.net.mysql.FieldPacket;
 import fm.liu.timo.net.mysql.ResultSetHeaderPacket;
 import fm.liu.timo.net.mysql.RowDataPacket;
-import fm.liu.timo.parser.util.Pair;
-import fm.liu.timo.parser.util.PairUtil;
 import fm.liu.timo.util.IntegerUtil;
-import fm.liu.timo.util.LongUtil;
 import fm.liu.timo.util.StringUtil;
-import fm.liu.timo.util.TimeUtil;
 
 /**
  * 查看数据节点信息
@@ -169,19 +164,6 @@ public final class ShowDataNode {
         // long recoveryTime = node.getHeartbeatRecoveryTime() - TimeUtil.currentTimeMillis();
         // row.add(LongUtil.toBytes(recoveryTime > 0 ? recoveryTime / 1000L : -1L));
         return row;
-    }
-
-    private static final class Comparators<T> implements Comparator<String> {
-        @Override
-        public int compare(String s1, String s2) {
-            Pair<String, Integer> p1 = PairUtil.splitIndex(s1, '[', ']');
-            Pair<String, Integer> p2 = PairUtil.splitIndex(s2, '[', ']');
-            if (p1.getKey().compareTo(p2.getKey()) == 0) {
-                return p1.getValue() - p2.getValue();
-            } else {
-                return p1.getKey().compareTo(p2.getKey());
-            }
-        }
     }
 
 }

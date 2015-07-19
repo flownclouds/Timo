@@ -21,7 +21,6 @@ import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.config.model.Database;
 import fm.liu.timo.manager.ManagerConnection;
 import fm.liu.timo.net.backend.Node;
-import fm.liu.timo.net.backend.Source;
 import fm.liu.timo.net.mysql.OkPacket;
 
 /**
@@ -31,8 +30,7 @@ public class ClearSlow {
 
     public static void dataNode(ManagerConnection c, String name) {
         Node dn = TimoServer.getInstance().getConfig().getNodes().get(name);
-        Source ds = null;
-        if (dn != null && (ds = dn.getSource()) != null) {
+        if (dn != null && (dn.getSource() != null)) {
             // ds.getSqlRecorder().clear();
             c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));
         } else {
@@ -47,8 +45,7 @@ public class ClearSlow {
             Map<Integer, Node> dataNodes = conf.getNodes();
             for (Integer n : schema.getNodes()) {
                 Node dn = dataNodes.get(n);
-                Source ds = null;
-                if (dn != null && (ds = dn.getSource()) != null) {
+                if (dn != null && (dn.getSource() != null)) {
                     // ds.getSqlRecorder().clear();
                 }
             }

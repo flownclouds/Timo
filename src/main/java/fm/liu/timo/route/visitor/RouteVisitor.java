@@ -196,18 +196,6 @@ public class RouteVisitor extends Visitor {
         info |= Info.HAS_LIMIT;
         limitSize = (int) limit.getSize();
         limitOffset = (int) limit.getOffset();
-        // if (size instanceof Expression) {
-        // size = ((Expression) size).evaluation(Collections.emptyMap());
-        // if (size instanceof Number) {
-        // limitSize = ((Number) size).intValue();
-        // }
-        // }
-        // if (offset instanceof Expression) {
-        // offset = ((Expression) size).evaluation(Collections.emptyMap());
-        // if (offset instanceof Number) {
-        // limitSize = ((Number) offset).intValue();
-        // }
-        // }
     }
 
 }

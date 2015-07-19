@@ -94,7 +94,6 @@ public class CharacterSet {
                 case CHARACTER_SET_CLIENT:
                     break;
                 default:
-                    StringBuilder s = new StringBuilder();
                     Logger.warn("SQL:'{}' from {} is not executed", sql, c);
             }
         }
