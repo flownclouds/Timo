@@ -32,6 +32,7 @@ import fm.liu.timo.parser.ast.expression.primary.function.groupby.Max;
 import fm.liu.timo.parser.ast.expression.primary.function.groupby.Min;
 import fm.liu.timo.parser.ast.expression.primary.function.groupby.Sum;
 import fm.liu.timo.parser.ast.fragment.GroupBy;
+import fm.liu.timo.parser.ast.fragment.Limit;
 import fm.liu.timo.parser.ast.fragment.OrderBy;
 import fm.liu.timo.parser.ast.fragment.SortOrder;
 import fm.liu.timo.parser.ast.fragment.tableref.TableRefFactor;
@@ -50,7 +51,8 @@ public class RouteVisitor extends Visitor {
     private int info;
     private Set<String> groupBy;
     private Map<String, Integer> orderBy;
-    private final Map<Object, Object> evaluationParameter = Collections.emptyMap();
+    private int limitSize = -1;
+    private int limitOffset = 0;
 
     public RouteVisitor(Database database) {
         this.database = database;
@@ -75,6 +77,14 @@ public class RouteVisitor extends Visitor {
 
     public Map<String, Integer> getOrderBy() {
         return orderBy;
+    }
+
+    public int getLimitSize() {
+        return limitSize;
+    }
+
+    public int getLimitOffset() {
+        return limitOffset;
     }
 
     private void recordTable(Identifier node) {
@@ -115,9 +125,9 @@ public class RouteVisitor extends Visitor {
         visitChild(left);
         visitChild(right);
         if (left instanceof Identifier) {
-            recordValue((Identifier) left, right.evaluation(evaluationParameter), node);
+            recordValue((Identifier) left, right.evaluation(Collections.emptyMap()), node);
         } else if (right instanceof Identifier) {
-            recordValue((Identifier) right, left.evaluation(evaluationParameter), node);
+            recordValue((Identifier) right, left.evaluation(Collections.emptyMap()), node);
         }
     }
 
@@ -179,6 +189,25 @@ public class RouteVisitor extends Visitor {
                     break;
             }
         }
+    }
+
+    @Override
+    public void visit(Limit limit) {
+        info |= Info.HAS_LIMIT;
+        limitSize = (int) limit.getSize();
+        limitOffset = (int) limit.getOffset();
+        // if (size instanceof Expression) {
+        // size = ((Expression) size).evaluation(Collections.emptyMap());
+        // if (size instanceof Number) {
+        // limitSize = ((Number) size).intValue();
+        // }
+        // }
+        // if (offset instanceof Expression) {
+        // offset = ((Expression) size).evaluation(Collections.emptyMap());
+        // if (offset instanceof Number) {
+        // limitSize = ((Number) offset).intValue();
+        // }
+        // }
     }
 
 }

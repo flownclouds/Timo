@@ -154,11 +154,30 @@ public class MySQLMultiNodeHandler extends SessionResultHandler {
             }
             ServerConnection front = session.getFront();
             Iterator<RowDataPacket> itor = merger.getResult().iterator();
-            while (itor.hasNext()) {
-                RowDataPacket row = itor.next();
-                itor.remove();
-                row.packetId = ++packetId;
-                buffer = row.write(buffer, front);
+            int start = merger.getOutlets().getLimitOffset();
+            int end = start + merger.getOutlets().getLimitSize();
+            if (end == -1) {
+                while (itor.hasNext()) {
+                    RowDataPacket row = itor.next();
+                    itor.remove();
+                    row.packetId = ++packetId;
+                    buffer = row.write(buffer, front);
+                }
+            } else {
+                int i = 0;
+                while (itor.hasNext()) {
+                    RowDataPacket row = itor.next();
+                    itor.remove();
+                    if (i < start) {
+                        i++;
+                        continue;
+                    } else if (i == end) {
+                        break;
+                    }
+                    row.packetId = ++packetId;
+                    buffer = row.write(buffer, front);
+                    i++;
+                }
             }
             eof[3] = ++packetId;
             buffer = front.writeToBuffer(eof, allocBuffer());

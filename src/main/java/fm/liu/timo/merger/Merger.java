@@ -100,4 +100,7 @@ public class Merger {
         rows.add(packet);
     }
 
+    public Outlets getOutlets() {
+        return this.outlets;
+    }
 }

@@ -25,6 +25,8 @@ public class Outlets {
     private int info;
     private Set<String> groupBy;
     private Map<String, Integer> orderBy;
+    private int limitSize = -1;
+    private int limitOffset = 0;
 
     public Outlets() {
         this.outlets = new HashSet<Outlet>();
@@ -66,4 +68,16 @@ public class Outlets {
         this.orderBy = orderBy;
     }
 
+    public void setLimit(int limitSize, int limitOffset) {
+        this.limitSize = limitSize;
+        this.limitOffset = limitOffset;
+    }
+
+    public int getLimitSize() {
+        return limitSize;
+    }
+
+    public int getLimitOffset() {
+        return limitOffset;
+    }
 }

@@ -22,6 +22,7 @@ import fm.liu.timo.config.model.Table;
 import fm.liu.timo.config.model.Table.TableType;
 import fm.liu.timo.parser.ast.stmt.SQLStatement;
 import fm.liu.timo.parser.recognizer.SQLParserDelegate;
+import fm.liu.timo.parser.visitor.OutputVisitor;
 import fm.liu.timo.route.visitor.RouteVisitor;
 import fm.liu.timo.server.parser.ServerParse;
 
@@ -57,11 +58,21 @@ public class Router {
                 if ((info & Info.HAS_ORDERBY) == Info.HAS_ORDERBY) {
                     outlets.setOrderBy(visitor.getOrderBy());
                 }
+                if ((info & Info.HAS_LIMIT) == Info.HAS_LIMIT) {
+                    outlets.setLimit(visitor.getLimitSize(), visitor.getLimitOffset());
+                }
         }
-        return route(outlets, table, values, sql);
+        return route(stmt, outlets, table, values, sql);
     }
 
-    private static Outlets route(Outlets outlets, Table table, Set<Object> values, String sql) {
+    private static String updateSQL(SQLStatement stmt) {
+        OutputVisitor visitor = new OutputVisitor(new StringBuilder(), true);
+        stmt.accept(visitor);
+        return visitor.getSql();
+    }
+
+    private static Outlets route(SQLStatement stmt, Outlets outlets, Table table,
+            Set<Object> values, String sql) {
         if (values.isEmpty()) {
             for (Integer id : table.getNodes()) {
                 Outlet out = new Outlet(id, sql);
@@ -70,6 +81,9 @@ public class Router {
         } else {
             Function function = table.getRule().getFunction();
             Set<Integer> result = function.calcute(values);
+            if (result.size() > 1) {
+                sql = updateSQL(stmt);
+            }
             for (int id : result) {
                 Outlet out = new Outlet(id, sql);
                 outlets.add(out);

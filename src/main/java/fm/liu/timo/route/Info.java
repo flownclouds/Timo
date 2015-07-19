@@ -21,4 +21,5 @@ public interface Info {
     public int HAS_GROUPBY = 2;
     public int HAS_ORDERBY = 4;
     public int HAS_DISTINCT = 8;
+    public int HAS_LIMIT = 16;
 }
