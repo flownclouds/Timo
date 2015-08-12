@@ -14,7 +14,6 @@
 package fm.liu.timo.server.session.handler;
 
 import java.util.List;
-
 import fm.liu.timo.mysql.connection.MySQLConnection;
 import fm.liu.timo.net.connection.BackendConnection;
 

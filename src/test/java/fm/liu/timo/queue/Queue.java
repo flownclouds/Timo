@@ -92,8 +92,7 @@ public final class Queue<T> {
         while (count == 0) {
             try {
                 wait();
-            } catch (InterruptedException e) {
-            }
+            } catch (InterruptedException e) {}
         }
     }
 
@@ -101,8 +100,7 @@ public final class Queue<T> {
         if (count == 0) {
             try {
                 wait(maxwait);
-            } catch (InterruptedException e) {
-            }
+            } catch (InterruptedException e) {}
             if (count == 0) {
                 return null;
             }
@@ -114,8 +112,7 @@ public final class Queue<T> {
         while (count == 0) {
             try {
                 wait();
-            } catch (InterruptedException e) {
-            }
+            } catch (InterruptedException e) {}
         }
 
         // pull the object off, and clear our reference to it

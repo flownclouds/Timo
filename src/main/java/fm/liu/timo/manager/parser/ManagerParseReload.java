@@ -20,10 +20,10 @@ import fm.liu.timo.parser.util.ParseUtil;
  */
 public final class ManagerParseReload {
 
-    public static final int OTHER = -1;
+    public static final int OTHER  = -1;
     public static final int CONFIG = 1;
-    public static final int ROUTE = 2;
-    public static final int USER = 3;
+    public static final int ROUTE  = 2;
+    public static final int USER   = 3;
 
     public static int parse(String stmt, int offset) {
         int i = offset;

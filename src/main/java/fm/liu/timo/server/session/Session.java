@@ -14,11 +14,9 @@
 package fm.liu.timo.server.session;
 
 import java.util.Collection;
-
 import fm.liu.timo.net.connection.BackendConnection;
 import fm.liu.timo.route.Outlets;
 import fm.liu.timo.server.ServerConnection;
-
 
 /**
  * @author Liu Huanting

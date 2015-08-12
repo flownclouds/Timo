@@ -19,7 +19,6 @@ import java.nio.channels.SocketChannel;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
-
 import fm.liu.timo.net.NIOActor;
 import fm.liu.timo.net.NIOHandler;
 import fm.liu.timo.net.NIOProcessor;
@@ -29,33 +28,33 @@ import fm.liu.timo.net.mysql.MySQLPacket;
  * @author xianmao.hexm
  */
 public abstract class AbstractConnection implements NIOConnection {
-    protected final SocketChannel channel;
-    protected NIOProcessor processor;
-    protected NIOHandler handler;
-    protected ReentrantLock closedLock = new ReentrantLock();
-    protected volatile int readBufferOffset;
-    protected volatile ByteBuffer readBuffer;
-    protected volatile ByteBuffer writeBuffer;
-    protected volatile long lastReadTime;
-    protected volatile long lastWriteTime;
+    protected final SocketChannel                     channel;
+    protected NIOProcessor                            processor;
+    protected NIOHandler                              handler;
+    protected ReentrantLock                           closedLock = new ReentrantLock();
+    protected volatile int                            readBufferOffset;
+    protected volatile ByteBuffer                     readBuffer;
+    protected volatile ByteBuffer                     writeBuffer;
+    protected volatile long                           lastReadTime;
+    protected volatile long                           lastWriteTime;
     protected final ConcurrentLinkedQueue<ByteBuffer> writeQueue =
             new ConcurrentLinkedQueue<ByteBuffer>();
-    private final NIOActor actor;
-    protected AtomicBoolean closed = new AtomicBoolean(false);
-    protected volatile int state;
-    protected Variables variables = new Variables();
+    private final NIOActor                            actor;
+    protected AtomicBoolean                           closed     = new AtomicBoolean(false);
+    protected volatile int                            state;
+    protected Variables                               variables  = new Variables();
 
-    protected long id;
+    protected long   id;
     protected String host;
-    protected int port;
-    protected int localPort;
+    protected int    port;
+    protected int    localPort;
 
     static public class State {
-        public static final int connecting = 0;
+        public static final int connecting     = 0;
         public static final int authenticating = 1;
-        public static final int idle = 2;
-        public static final int borrowed = 3;
-        public static final int running = 4;
+        public static final int idle           = 2;
+        public static final int borrowed       = 3;
+        public static final int running        = 4;
 
         public static String getStateDesc(int state) {
             switch (state) {
@@ -89,7 +88,6 @@ public abstract class AbstractConnection implements NIOConnection {
     public SocketChannel getChannel() {
         return channel;
     }
-
 
     public NIOProcessor getProcessor() {
         return processor;
@@ -187,7 +185,6 @@ public abstract class AbstractConnection implements NIOConnection {
         this.processor.getBufferPool().recycle(buffer);
     }
 
-
     public void check() {
         actor.check();
     }
@@ -244,8 +241,7 @@ public abstract class AbstractConnection implements NIOConnection {
         if (channel != null) {
             try {
                 channel.close();
-            } catch (Throwable e) {
-            }
+            } catch (Throwable e) {}
         }
         // 清理回收readBuffer
         if (getReadBuffer() != null) {

@@ -15,7 +15,6 @@ package fm.liu.timo.statistic;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import fm.liu.timo.util.TimeUtil;
 
 /**
@@ -25,14 +24,14 @@ import fm.liu.timo.util.TimeUtil;
  */
 public class HeartbeatRecorder {
 
-    private static final int MAX_RECORD_SIZE = 256;
-    private static final long AVG1_TIME = 60 * 1000L;
-    private static final long AVG2_TIME = 10 * 60 * 1000L;
-    private static final long AVG3_TIME = 30 * 60 * 1000L;
+    private static final int  MAX_RECORD_SIZE = 256;
+    private static final long AVG1_TIME       = 60 * 1000L;
+    private static final long AVG2_TIME       = 10 * 60 * 1000L;
+    private static final long AVG3_TIME       = 30 * 60 * 1000L;
 
-    private long avg1;
-    private long avg2;
-    private long avg3;
+    private long               avg1;
+    private long               avg2;
+    private long               avg3;
     private final List<Record> records;
 
     public HeartbeatRecorder() {

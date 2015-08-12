@@ -15,7 +15,6 @@ package fm.liu.timo;
 
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicLong;
-
 import fm.liu.timo.util.ExecutorUtil;
 
 /**

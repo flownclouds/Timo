@@ -23,7 +23,7 @@ public final class ParserCount {
     private long maxParseTime;
     private long maxParseSQL;
     private long cachedCount;
-    private int cacheSizeCount;
+    private int  cacheSizeCount;
 
     public void doParse(long sqlId, long time) {
         parseCount++;

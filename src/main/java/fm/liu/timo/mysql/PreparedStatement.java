@@ -18,11 +18,11 @@ package fm.liu.timo.mysql;
  */
 public class PreparedStatement {
 
-    private long id;
+    private long   id;
     private String statement;
-    private int columnsNumber;
-    private int parametersNumber;
-    private int[] parametersType;
+    private int    columnsNumber;
+    private int    parametersNumber;
+    private int[]  parametersType;
 
     public PreparedStatement(long id, String statement, int columnsNumber, int parametersNumber) {
         this.id = id;

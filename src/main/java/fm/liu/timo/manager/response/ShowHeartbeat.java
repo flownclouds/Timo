@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import fm.liu.timo.TimoConfig;
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.Fields;
@@ -36,10 +35,10 @@ import fm.liu.timo.net.mysql.RowDataPacket;
  */
 public class ShowHeartbeat {
 
-    private static final int FIELD_COUNT = 11;
-    private static final ResultSetHeaderPacket header = PacketUtil.getHeader(FIELD_COUNT);
-    private static final FieldPacket[] fields = new FieldPacket[FIELD_COUNT];
-    private static final EOFPacket eof = new EOFPacket();
+    private static final int                   FIELD_COUNT = 11;
+    private static final ResultSetHeaderPacket header      = PacketUtil.getHeader(FIELD_COUNT);
+    private static final FieldPacket[]         fields      = new FieldPacket[FIELD_COUNT];
+    private static final EOFPacket             eof         = new EOFPacket();
 
     static {
         int i = 0;

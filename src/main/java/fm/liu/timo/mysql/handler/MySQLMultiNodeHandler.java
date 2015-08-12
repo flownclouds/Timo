@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.merger.ColumnInfo;
 import fm.liu.timo.merger.Merger;
@@ -36,10 +35,10 @@ import fm.liu.timo.util.StringUtil;
  * @author Liu Huanting 2015年5月9日
  */
 public class MySQLMultiNodeHandler extends SessionResultHandler {
-    protected long affectedRows = 0;
-    protected long insertId = 0;
-    protected boolean returned = false;
-    protected Merger merger;
+    protected long    affectedRows = 0;
+    protected long    insertId     = 0;
+    protected boolean returned     = false;
+    protected Merger  merger;
 
     public MySQLMultiNodeHandler(Session session, Merger merger, int size) {
         super.session = session;

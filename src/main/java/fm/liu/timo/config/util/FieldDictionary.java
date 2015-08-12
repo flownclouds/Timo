@@ -21,9 +21,9 @@ import java.util.Map;
 
 public class FieldDictionary {
 
-    private final Map<String, Map<String, Field>> nameCache =
+    private final Map<String, Map<String, Field>>   nameCache =
             Collections.synchronizedMap(new HashMap<String, Map<String, Field>>());
-    private final Map<String, Map<FieldKey, Field>> keyCache =
+    private final Map<String, Map<FieldKey, Field>> keyCache  =
             Collections.synchronizedMap(new HashMap<String, Map<FieldKey, Field>>());
 
     /**
@@ -97,10 +97,10 @@ public class FieldDictionary {
 
     private static class FieldKey {
 
-        private String fieldName;
+        private String   fieldName;
         private Class<?> declaringClass;
-        private Integer depth;
-        private int order;
+        private Integer  depth;
+        private int      order;
 
         public FieldKey(String fieldName, Class<?> declaringClass, int order) {
             this.fieldName = fieldName;

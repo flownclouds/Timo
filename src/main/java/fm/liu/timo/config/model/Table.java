@@ -20,10 +20,10 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author Liu Huanting 2015年5月9日
  */
 public class Table {
-    private final int databaseID;
-    private final String name;
-    private final TableType type;
-    private final Rule rule;
+    private final int           databaseID;
+    private final String        name;
+    private final TableType     type;
+    private final Rule          rule;
     private final List<Integer> nodes;
 
     public Table(int databaseID, String name, int type, Rule rule, List<Integer> nodes) {

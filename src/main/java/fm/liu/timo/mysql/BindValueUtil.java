@@ -14,7 +14,6 @@
 package fm.liu.timo.mysql;
 
 import java.io.UnsupportedEncodingException;
-
 import fm.liu.timo.config.Fields;
 
 /**

@@ -24,12 +24,12 @@ import java.util.Calendar;
  * @author xianmao.hexm
  */
 public class MySQLMessage {
-    public static final long NULL_LENGTH = -1;
+    public static final long    NULL_LENGTH = -1;
     private static final byte[] EMPTY_BYTES = new byte[0];
 
     private final byte[] data;
-    private final int length;
-    private int position;
+    private final int    length;
+    private int          position;
 
     public MySQLMessage(byte[] data) {
         this.data = data;

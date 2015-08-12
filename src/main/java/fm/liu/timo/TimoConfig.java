@@ -16,7 +16,6 @@ package fm.liu.timo;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
-
 import fm.liu.timo.config.loader.ServerConfigLoader;
 import fm.liu.timo.config.loader.SystemConfigLoader;
 import fm.liu.timo.config.model.Database;
@@ -32,11 +31,11 @@ import fm.liu.timo.net.connection.Variables;
  * @author Liu Huanting 2015年5月10日
  */
 public class TimoConfig {
-    private volatile SystemConfig system;
-    private volatile Map<String, User> users;
+    private volatile SystemConfig          system;
+    private volatile Map<String, User>     users;
     private volatile Map<String, Database> databases;
-    private volatile Map<Integer, Node> nodes;
-    private ReentrantLock lock = new ReentrantLock();
+    private volatile Map<Integer, Node>    nodes;
+    private ReentrantLock                  lock = new ReentrantLock();
     private final Map<Integer, Datasource> datasources;
 
     public TimoConfig() {

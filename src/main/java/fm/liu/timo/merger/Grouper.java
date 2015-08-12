@@ -15,7 +15,6 @@ package fm.liu.timo.merger;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
-
 import fm.liu.timo.net.mysql.RowDataPacket;
 import fm.liu.timo.util.ByteUtil;
 import fm.liu.timo.util.CompareUtil;
@@ -25,9 +24,9 @@ import fm.liu.timo.util.LongUtil;
  * @author Liu Huanting 2015年6月4日
  */
 public class Grouper {
-    private final MergeInfo[] mergeInfo;
+    private final MergeInfo[]         mergeInfo;
     private ArrayDeque<RowDataPacket> rows;
-    private Sorter sorter;
+    private Sorter                    sorter;
 
     public Grouper(MergeInfo[] groupBy, MergeInfo[] mergeInfo) {
         this.mergeInfo = mergeInfo;

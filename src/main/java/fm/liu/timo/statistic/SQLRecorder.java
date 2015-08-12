@@ -23,11 +23,11 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public final class SQLRecorder {
 
-    private int index;
-    private long minValue;
-    private final int count;
-    private final int lastIndex;
-    private final SQLRecord[] records;
+    private int                 index;
+    private long                minValue;
+    private final int           count;
+    private final int           lastIndex;
+    private final SQLRecord[]   records;
     private final ReentrantLock lock;
 
     public SQLRecorder(int count) {

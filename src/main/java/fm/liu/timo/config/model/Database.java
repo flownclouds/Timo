@@ -23,10 +23,10 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author Liu Huanting 2015年5月9日
  */
 public class Database {
-    private final int id;
-    private final String name;
+    private final int                id;
+    private final String             name;
     private final Map<String, Table> tables;
-    private final List<Integer> nodes;
+    private final List<Integer>      nodes;
 
     public Database(int id, String name, Map<String, Table> tables) {
         this.id = id;

@@ -23,7 +23,7 @@ import java.util.Set;
 public class OrderRetainingMap<K, V> extends HashMap<K, V> {
     private static final long serialVersionUID = 1L;
 
-    private Set<K> keyOrder = new ArraySet<K>();
+    private Set<K>  keyOrder   = new ArraySet<K>();
     private List<V> valueOrder = new ArrayList<V>();
 
     @Override

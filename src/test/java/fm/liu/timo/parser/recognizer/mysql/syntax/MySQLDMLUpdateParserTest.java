@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
 import java.sql.SQLSyntaxErrorException;
-
 import fm.liu.timo.parser.ast.stmt.dml.DMLUpdateStatement;
 import fm.liu.timo.parser.recognizer.mysql.lexer.MySQLLexer;
 import fm.liu.timo.parser.recognizer.mysql.syntax.MySQLDMLUpdateParser;

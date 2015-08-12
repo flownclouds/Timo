@@ -16,7 +16,6 @@ package fm.liu.timo.net.factory;
 import java.io.IOException;
 import java.net.StandardSocketOptions;
 import java.nio.channels.SocketChannel;
-
 import fm.liu.timo.net.NIOProcessor;
 import fm.liu.timo.net.connection.FrontendConnection;
 import fm.liu.timo.net.connection.Variables;
@@ -26,10 +25,10 @@ import fm.liu.timo.net.connection.Variables;
  */
 public abstract class FrontendConnectionFactory {
 
-    protected int socketRecvBuffer = 8 * 1024;
-    protected int socketSendBuffer = 16 * 1024;
-    protected int writeQueueCapcity = 16;
-    protected long idleTimeout = 8 * 3600 * 1000L;
+    protected int             socketRecvBuffer  = 8 * 1024;
+    protected int             socketSendBuffer  = 16 * 1024;
+    protected int             writeQueueCapcity = 16;
+    protected long            idleTimeout       = 8 * 3600 * 1000L;
     protected final Variables variables;
 
     public FrontendConnectionFactory(Variables variables) {

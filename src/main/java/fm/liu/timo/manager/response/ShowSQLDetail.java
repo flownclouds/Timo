@@ -16,7 +16,6 @@ package fm.liu.timo.manager.response;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-
 import fm.liu.timo.config.Fields;
 import fm.liu.timo.manager.ManagerConnection;
 import fm.liu.timo.mysql.PacketUtil;
@@ -35,11 +34,11 @@ import fm.liu.timo.util.StringUtil;
  */
 public final class ShowSQLDetail {
 
-    private static final NumberFormat nf = DecimalFormat.getInstance();
-    private static final int FIELD_COUNT = 5;
-    private static final ResultSetHeaderPacket header = PacketUtil.getHeader(FIELD_COUNT);
-    private static final FieldPacket[] fields = new FieldPacket[FIELD_COUNT];
-    private static final EOFPacket eof = new EOFPacket();
+    private static final NumberFormat          nf          = DecimalFormat.getInstance();
+    private static final int                   FIELD_COUNT = 5;
+    private static final ResultSetHeaderPacket header      = PacketUtil.getHeader(FIELD_COUNT);
+    private static final FieldPacket[]         fields      = new FieldPacket[FIELD_COUNT];
+    private static final EOFPacket             eof         = new EOFPacket();
 
     static {
         nf.setMaximumFractionDigits(3);

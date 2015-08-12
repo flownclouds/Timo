@@ -18,9 +18,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.pmw.tinylog.Logger;
-
 import fm.liu.timo.config.model.SystemConfig;
 import fm.liu.timo.manager.ManagerConnectionFactory;
 import fm.liu.timo.net.NIOAcceptor;
@@ -38,23 +36,23 @@ import fm.liu.timo.util.TimeUtil;
  * @author xianmao.hexm 2011-4-19 下午02:58:59
  */
 public class TimoServer {
-    public static final String NAME = "Timo";
-    private static final long TIME_UPDATE_PERIOD = 20L;
-    private static final TimoServer INSTANCE = new TimoServer();
+    public static final String      NAME               = "Timo";
+    private static final long       TIME_UPDATE_PERIOD = 20L;
+    private static final TimoServer INSTANCE           = new TimoServer();
 
     public static final TimoServer getInstance() {
         return INSTANCE;
     }
 
-    private final TimoConfig config;
-    private final Timer timer;
+    private final TimoConfig       config;
+    private final Timer            timer;
     private final NameableExecutor timerExecutor;
-    private final AtomicBoolean isOnline;
-    private final long startupTime;
-    private NIOProcessor[] processors;
-    private NIOConnector connector;
-    private NIOAcceptor manager;
-    private NIOAcceptor server;
+    private final AtomicBoolean    isOnline;
+    private final long             startupTime;
+    private NIOProcessor[]         processors;
+    private NIOConnector           connector;
+    private NIOAcceptor            manager;
+    private NIOAcceptor            server;
 
     private TimoServer() {
         this.config = new TimoConfig();

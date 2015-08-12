@@ -18,8 +18,8 @@ package fm.liu.timo.util;
  */
 public final class IntegerUtil {
 
-    static final byte[] minValue = "-2147483648".getBytes();
-    static final int[] sizeTable =
+    static final byte[] minValue  = "-2147483648".getBytes();
+    static final int[]  sizeTable =
             {9, 99, 999, 9999, 99999, 999999, 9999999, 99999999, 999999999, Integer.MAX_VALUE};
     static final byte[] digitTens = {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '1',
             '1', '1', '1', '1', '1', '1', '1', '1', '2', '2', '2', '2', '2', '2', '2', '2', '2',
@@ -35,9 +35,9 @@ public final class IntegerUtil {
             '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1', '2', '3', '4', '5', '6',
             '7', '8', '9',};
-    static final byte[] digits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c',
-            'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-            'u', 'v', 'w', 'x', 'y', 'z'};
+    static final byte[] digits    = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b',
+            'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+            't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
     public static byte[] toBytes(int i) {
         if (i == Integer.MIN_VALUE)

@@ -17,11 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import fm.liu.timo.config.model.SystemConfig;
 import fm.liu.timo.config.util.ConfigException;
 import fm.liu.timo.config.util.ConfigUtil;
@@ -56,8 +54,7 @@ public class SystemConfigLoader {
             if (xml != null) {
                 try {
                     xml.close();
-                } catch (IOException e) {
-                }
+                } catch (IOException e) {}
             }
         }
     }

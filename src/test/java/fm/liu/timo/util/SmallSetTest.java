@@ -18,7 +18,6 @@ package fm.liu.timo.util;
 
 import java.util.Collection;
 import java.util.Iterator;
-
 import fm.liu.timo.util.SmallSet;
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -51,8 +50,7 @@ public class SmallSetTest extends TestCase {
         try {
             iter.next();
             Assert.assertTrue(false);
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
 
         sut = new SmallSet<Object>();
         sut.add(1);

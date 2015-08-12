@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
 import org.junit.Assert;
-
 import fm.liu.timo.parser.ast.stmt.ddl.DDLStatement;
 import fm.liu.timo.parser.ast.stmt.ddl.DDLTruncateStatement;
 import fm.liu.timo.parser.recognizer.mysql.MySQLToken;

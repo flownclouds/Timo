@@ -20,7 +20,7 @@ import fm.liu.timo.parser.util.ParseUtil;
  */
 public final class ManagerParseKill {
 
-    public static final int OTHER = -1;
+    public static final int OTHER      = -1;
     public static final int CONNECTION = 1;
 
     public static int parse(String stmt, int offset) {

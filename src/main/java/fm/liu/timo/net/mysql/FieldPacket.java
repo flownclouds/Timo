@@ -14,7 +14,6 @@
 package fm.liu.timo.net.mysql;
 
 import java.nio.ByteBuffer;
-
 import fm.liu.timo.mysql.BufferUtil;
 import fm.liu.timo.mysql.MySQLMessage;
 
@@ -47,7 +46,7 @@ import fm.liu.timo.mysql.MySQLMessage;
  */
 public class FieldPacket extends ResultSetPacket {
     private static final byte[] DEFAULT_CATALOG = "def".getBytes();
-    private static final byte[] FILLER = new byte[2];
+    private static final byte[] FILLER          = new byte[2];
 
     public byte[] catalog = DEFAULT_CATALOG;
     public byte[] db;
@@ -55,11 +54,11 @@ public class FieldPacket extends ResultSetPacket {
     public byte[] orgTable;
     public byte[] name;
     public byte[] orgName;
-    public int charsetIndex;
-    public long length;
-    public int type;
-    public int flags;
-    public byte decimals;
+    public int    charsetIndex;
+    public long   length;
+    public int    type;
+    public int    flags;
+    public byte   decimals;
     public byte[] definition;
 
     @Override

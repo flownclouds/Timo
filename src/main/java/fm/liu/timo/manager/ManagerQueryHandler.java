@@ -14,7 +14,6 @@
 package fm.liu.timo.manager;
 
 import org.pmw.tinylog.Logger;
-
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.manager.handler.ClearHandler;
 import fm.liu.timo.manager.handler.ReloadHandler;

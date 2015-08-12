@@ -17,9 +17,7 @@
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
 import java.sql.SQLSyntaxErrorException;
-
 import org.junit.Assert;
-
 import fm.liu.timo.parser.Performance;
 import fm.liu.timo.parser.ast.expression.misc.QueryExpression;
 import fm.liu.timo.parser.ast.stmt.dml.DMLSelectStatement;

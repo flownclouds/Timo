@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE timo:server>
 <timo:server xmlns:timo="http://timo.liu.fm/">
-  <system>
-    <property name="serverPort">8066</property>
-    <property name="managerPort">9066</property>
-    <property name="timerExecutor">2</property>
-    <property name="processors">4</property>
-    <property name="processorExecutor">8</property>
-    <property name="url">jdbc:mysql://127.0.0.1:3306/timo_config</property>
-    <property name="username">test</property>
-    <property name="password">test</property>
-  </system>
+    <system>
+        <property name="serverPort">8066</property>
+        <property name="managerPort">9066</property>
+        <property name="timerExecutor">2</property>
+        <property name="processors">4</property>
+        <property name="processorExecutor">8</property>
+        <property name="url">jdbc:mysql://127.0.0.1:3306/timo_config</property>
+        <property name="username">test</property>
+        <property name="password">test</property>
+    </system>
 </timo:server>

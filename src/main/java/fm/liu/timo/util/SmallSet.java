@@ -32,10 +32,10 @@ public final class SmallSet<E> extends AbstractSet<E>implements Set<E>, Cloneabl
 
     private static final long serialVersionUID = 2037649294658559180L;
 
-    private final int initSize;
+    private final int    initSize;
     private ArrayList<E> list;
-    private E single;
-    private int size;
+    private E            single;
+    private int          size;
 
     public SmallSet() {
         this(2);

@@ -22,10 +22,10 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public final class FixedQueue<E> {
 
-    private final E[] items;
-    private int putIndex;
-    private int takeIndex;
-    private int count;
+    private final E[]           items;
+    private int                 putIndex;
+    private int                 takeIndex;
+    private int                 count;
     private final ReentrantLock lock;
 
     @SuppressWarnings("unchecked")

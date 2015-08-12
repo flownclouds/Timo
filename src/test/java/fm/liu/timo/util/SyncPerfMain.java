@@ -22,7 +22,7 @@ public class SyncPerfMain {
 
     long i = 0L;
 
-    private final Object lockA = new Object();
+    private final Object        lockA = new Object();
     private final ReentrantLock lockB = new ReentrantLock();
 
     final void tLockA() {

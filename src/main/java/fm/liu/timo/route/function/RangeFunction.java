@@ -16,7 +16,6 @@ package fm.liu.timo.route.function;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
 import fm.liu.timo.config.model.Function;
 
 /**
@@ -25,7 +24,7 @@ import fm.liu.timo.config.model.Function;
 public class RangeFunction implements Function {
 
     private final Set<Range> ranges;
-    private final int defaultNode;
+    private final int        defaultNode;
 
     public RangeFunction(Set<Range> ranges, int defaultNode) {
         this.ranges = ranges;

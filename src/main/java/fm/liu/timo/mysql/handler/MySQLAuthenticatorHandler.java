@@ -28,7 +28,7 @@ import fm.liu.timo.net.mysql.Reply323Packet;
  * @author Liu Huanting 2015年5月9日
  */
 public class MySQLAuthenticatorHandler implements NIOHandler {
-    private final MySQLConnection con;
+    private final MySQLConnection       con;
     private final BackendConnectHandler handler;
 
     public MySQLAuthenticatorHandler(MySQLConnection con, BackendConnectHandler handler) {

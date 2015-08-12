@@ -15,7 +15,6 @@ package fm.liu.timo.mysql.handler;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import fm.liu.timo.mysql.ByteUtil;
 import fm.liu.timo.mysql.connection.MySQLConnection;
 import fm.liu.timo.net.connection.AbstractConnection.State;
@@ -31,13 +30,13 @@ import fm.liu.timo.server.session.handler.ResultHandler;
  * @author xianmao.hexm 2012-4-12
  */
 public class MySQLConnectionHandler extends BackendHandler {
-    private static final int RESULT_STATUS_INIT = 0;
-    private static final int RESULT_STATUS_HEADER = 1;
+    private static final int RESULT_STATUS_INIT      = 0;
+    private static final int RESULT_STATUS_HEADER    = 1;
     private static final int RESULT_STATUS_FIELD_EOF = 2;
 
     private final MySQLConnection con;
-    private volatile int resultStatus;
-    private volatile byte[] header;
+    private volatile int          resultStatus;
+    private volatile byte[]       header;
     private volatile List<byte[]> fields;
 
     public MySQLConnectionHandler(MySQLConnection source) {

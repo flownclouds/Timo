@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.recognizer;
 
 import java.sql.SQLSyntaxErrorException;
-
 import fm.liu.timo.parser.ast.stmt.SQLStatement;
 import fm.liu.timo.parser.ast.stmt.dml.DMLSelectStatement;
 import fm.liu.timo.parser.recognizer.SQLParserDelegate;
@@ -46,15 +45,13 @@ public class SQLParserDelegateTest extends AbstractSyntaxTest {
         try {
             stmt = SQLParserDelegate.parse(sql);
             Assert.fail("should detect inproperly end");
-        } catch (SQLSyntaxErrorException e) {
-        }
+        } catch (SQLSyntaxErrorException e) {}
 
         sql = "select * from tb1 ;,  ";
         try {
             stmt = SQLParserDelegate.parse(sql);
             Assert.fail("should detect inproperly end");
-        } catch (SQLSyntaxErrorException e) {
-        }
+        } catch (SQLSyntaxErrorException e) {}
 
     }
 }

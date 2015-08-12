@@ -15,7 +15,6 @@ package fm.liu.timo.util;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import fm.liu.timo.util.HexFormatUtil;
 
 /**

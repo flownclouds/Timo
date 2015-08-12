@@ -18,7 +18,6 @@ import java.net.StandardSocketOptions;
 import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.SocketChannel;
-
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.model.Datasource;
 import fm.liu.timo.mysql.connection.MySQLConnection;

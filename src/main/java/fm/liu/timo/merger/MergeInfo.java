@@ -19,7 +19,7 @@ package fm.liu.timo.merger;
  * @author Liu Huanting 2015年6月4日
  */
 public class MergeInfo {
-    public final int type;
+    public final int        type;
     public final ColumnInfo columnInfo;
 
     public MergeInfo(int type, ColumnInfo columnInfo) {

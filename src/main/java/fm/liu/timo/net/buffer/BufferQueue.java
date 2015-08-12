@@ -22,13 +22,13 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public final class BufferQueue {
 
-    private int takeIndex;
-    private int putIndex;
-    private int count;
-    private final ByteBuffer[] items;
+    private int                 takeIndex;
+    private int                 putIndex;
+    private int                 count;
+    private final ByteBuffer[]  items;
     private final ReentrantLock lock;
-    private final Condition notFull;
-    private ByteBuffer attachment;
+    private final Condition     notFull;
+    private ByteBuffer          attachment;
 
     public BufferQueue(int capacity) {
         items = new ByteBuffer[capacity];

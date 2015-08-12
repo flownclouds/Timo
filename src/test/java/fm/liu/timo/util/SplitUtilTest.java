@@ -14,9 +14,7 @@
 package fm.liu.timo.util;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
-
 import fm.liu.timo.util.SplitUtil;
 
 /**

@@ -21,10 +21,10 @@ public final class SQLRecord implements Comparable<SQLRecord> {
     public String host;
     public String schema;
     public String statement;
-    public long startTime;
-    public long executeTime;
+    public long   startTime;
+    public long   executeTime;
     public String dataNode;
-    public int dataNodeIndex;
+    public int    dataNodeIndex;
 
     @Override
     public int compareTo(SQLRecord o) {

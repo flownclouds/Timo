@@ -49,7 +49,7 @@ public class Main {
         }
     }
 
-    protected static final String srcString = "<a href=\"mailto:QiuShuo1985@gmail.com\">";
+    protected static final String srcString    = "<a href=\"mailto:QiuShuo1985@gmail.com\">";
     protected static final String targetString = "<a href=\"mailto:shuo.qius@alibaba-inc.com\">";
 
     // void visit(ASTNode groupBy);
@@ -78,8 +78,7 @@ public class Main {
             } finally {
                 try {
                     tout.close();
-                } catch (Exception e2) {
-                }
+                } catch (Exception e2) {}
             }
             String opath = file.getAbsolutePath();
             if (file.delete() == false) {
@@ -91,8 +90,7 @@ public class Main {
         } finally {
             try {
                 fileInputStream.close();
-            } catch (Exception e) {
-            }
+            } catch (Exception e) {}
         }
     }
 

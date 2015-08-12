@@ -22,7 +22,7 @@ import java.io.OutputStream;
  * @author xianmao.hexm 2011-5-5 下午09:34:11
  */
 public class StreamUtil {
-    private static final long NULL_LENGTH = -1;
+    private static final long   NULL_LENGTH = -1;
     private static final byte[] EMPTY_BYTES = new byte[0];
 
     public static final void read(InputStream in, byte[] b, int offset, int length)

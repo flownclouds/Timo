@@ -22,7 +22,6 @@ import fm.liu.timo.server.ServerConnection;
 
 public class Heartbeat {
 
-
     public static void response(ServerConnection c, byte[] data) {
         HeartbeatPacket hp = new HeartbeatPacket();
         hp.read(data);

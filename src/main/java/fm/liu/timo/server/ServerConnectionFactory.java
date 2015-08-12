@@ -14,7 +14,6 @@
 package fm.liu.timo.server;
 
 import java.nio.channels.SocketChannel;
-
 import fm.liu.timo.TimoPrivileges;
 import fm.liu.timo.net.NIOProcessor;
 import fm.liu.timo.net.connection.FrontendConnection;

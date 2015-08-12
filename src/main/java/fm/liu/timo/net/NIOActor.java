@@ -20,17 +20,16 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import fm.liu.timo.net.connection.AbstractConnection;
 
 /**
  * @author Liu Huanting 2015年5月9日
  */
 public class NIOActor {
-    private volatile SelectionKey key;
+    private volatile SelectionKey    key;
     private final AbstractConnection con;
-    private final SocketChannel channel;
-    private final AtomicBoolean writing = new AtomicBoolean(false);
+    private final SocketChannel      channel;
+    private final AtomicBoolean      writing = new AtomicBoolean(false);
 
     public NIOActor(AbstractConnection con) {
         this.con = con;

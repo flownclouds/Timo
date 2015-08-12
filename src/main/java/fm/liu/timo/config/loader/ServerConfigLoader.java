@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import fm.liu.timo.config.model.Database;
 import fm.liu.timo.config.model.Datanode;
 import fm.liu.timo.config.model.Datasource;
@@ -37,20 +36,19 @@ import fm.liu.timo.route.function.MatchFunction;
 import fm.liu.timo.route.function.Range;
 import fm.liu.timo.route.function.RangeFunction;
 
-
 /**
  * @author Liu Huanting 2015年5月9日
  */
 public class ServerConfigLoader {
-    private final String url;
-    private final String username;
-    private final String password;
+    private final String                   url;
+    private final String                   username;
+    private final String                   password;
     private final Map<Integer, Datasource> datasources;
-    private final Map<Integer, Datanode> datanodes;
-    private final Map<String, Database> databases;
-    private final Map<Integer, Rule> rules;
-    private final Map<Integer, Function> functions;
-    private final Map<String, User> users;
+    private final Map<Integer, Datanode>   datanodes;
+    private final Map<String, Database>    databases;
+    private final Map<Integer, Rule>       rules;
+    private final Map<Integer, Function>   functions;
+    private final Map<String, User>        users;
 
     public ServerConfigLoader(String url, String username, String password) {
         this.url = url;

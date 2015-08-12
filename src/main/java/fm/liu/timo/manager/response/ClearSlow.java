@@ -14,7 +14,6 @@
 package fm.liu.timo.manager.response;
 
 import java.util.Map;
-
 import fm.liu.timo.TimoConfig;
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.ErrorCode;

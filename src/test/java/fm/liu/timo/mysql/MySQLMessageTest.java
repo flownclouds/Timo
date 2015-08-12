@@ -15,7 +15,6 @@ package fm.liu.timo.mysql;
 
 import org.junit.Assert;
 import org.junit.Test;
-
 import fm.liu.timo.mysql.MySQLMessage;
 
 /**

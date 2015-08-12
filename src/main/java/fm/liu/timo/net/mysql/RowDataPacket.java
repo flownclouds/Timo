@@ -16,7 +16,6 @@ package fm.liu.timo.net.mysql;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-
 import fm.liu.timo.mysql.BufferUtil;
 import fm.liu.timo.mysql.MySQLMessage;
 
@@ -44,7 +43,7 @@ import fm.liu.timo.mysql.MySQLMessage;
 public class RowDataPacket extends ResultSetPacket {
     private static final byte NULL_MARK = (byte) 251;
 
-    public final int fieldCount;
+    public final int          fieldCount;
     public final List<byte[]> fieldValues;
 
     public RowDataPacket(int fieldCount) {

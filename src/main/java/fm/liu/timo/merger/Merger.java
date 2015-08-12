@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import fm.liu.timo.net.mysql.RowDataPacket;
 import fm.liu.timo.route.Info;
 import fm.liu.timo.route.Outlets;
@@ -27,12 +26,12 @@ import fm.liu.timo.route.Outlets;
  * @author Liu Huanting 2015年6月4日
  */
 public class Merger {
-    private Grouper grouper;
-    private Sorter sorter;
-    private Distincter distincter;
+    private Grouper                   grouper;
+    private Sorter                    sorter;
+    private Distincter                distincter;
     private ArrayDeque<RowDataPacket> rows;
-    private Outlets outlets;
-    private int fieldCount;
+    private Outlets                   outlets;
+    private int                       fieldCount;
 
     public Merger(Outlets outlets) {
         this.outlets = outlets;

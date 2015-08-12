@@ -19,12 +19,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JVMInfo {
-    private static final float DEFAULT_JAVA_VERSION = 1.3f;
+    private static final float   DEFAULT_JAVA_VERSION = 1.3f;
     private static final boolean reverseFieldOrder;
-    private static final float majorJavaVersion =
+    private static final float   majorJavaVersion     =
             getMajorJavaVersion(System.getProperty("java.specification.version"));
 
-    private ReflectionProvider reflectionProvider;
+    private ReflectionProvider    reflectionProvider;
     private Map<String, Class<?>> loaderCache = new HashMap<String, Class<?>>();
 
     static {

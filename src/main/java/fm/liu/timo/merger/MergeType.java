@@ -17,12 +17,12 @@ package fm.liu.timo.merger;
  * @author Liu Huanting 2015年6月4日
  */
 public class MergeType {
-    public static final int COUNT = 1;
-    public static final int SUM = 2;
-    public static final int MIN = 3;
-    public static final int MAX = 4;
+    public static final int COUNT     = 1;
+    public static final int SUM       = 2;
+    public static final int MIN       = 3;
+    public static final int MAX       = 4;
     public static final int UNSUPPORT = -1;
-    public static final int NOMERGE = -2;
-    public static final int ASC = 5;
-    public static final int DESC = 6;
+    public static final int NOMERGE   = -2;
+    public static final int ASC       = 5;
+    public static final int DESC      = 6;
 }

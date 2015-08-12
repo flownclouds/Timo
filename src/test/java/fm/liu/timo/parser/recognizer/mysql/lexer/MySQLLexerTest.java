@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.recognizer.mysql.lexer;
 
 import java.sql.SQLSyntaxErrorException;
-
 import fm.liu.timo.parser.Performance;
 import fm.liu.timo.parser.recognizer.mysql.MySQLToken;
 import fm.liu.timo.parser.recognizer.mysql.lexer.MySQLLexer;
@@ -1109,8 +1108,7 @@ public class MySQLLexerTest extends TestCase {
         try {
             sut = new MySQLLexer("12.e ");
             Assert.assertFalse("should not reach here", true);
-        } catch (SQLSyntaxErrorException e) {
-        }
+        } catch (SQLSyntaxErrorException e) {}
 
         sut = new MySQLLexer("0e  ");
         Assert.assertEquals(MySQLToken.IDENTIFIER, sut.token());

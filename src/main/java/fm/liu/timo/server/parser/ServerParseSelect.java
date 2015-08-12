@@ -21,18 +21,18 @@ import fm.liu.timo.parser.util.ParseUtil;
  */
 public final class ServerParseSelect {
 
-    public static final int OTHER = -1;
+    public static final int OTHER           = -1;
     public static final int VERSION_COMMENT = 1;
-    public static final int DATABASE = 2;
-    public static final int USER = 3;
-    public static final int LAST_INSERT_ID = 4;
-    public static final int IDENTITY = 5;
-    public static final int VERSION = 6;
+    public static final int DATABASE        = 2;
+    public static final int USER            = 3;
+    public static final int LAST_INSERT_ID  = 4;
+    public static final int IDENTITY        = 5;
+    public static final int VERSION         = 6;
 
     private static final char[] _VERSION_COMMENT = "VERSION_COMMENT".toCharArray();
-    private static final char[] _IDENTITY = "IDENTITY".toCharArray();
-    private static final char[] _LAST_INSERT_ID = "LAST_INSERT_ID".toCharArray();
-    private static final char[] _DATABASE = "DATABASE()".toCharArray();
+    private static final char[] _IDENTITY        = "IDENTITY".toCharArray();
+    private static final char[] _LAST_INSERT_ID  = "LAST_INSERT_ID".toCharArray();
+    private static final char[] _DATABASE        = "DATABASE()".toCharArray();
 
     public static int parse(String stmt, int offset) {
         int i = offset;
@@ -144,7 +144,8 @@ public final class ServerParseSelect {
             default:
                 if (CharTypes.isIdentifierChar(stmt.charAt(offset))) {
                     for (; offset < stmt.length()
-                            && CharTypes.isIdentifierChar(stmt.charAt(offset)); ++offset);
+                            && CharTypes.isIdentifierChar(stmt.charAt(offset)); ++offset)
+                        ;
                     return offset;
                 }
         }

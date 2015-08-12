@@ -16,14 +16,13 @@ package fm.liu.timo.config.util;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
-
 import fm.liu.timo.util.ObjectUtil;
 
 public class BeanConfig implements Cloneable {
     private static final ReflectionProvider refProvider = new ReflectionProvider();
 
-    private String name;
-    private String className;
+    private String              name;
+    private String              className;
     private Map<String, Object> params = new HashMap<String, Object>();
 
     public String getName() {

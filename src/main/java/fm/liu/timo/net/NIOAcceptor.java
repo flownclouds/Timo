@@ -21,9 +21,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Set;
-
 import org.pmw.tinylog.Logger;
-
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.net.connection.FrontendConnection;
 import fm.liu.timo.net.factory.FrontendConnectionFactory;
@@ -34,11 +32,11 @@ import fm.liu.timo.net.factory.FrontendConnectionFactory;
 public final class NIOAcceptor extends Thread {
     private static final AcceptIdGenerator ID_GENERATOR = new AcceptIdGenerator();
 
-    private final int port;
-    private final Selector selector;
-    private final ServerSocketChannel serverChannel;
+    private final int                       port;
+    private final Selector                  selector;
+    private final ServerSocketChannel       serverChannel;
     private final FrontendConnectionFactory factory;
-    private long acceptCount;
+    private long                            acceptCount;
 
     public NIOAcceptor(String name, int port, FrontendConnectionFactory factory)
             throws IOException {
@@ -110,13 +108,11 @@ public final class NIOAcceptor extends Thread {
         if (socket != null) {
             try {
                 socket.close();
-            } catch (IOException e) {
-            }
+            } catch (IOException e) {}
         }
         try {
             channel.close();
-        } catch (IOException e) {
-        }
+        } catch (IOException e) {}
     }
 
     /**
@@ -128,8 +124,8 @@ public final class NIOAcceptor extends Thread {
 
         private static final long MAX_VALUE = 0xffffffffL;
 
-        private long acceptId = 0L;
-        private final Object lock = new Object();
+        private long         acceptId = 0L;
+        private final Object lock     = new Object();
 
         private long getId() {
             synchronized (lock) {

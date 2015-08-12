@@ -20,7 +20,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class QueueSimpleMain {
 
-    static long putCount = 0;
+    static long putCount  = 0;
     static long takeCount = 0;
 
     public static void main(String[] args) {

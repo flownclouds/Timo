@@ -14,7 +14,6 @@
 package fm.liu.timo.server.response;
 
 import java.nio.ByteBuffer;
-
 import fm.liu.timo.mysql.PreparedStatement;
 import fm.liu.timo.net.connection.FrontendConnection;
 import fm.liu.timo.net.mysql.EOFPacket;

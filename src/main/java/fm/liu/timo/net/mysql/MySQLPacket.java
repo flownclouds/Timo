@@ -14,19 +14,17 @@
 package fm.liu.timo.net.mysql;
 
 import java.nio.ByteBuffer;
-
 import fm.liu.timo.mysql.BufferUtil;
 import fm.liu.timo.mysql.MySQLMessage;
 
 public abstract class MySQLPacket {
 
     //
-    public static final int PACKET_HEADER_SIZE = 4;// 固定值
-    public static final int MAX_PACKET_SIZE = 16 * 1024 * 1024;// 固定值2^24,3个字节的最大值
+    public static final int PACKET_HEADER_SIZE = 4;               // 固定值
+    public static final int MAX_PACKET_SIZE    = 16 * 1024 * 1024;// 固定值2^24,3个字节的最大值
 
     protected int packetLength;
-    public byte packetId;
-
+    public byte   packetId;
 
     /**
      * 计算数据包大小，不包含包头长度。

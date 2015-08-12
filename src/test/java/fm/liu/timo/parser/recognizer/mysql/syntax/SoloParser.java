@@ -23,11 +23,9 @@ import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_UNION;
 import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_COMMA;
 import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_LEFT_PAREN;
 import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_RIGHT_PAREN;
-
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.List;
-
 import fm.liu.timo.parser.recognizer.mysql.lexer.MySQLLexer;
 import fm.liu.timo.parser.recognizer.mysql.syntax.MySQLParser;
 
@@ -193,10 +191,7 @@ public class SoloParser extends MySQLParser {
 
 }
 
-
-interface Ref {
-}
-
+interface Ref {}
 
 class Factor implements Ref {
     String tableName;
@@ -218,9 +213,8 @@ class Factor implements Ref {
     }
 }
 
-
 class SubQuery implements Ref {
-    Query u;
+    Query  u;
     String alias;
 
     public SubQuery(Query u, String alias) {
@@ -240,7 +234,6 @@ class SubQuery implements Ref {
     }
 
 }
-
 
 class Join implements Ref {
     Ref left;
@@ -264,7 +257,6 @@ class Join implements Ref {
     }
 }
 
-
 class Refs implements Ref {
     List<Ref> refs = new ArrayList<Ref>();
 
@@ -287,10 +279,7 @@ class Refs implements Ref {
     }
 }
 
-
-interface Query {
-}
-
+interface Query {}
 
 class Union implements Query, Ref {
     List<Select> selects = new ArrayList<Select>();
@@ -314,7 +303,6 @@ class Union implements Query, Ref {
         return rst;
     }
 }
-
 
 class Select implements Query, Ref {
     @Override

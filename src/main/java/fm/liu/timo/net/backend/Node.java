@@ -14,15 +14,14 @@
 package fm.liu.timo.net.backend;
 
 import java.util.Map;
-
 import fm.liu.timo.config.model.Datasource.Type;
 
 /**
  * @author Liu Huanting 2015年5月9日
  */
 public class Node {
-    private final int id;
-    private volatile Source source;
+    private final int                  id;
+    private volatile Source            source;
     private final Map<Integer, Source> sources;
 
     public Node(int id, Map<Integer, Source> sources) {

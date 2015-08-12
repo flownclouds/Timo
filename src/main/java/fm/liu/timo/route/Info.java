@@ -17,9 +17,9 @@ package fm.liu.timo.route;
  * @author Liu Huanting 2015年6月4日
  */
 public interface Info {
-    public int NEED_MERGE = 1;
-    public int HAS_GROUPBY = 2;
-    public int HAS_ORDERBY = 4;
+    public int NEED_MERGE   = 1;
+    public int HAS_GROUPBY  = 2;
+    public int HAS_ORDERBY  = 4;
     public int HAS_DISTINCT = 8;
-    public int HAS_LIMIT = 16;
+    public int HAS_LIMIT    = 16;
 }

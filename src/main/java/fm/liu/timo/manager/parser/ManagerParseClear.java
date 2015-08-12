@@ -20,8 +20,8 @@ import fm.liu.timo.parser.util.ParseUtil;
  */
 public class ManagerParseClear {
 
-    public static final int OTHER = -1;
-    public static final int SLOW_SCHEMA = 1;
+    public static final int OTHER         = -1;
+    public static final int SLOW_SCHEMA   = 1;
     public static final int SLOW_DATANODE = 2;
 
     public static int parse(String stmt, int offset) {

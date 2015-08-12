@@ -19,8 +19,8 @@ import java.util.Set;
  * @author Liu Huanting 2015年5月9日
  */
 public class User {
-    private final String username;
-    private final String password;
+    private final String      username;
+    private final String      password;
     private final Set<String> databases;
     private final Set<String> hosts;
 

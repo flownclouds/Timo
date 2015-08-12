@@ -15,7 +15,6 @@ package fm.liu.timo.server.session;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
-
 import fm.liu.timo.TimoConfig;
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.merger.Merger;
@@ -33,9 +32,9 @@ import fm.liu.timo.server.session.handler.ResultHandler;
  * @author Liu Huanting 2015年5月9日
  */
 public class AbstractSession implements Session {
-    protected final ServerConnection front;
+    protected final ServerConnection                              front;
     protected final ConcurrentHashMap<Integer, BackendConnection> connections;
-    protected final Variables variables;
+    protected final Variables                                     variables;
 
     public AbstractSession(ServerConnection front) {
         this.front = front;

@@ -19,7 +19,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
-
 import fm.liu.timo.net.buffer.BufferPool;
 import fm.liu.timo.net.connection.AbstractConnection;
 import fm.liu.timo.net.connection.BackendConnection;
@@ -32,19 +31,19 @@ import fm.liu.timo.util.ExecutorUtil;
  * @author xianmao.hexm
  */
 public final class NIOProcessor {
-    private static final int DEFAULT_BUFFER_SIZE = 1024 * 1024 * 16;
+    private static final int DEFAULT_BUFFER_SIZE       = 1024 * 1024 * 16;
     private static final int DEFAULT_BUFFER_CHUNK_SIZE = 4096;
-    private static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
+    private static final int AVAILABLE_PROCESSORS      = Runtime.getRuntime().availableProcessors();
 
-    private final String name;
-    private final NIOReactor reactor;
-    private final BufferPool bufferPool;
-    private final ExecutorService executor;
+    private final String                                  name;
+    private final NIOReactor                              reactor;
+    private final BufferPool                              bufferPool;
+    private final ExecutorService                         executor;
     private final ConcurrentMap<Long, FrontendConnection> frontends;
-    private final ConcurrentMap<Long, BackendConnection> backends;
-    private final CommandCount commands;
-    private long netInBytes;
-    private long netOutBytes;
+    private final ConcurrentMap<Long, BackendConnection>  backends;
+    private final CommandCount                            commands;
+    private long                                          netInBytes;
+    private long                                          netOutBytes;
 
     public NIOProcessor(String name) throws IOException {
         this(name, DEFAULT_BUFFER_SIZE, DEFAULT_BUFFER_CHUNK_SIZE, AVAILABLE_PROCESSORS,

@@ -16,15 +16,14 @@ package fm.liu.timo.net.handler;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import fm.liu.timo.net.NIOHandler;
 
 /**
  * @author Liu Huanting 2015年5月9日
  */
 public abstract class BackendHandler implements NIOHandler {
-    protected final LinkedBlockingQueue<byte[]> dataQueue = new LinkedBlockingQueue<byte[]>();
-    protected final AtomicBoolean isHandling = new AtomicBoolean(false);
+    protected final LinkedBlockingQueue<byte[]> dataQueue  = new LinkedBlockingQueue<byte[]>();
+    protected final AtomicBoolean               isHandling = new AtomicBoolean(false);
 
     protected void offerData(byte[] data, Executor executor) {
         if (dataQueue.offer(data)) {

@@ -18,7 +18,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
 import java.util.Set;
-
 import fm.liu.timo.config.Capabilities;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.config.Versions;
@@ -41,26 +40,26 @@ import fm.liu.timo.util.TimeUtil;
  */
 public abstract class FrontendConnection extends AbstractConnection {
 
-    protected long id;
+    protected long   id;
     protected String host;
-    protected int port;
-    protected int localPort;
-    protected long idleTimeout;
+    protected int    port;
+    protected int    localPort;
+    protected long   idleTimeout;
 
     // 原则: 数据库编码控制使用dbCharset来处理的，设计到Java相关的字符串编码解码采用charset来表示
     protected String dbCharset;
     protected String charset;
-    protected int charsetIndex;
+    protected int    charsetIndex;
 
-    protected byte[] seed;
-    protected String user;
-    protected String db;
-    protected NIOHandler handler;
-    protected FrontendPrivileges privileges;
-    protected FrontendQueryHandler queryHandler;
+    protected byte[]                 seed;
+    protected String                 user;
+    protected String                 db;
+    protected NIOHandler             handler;
+    protected FrontendPrivileges     privileges;
+    protected FrontendQueryHandler   queryHandler;
     protected FrontendPrepareHandler prepareHandler;
-    protected boolean isAccepted;
-    protected boolean isAuthenticated;
+    protected boolean                isAccepted;
+    protected boolean                isAuthenticated;
 
     public FrontendConnection(SocketChannel channel, NIOProcessor processor) {
         super(channel, processor);

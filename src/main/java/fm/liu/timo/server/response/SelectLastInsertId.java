@@ -14,7 +14,6 @@
 package fm.liu.timo.server.response;
 
 import java.nio.ByteBuffer;
-
 import fm.liu.timo.config.Fields;
 import fm.liu.timo.mysql.PacketUtil;
 import fm.liu.timo.net.mysql.EOFPacket;
@@ -30,9 +29,9 @@ import fm.liu.timo.util.LongUtil;
  */
 public class SelectLastInsertId {
 
-    private static final String ORG_NAME = "LAST_INSERT_ID()";
-    private static final int FIELD_COUNT = 1;
-    private static final ResultSetHeaderPacket header = PacketUtil.getHeader(FIELD_COUNT);
+    private static final String                ORG_NAME    = "LAST_INSERT_ID()";
+    private static final int                   FIELD_COUNT = 1;
+    private static final ResultSetHeaderPacket header      = PacketUtil.getHeader(FIELD_COUNT);
 
     static {
         byte packetId = 0;

@@ -14,7 +14,6 @@
 package fm.liu.timo.net.mysql;
 
 import java.nio.ByteBuffer;
-
 import fm.liu.timo.mysql.BufferUtil;
 import fm.liu.timo.mysql.MySQLMessage;
 
@@ -36,14 +35,14 @@ import fm.liu.timo.mysql.MySQLMessage;
  * 
  */
 public class OkPacket extends MySQLServerPacket {
-    public static final byte FIELD_COUNT = 0x00;
-    public static final byte[] OK = new byte[] {7, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0};
+    public static final byte   FIELD_COUNT = 0x00;
+    public static final byte[] OK          = new byte[] {7, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0};
 
-    public byte fieldCount = FIELD_COUNT;
-    public long affectedRows;
-    public long insertId;
-    public int serverStatus;
-    public int warningCount;
+    public byte   fieldCount = FIELD_COUNT;
+    public long   affectedRows;
+    public long   insertId;
+    public int    serverStatus;
+    public int    warningCount;
     public byte[] message;
 
     @Override

@@ -15,7 +15,6 @@ package fm.liu.timo.server;
 
 import java.nio.channels.SocketChannel;
 import java.sql.SQLSyntaxErrorException;
-
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.config.model.Database;

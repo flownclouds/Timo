@@ -15,7 +15,6 @@ package fm.liu.timo.net.mysql;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-
 import fm.liu.timo.mysql.BindValue;
 import fm.liu.timo.mysql.BindValueUtil;
 import fm.liu.timo.mysql.MySQLMessage;
@@ -73,13 +72,13 @@ import fm.liu.timo.mysql.PreparedStatement;
  */
 public class ExecutePacket extends MySQLPacket {
 
-    public byte code;
-    public long statementId;
-    public byte flags;
-    public long iterationCount;
-    public byte[] nullBitMap;
-    public byte newParameterBoundFlag;
-    public BindValue[] values;
+    public byte                 code;
+    public long                 statementId;
+    public byte                 flags;
+    public long                 iterationCount;
+    public byte[]               nullBitMap;
+    public byte                 newParameterBoundFlag;
+    public BindValue[]          values;
     protected PreparedStatement pstmt;
 
     public ExecutePacket(PreparedStatement pstmt) {

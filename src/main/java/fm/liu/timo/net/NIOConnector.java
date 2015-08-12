@@ -21,9 +21,7 @@ import java.nio.channels.SocketChannel;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-
 import org.pmw.tinylog.Logger;
-
 import fm.liu.timo.mysql.connection.MySQLConnection;
 import fm.liu.timo.net.connection.AbstractConnection;
 import fm.liu.timo.net.connection.BackendConnection;
@@ -34,10 +32,10 @@ import fm.liu.timo.net.connection.BackendConnection;
 public final class NIOConnector extends Thread {
     private static final ConnectIdGenerator ID_GENERATOR = new ConnectIdGenerator();
 
-    private final String name;
-    private final Selector selector;
+    private final String                           name;
+    private final Selector                         selector;
     private final BlockingQueue<BackendConnection> connectQueue;
-    private long connectCount;
+    private long                                   connectCount;
 
     public NIOConnector(String name) throws IOException {
         super.setName(name);
@@ -142,8 +140,8 @@ public final class NIOConnector extends Thread {
 
         private static final long MAX_VALUE = Long.MAX_VALUE;
 
-        private long connectId = 0L;
-        private final Object lock = new Object();
+        private long         connectId = 0L;
+        private final Object lock      = new Object();
 
         private long getId() {
             synchronized (lock) {

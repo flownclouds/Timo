@@ -14,7 +14,6 @@
 package fm.liu.timo.net.handler;
 
 import java.util.concurrent.atomic.AtomicInteger;
-
 import fm.liu.timo.net.connection.BackendConnection;
 import fm.liu.timo.route.Outlet;
 import fm.liu.timo.server.session.handler.OKResultHandler;
@@ -25,7 +24,7 @@ import fm.liu.timo.server.session.handler.ResultHandler;
  */
 public class BackendCreateConnectionHandler implements BackendConnectHandler {
     private final AtomicInteger finished = new AtomicInteger(0);
-    private String db;
+    private String              db;
 
     @Override
     public void error(String msg, BackendConnection con) {

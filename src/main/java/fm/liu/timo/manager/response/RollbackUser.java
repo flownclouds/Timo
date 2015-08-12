@@ -14,7 +14,6 @@
 package fm.liu.timo.manager.response;
 
 import org.pmw.tinylog.Logger;
-
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.manager.ManagerConnection;
 import fm.liu.timo.net.mysql.OkPacket;

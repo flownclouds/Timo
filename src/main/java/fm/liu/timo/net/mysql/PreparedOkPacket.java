@@ -14,7 +14,6 @@
 package fm.liu.timo.net.mysql;
 
 import java.nio.ByteBuffer;
-
 import fm.liu.timo.mysql.BufferUtil;
 import fm.liu.timo.mysql.MySQLMessage;
 
@@ -49,10 +48,10 @@ public class PreparedOkPacket extends ResultSetPacket {
 
     public byte flag;
     public long statementId;
-    public int columnsNumber;
-    public int parametersNumber;
+    public int  columnsNumber;
+    public int  parametersNumber;
     public byte filler;
-    public int warningCount;
+    public int  warningCount;
 
     public PreparedOkPacket() {
         this.flag = 0;

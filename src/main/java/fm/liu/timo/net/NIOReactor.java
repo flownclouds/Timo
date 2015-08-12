@@ -20,9 +20,7 @@ import java.nio.channels.Selector;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
 import org.pmw.tinylog.Logger;
-
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.net.connection.AbstractConnection;
 
@@ -33,7 +31,7 @@ import fm.liu.timo.net.connection.AbstractConnection;
  */
 public final class NIOReactor {
 
-    private final String name;
+    private final String   name;
     private final Refactor reactor;
 
     public NIOReactor(String name) throws IOException {
@@ -59,9 +57,9 @@ public final class NIOReactor {
     }
 
     private final class Refactor implements Runnable {
-        private final Selector selector;
+        private final Selector                                  selector;
         private final ConcurrentLinkedQueue<AbstractConnection> registerQueue;
-        private long reactCount;
+        private long                                            reactCount;
 
         private Refactor() throws IOException {
             this.selector = Selector.open();

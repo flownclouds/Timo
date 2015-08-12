@@ -22,7 +22,7 @@ import fm.liu.timo.util.SplitUtil;
  */
 public final class ManagerParseSwitch {
 
-    public static final int OTHER = -1;
+    public static final int OTHER      = -1;
     public static final int DATASOURCE = 1;
 
     public static int parse(String stmt, int offset) {

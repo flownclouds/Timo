@@ -21,9 +21,9 @@ import fm.liu.timo.mysql.CharsetUtil;
  */
 public class Variables implements Cloneable {
     private volatile boolean autocommit;
-    private volatile int isolationLevel;
-    private volatile int charsetIndex;
-    private volatile String charset;
+    private volatile int     isolationLevel;
+    private volatile int     charsetIndex;
+    private volatile String  charset;
 
     public Variables() {
         super();

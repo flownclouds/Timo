@@ -20,22 +20,22 @@ import fm.liu.timo.parser.util.ParseUtil;
  */
 public final class ServerParse {
 
-    public static final int OTHER = -1;
-    public static final int BEGIN = 1;
-    public static final int COMMIT = 2;
-    public static final int DELETE = 3;
-    public static final int INSERT = 4;
-    public static final int REPLACE = 5;
-    public static final int ROLLBACK = 6;
-    public static final int SELECT = 7;
-    public static final int SET = 8;
-    public static final int SHOW = 9;
-    public static final int START = 10;
-    public static final int UPDATE = 11;
-    public static final int KILL = 12;
-    public static final int SAVEPOINT = 13;
-    public static final int USE = 14;
-    public static final int EXPLAIN = 15;
+    public static final int OTHER      = -1;
+    public static final int BEGIN      = 1;
+    public static final int COMMIT     = 2;
+    public static final int DELETE     = 3;
+    public static final int INSERT     = 4;
+    public static final int REPLACE    = 5;
+    public static final int ROLLBACK   = 6;
+    public static final int SELECT     = 7;
+    public static final int SET        = 8;
+    public static final int SHOW       = 9;
+    public static final int START      = 10;
+    public static final int UPDATE     = 11;
+    public static final int KILL       = 12;
+    public static final int SAVEPOINT  = 13;
+    public static final int USE        = 14;
+    public static final int EXPLAIN    = 15;
     public static final int KILL_QUERY = 16;
 
     public static int parse(String stmt) {

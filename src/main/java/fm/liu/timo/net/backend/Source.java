@@ -16,7 +16,6 @@ package fm.liu.timo.net.backend;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
 import fm.liu.timo.config.model.Datasource;
 import fm.liu.timo.config.model.Datasource.Status;
 import fm.liu.timo.mysql.connection.MySQLConnection;
@@ -31,12 +30,12 @@ import fm.liu.timo.net.handler.BackendCreateConnectionHandler;
  * @author Liu Huanting 2015年5月9日
  */
 public class Source {
-    private Datasource config;
-    private final int datanodeID;
-    private final BackendConnectionFactory factory;
+    private Datasource                                       config;
+    private final int                                        datanodeID;
+    private final BackendConnectionFactory                   factory;
     private final ConcurrentHashMap<Long, BackendConnection> connections =
             new ConcurrentHashMap<Long, BackendConnection>();
-    private final ConcurrentLinkedQueue<BackendConnection> idle =
+    private final ConcurrentLinkedQueue<BackendConnection>   idle        =
             new ConcurrentLinkedQueue<BackendConnection>();
 
     public Source(Datasource config, int datanodeID, Variables variables) {

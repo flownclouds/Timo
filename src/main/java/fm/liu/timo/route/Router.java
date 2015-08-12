@@ -15,7 +15,6 @@ package fm.liu.timo.route;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.Set;
-
 import fm.liu.timo.config.model.Database;
 import fm.liu.timo.config.model.Function;
 import fm.liu.timo.config.model.Table;

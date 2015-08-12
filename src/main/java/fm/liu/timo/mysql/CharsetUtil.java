@@ -20,13 +20,13 @@ import java.util.Map;
  * @author xianmao.hexm 2010-8-3 下午06:12:53
  */
 public class CharsetUtil {
-    private static final String[] INDEX_TO_CHARSET = new String[99];
-    private static final String[] INDEX_TO_DB_CHARSET = new String[99];
-    private static final Map<String, Integer> CHARSET_TO_INDEX = new HashMap<String, Integer>();
+    private static final String[]             INDEX_TO_CHARSET    = new String[99];
+    private static final String[]             INDEX_TO_DB_CHARSET = new String[99];
+    private static final Map<String, Integer> CHARSET_TO_INDEX    = new HashMap<String, Integer>();
     private static final Map<String, Integer> DB_CHARSET_TO_INDEX = new HashMap<String, Integer>();
 
     public static final String UTF8_MB4 = "utf8mb4";
-    public static final String UTF8 = "utf8";
+    public static final String UTF8     = "utf8";
 
     static {
         // index --> charset
@@ -222,7 +222,6 @@ public class CharsetUtil {
             if (charset != null && CHARSET_TO_INDEX.get(charset) == null) {
                 CHARSET_TO_INDEX.put(charset, i);
             }
-
 
             charset = INDEX_TO_DB_CHARSET[i];
             if (charset != null && DB_CHARSET_TO_INDEX.get(charset) == null) {

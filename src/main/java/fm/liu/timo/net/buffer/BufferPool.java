@@ -21,13 +21,13 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public final class BufferPool {
 
-    private final int chunkSize;
-    private final ByteBuffer[] items;
+    private final int           chunkSize;
+    private final ByteBuffer[]  items;
     private final ReentrantLock lock;
-    private int putIndex;
-    private int takeIndex;
-    private int count;
-    private volatile int newCount;
+    private int                 putIndex;
+    private int                 takeIndex;
+    private int                 count;
+    private volatile int        newCount;
 
     public BufferPool(int bufferSize, int chunkSize) {
         this.chunkSize = chunkSize;

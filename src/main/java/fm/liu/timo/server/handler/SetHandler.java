@@ -17,9 +17,7 @@ import static fm.liu.timo.server.parser.ServerParseSet.CHARACTER_SET_CLIENT;
 import static fm.liu.timo.server.parser.ServerParseSet.CHARACTER_SET_CONNECTION;
 import static fm.liu.timo.server.parser.ServerParseSet.CHARACTER_SET_RESULTS;
 import static fm.liu.timo.server.parser.ServerParseSet.NAMES;
-
 import org.pmw.tinylog.Logger;
-
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.net.mysql.OkPacket;
 import fm.liu.timo.server.ServerConnection;

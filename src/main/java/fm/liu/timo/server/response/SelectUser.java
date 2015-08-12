@@ -14,7 +14,6 @@
 package fm.liu.timo.server.response;
 
 import java.nio.ByteBuffer;
-
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.Fields;
 import fm.liu.timo.mysql.PacketUtil;
@@ -31,11 +30,11 @@ import fm.liu.timo.util.StringUtil;
  */
 public class SelectUser {
 
-    private static final int FIELD_COUNT = 1;
-    private static final ResultSetHeaderPacket header = PacketUtil.getHeader(FIELD_COUNT);
-    private static final FieldPacket[] fields = new FieldPacket[FIELD_COUNT];
-    private static final EOFPacket eof = new EOFPacket();
-    private static final ErrorPacket error = PacketUtil.getShutdown();
+    private static final int                   FIELD_COUNT = 1;
+    private static final ResultSetHeaderPacket header      = PacketUtil.getHeader(FIELD_COUNT);
+    private static final FieldPacket[]         fields      = new FieldPacket[FIELD_COUNT];
+    private static final EOFPacket             eof         = new EOFPacket();
+    private static final ErrorPacket           error       = PacketUtil.getShutdown();
 
     static {
         int i = 0;

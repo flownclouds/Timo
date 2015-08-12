@@ -35,14 +35,12 @@ public class Solo {
 
 }
 
-
 class A {
     void accept(I i) {
         System.out.println("A");
         i.visit(this);
     }
 }
-
 
 class B extends A {
     @Override
@@ -51,7 +49,6 @@ class B extends A {
         i.visit(this);
     }
 }
-
 
 class I {
     void visit(A a) {

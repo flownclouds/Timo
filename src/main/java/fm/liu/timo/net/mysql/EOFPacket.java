@@ -14,7 +14,6 @@
 package fm.liu.timo.net.mysql;
 
 import java.nio.ByteBuffer;
-
 import fm.liu.timo.mysql.BufferUtil;
 import fm.liu.timo.mysql.MySQLMessage;
 
@@ -38,8 +37,8 @@ public class EOFPacket extends ResultSetPacket {
     public static final byte FIELD_COUNT = (byte) 0xfe;
 
     public byte fieldCount = FIELD_COUNT;
-    public int warningCount;
-    public int status = 2;
+    public int  warningCount;
+    public int  status     = 2;
 
     @Override
     protected void readBody(MySQLMessage mm) {

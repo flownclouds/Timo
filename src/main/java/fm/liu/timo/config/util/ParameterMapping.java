@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import fm.liu.timo.util.StringUtil;
 
 public class ParameterMapping {
@@ -82,8 +81,7 @@ public class ParameterMapping {
                 }
                 map.put(key, value);
             }
-        } else if (bean instanceof List) {
-        } else {
+        } else if (bean instanceof List) {} else {
             mapping(bean, config.getParams());
         }
         return bean;

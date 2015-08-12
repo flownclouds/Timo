@@ -18,20 +18,20 @@ package fm.liu.timo.config.model;
  */
 public class Datasource {
     private final int id;
-    private int datanodeID;
-    private String host;
-    private int port;
-    private String username;
-    private String password;
-    private String db;
-    private Type type;
-    private Status status;
-    private String charset;
-    private int initCon;
-    private int maxCon;
-    private int minIdle;
-    private int maxIdle;
-    private long idleCheckPeriod;
+    private int       datanodeID;
+    private String    host;
+    private int       port;
+    private String    username;
+    private String    password;
+    private String    db;
+    private Type      type;
+    private Status    status;
+    private String    charset;
+    private int       initCon;
+    private int       maxCon;
+    private int       minIdle;
+    private int       maxIdle;
+    private long      idleCheckPeriod;
 
     public enum Type {
         MASTER, BACKUP, SLAVE

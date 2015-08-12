@@ -15,7 +15,6 @@ package fm.liu.timo;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import org.pmw.tinylog.Logger;
 
 /**

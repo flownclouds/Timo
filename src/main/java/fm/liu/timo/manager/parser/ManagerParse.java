@@ -21,18 +21,18 @@ import fm.liu.timo.parser.util.ParseUtil;
  */
 public final class ManagerParse {
 
-    public static final int OTHER = -1;
-    public static final int SELECT = 1;
-    public static final int SET = 2;
-    public static final int SHOW = 3;
-    public static final int SWITCH = 4;
+    public static final int OTHER     = -1;
+    public static final int SELECT    = 1;
+    public static final int SET       = 2;
+    public static final int SHOW      = 3;
+    public static final int SWITCH    = 4;
     public static final int KILL_CONN = 5;
-    public static final int STOP = 6;
-    public static final int RELOAD = 7;
-    public static final int ROLLBACK = 8;
-    public static final int OFFLINE = 9;
-    public static final int ONLINE = 10;
-    public static final int CLEAR = 11;
+    public static final int STOP      = 6;
+    public static final int RELOAD    = 7;
+    public static final int ROLLBACK  = 8;
+    public static final int OFFLINE   = 9;
+    public static final int ONLINE    = 10;
+    public static final int CLEAR     = 11;
 
     public static int parse(String stmt) {
         for (int i = 0; i < stmt.length(); i++) {

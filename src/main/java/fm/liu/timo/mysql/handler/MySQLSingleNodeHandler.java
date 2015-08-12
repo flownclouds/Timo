@@ -14,7 +14,6 @@
 package fm.liu.timo.mysql.handler;
 
 import java.util.List;
-
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.net.connection.BackendConnection;
 import fm.liu.timo.net.mysql.ErrorPacket;

@@ -17,21 +17,20 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
-
 import fm.liu.timo.server.session.Session;
 
 /**
  * @author Liu Huanting 2015年5月9日
  */
 public abstract class SessionResultHandler implements ResultHandler {
-    public Session session;
-    protected volatile byte packetId = 0;
-    protected volatile ByteBuffer buffer = null;
+    public Session                   session;
+    protected volatile byte          packetId = 0;
+    protected volatile ByteBuffer    buffer   = null;
     protected volatile AtomicInteger count;
-    protected volatile AtomicBoolean failed = new AtomicBoolean(false);
-    protected final ReentrantLock lock = new ReentrantLock();
-    protected volatile int errno;
-    protected volatile String errMsg;
+    protected volatile AtomicBoolean failed   = new AtomicBoolean(false);
+    protected final ReentrantLock    lock     = new ReentrantLock();
+    protected volatile int           errno;
+    protected volatile String        errMsg;
 
     protected void recycleResources() {
         if (buffer != null) {

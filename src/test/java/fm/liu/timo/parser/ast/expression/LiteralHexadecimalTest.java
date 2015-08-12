@@ -17,9 +17,7 @@
 package fm.liu.timo.parser.ast.expression;
 
 import junit.framework.TestCase;
-
 import org.junit.Assert;
-
 import fm.liu.timo.parser.ast.expression.primary.literal.LiteralHexadecimal;
 import fm.liu.timo.parser.recognizer.mysql.lexer.MySQLLexer;
 import fm.liu.timo.parser.recognizer.mysql.syntax.MySQLExprParser;

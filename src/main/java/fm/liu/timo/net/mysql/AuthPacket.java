@@ -16,7 +16,6 @@ package fm.liu.timo.net.mysql;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
-
 import fm.liu.timo.config.Capabilities;
 import fm.liu.timo.mysql.BufferUtil;
 import fm.liu.timo.mysql.MySQLMessage;
@@ -43,10 +42,10 @@ import fm.liu.timo.mysql.StreamUtil;
 public class AuthPacket extends MySQLClientPacket {
     private static final byte[] FILLER = new byte[23];
 
-    public long clientFlags;
-    public long maxPacketSize;
-    public int charsetIndex;
-    public byte[] extra;// from FILLER(23)
+    public long   clientFlags;
+    public long   maxPacketSize;
+    public int    charsetIndex;
+    public byte[] extra;        // from FILLER(23)
     public String user;
     public byte[] password;
     public String database;

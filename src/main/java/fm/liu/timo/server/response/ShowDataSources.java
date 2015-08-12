@@ -15,7 +15,6 @@ package fm.liu.timo.server.response;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
-
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.Fields;
 import fm.liu.timo.config.model.Datasource;
@@ -37,10 +36,10 @@ import fm.liu.timo.util.StringUtil;
  */
 public class ShowDataSources {
 
-    private static final int FIELD_COUNT = 5;
-    private static final ResultSetHeaderPacket header = PacketUtil.getHeader(FIELD_COUNT);
-    private static final FieldPacket[] fields = new FieldPacket[FIELD_COUNT];
-    private static final EOFPacket eof = new EOFPacket();
+    private static final int                   FIELD_COUNT = 5;
+    private static final ResultSetHeaderPacket header      = PacketUtil.getHeader(FIELD_COUNT);
+    private static final FieldPacket[]         fields      = new FieldPacket[FIELD_COUNT];
+    private static final EOFPacket             eof         = new EOFPacket();
 
     static {
         int i = 0;

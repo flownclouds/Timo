@@ -14,7 +14,6 @@
 package fm.liu.timo.manager.response;
 
 import java.nio.ByteBuffer;
-
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.Fields;
 import fm.liu.timo.manager.ManagerConnection;
@@ -37,10 +36,10 @@ import fm.liu.timo.util.StringUtil;
  */
 public final class ShowConnection {
 
-    private static final int FIELD_COUNT = 14;
-    private static final ResultSetHeaderPacket header = PacketUtil.getHeader(FIELD_COUNT);
-    private static final FieldPacket[] fields = new FieldPacket[FIELD_COUNT];
-    private static final EOFPacket eof = new EOFPacket();
+    private static final int                   FIELD_COUNT = 14;
+    private static final ResultSetHeaderPacket header      = PacketUtil.getHeader(FIELD_COUNT);
+    private static final FieldPacket[]         fields      = new FieldPacket[FIELD_COUNT];
+    private static final EOFPacket             eof         = new EOFPacket();
 
     static {
         int i = 0;

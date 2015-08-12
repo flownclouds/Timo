@@ -15,20 +15,19 @@ package fm.liu.timo.merger;
 
 import java.util.ArrayDeque;
 import java.util.Collections;
-
 import fm.liu.timo.net.mysql.RowDataPacket;
 
 /**
  * @author Liu Huanting 2015年6月4日
  */
 public class Sorter {
-    private final MergeInfo[] mergeInfo;
+    private final MergeInfo[]         mergeInfo;
     private ArrayDeque<RowDataPacket> rows;
-    private RowDataPacket[] result;
-    private RowDataPacket[] temp;
-    private int p;
-    private int pL;
-    private int pR;
+    private RowDataPacket[]           result;
+    private RowDataPacket[]           temp;
+    private int                       p;
+    private int                       pL;
+    private int                       pR;
 
     public Sorter(MergeInfo[] mergeInfo) {
         this.mergeInfo = mergeInfo;

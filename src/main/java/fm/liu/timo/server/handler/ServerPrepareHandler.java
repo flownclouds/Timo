@@ -16,7 +16,6 @@ package fm.liu.timo.server.handler;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
-
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.mysql.ByteUtil;
 import fm.liu.timo.mysql.PreparedStatement;
@@ -30,10 +29,10 @@ import fm.liu.timo.server.response.PreparedStmtResponse;
  */
 public class ServerPrepareHandler implements FrontendPrepareHandler {
 
-    private ServerConnection source;
-    private volatile long pstmtId;
+    private ServerConnection               source;
+    private volatile long                  pstmtId;
     private Map<String, PreparedStatement> pstmtForSql;
-    private Map<Long, PreparedStatement> pstmtForId;
+    private Map<Long, PreparedStatement>   pstmtForId;
 
     public ServerPrepareHandler(ServerConnection source) {
         this.source = source;

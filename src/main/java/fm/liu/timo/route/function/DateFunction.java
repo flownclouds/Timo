@@ -15,7 +15,6 @@ package fm.liu.timo.route.function;
 
 import java.util.Collection;
 import java.util.Set;
-
 import fm.liu.timo.config.model.Function;
 
 /**

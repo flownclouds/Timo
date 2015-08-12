@@ -17,10 +17,8 @@
 package fm.liu.timo.parser.util;
 
 import junit.framework.TestCase;
-
 import org.junit.Assert;
 import org.junit.Test;
-
 import fm.liu.timo.parser.util.Pair;
 import fm.liu.timo.parser.util.PairUtil;
 

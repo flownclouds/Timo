@@ -18,22 +18,22 @@ package fm.liu.timo.mysql;
  */
 public class BindValue {
 
-    public boolean isNull; /* NULL indicator */
+    public boolean isNull;     /* NULL indicator */
     public boolean isLongData; /* long data indicator */
-    public boolean isSet; /* has this parameter been set */
+    public boolean isSet;      /* has this parameter been set */
 
     public long length; /* Default length of data */
-    public int type; /* data type */
+    public int  type;   /* data type */
     public byte scale;
 
     /** 数据值 **/
-    public byte byteBinding;
-    public short shortBinding;
-    public int intBinding;
-    public float floatBinding;
-    public long longBinding;
+    public byte   byteBinding;
+    public short  shortBinding;
+    public int    intBinding;
+    public float  floatBinding;
+    public long   longBinding;
     public double doubleBinding;
-    public Object value; /* Other value to store */
+    public Object value;        /* Other value to store */
 
     public void reset() {
         this.isNull = false;

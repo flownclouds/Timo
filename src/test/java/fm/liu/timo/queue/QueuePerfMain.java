@@ -26,9 +26,9 @@ public class QueuePerfMain {
 
     private static byte[] testData = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
 
-    private static BlockingQueue<byte[]> arrayQueue = new ArrayBlockingQueue<byte[]>(5000000);
-    private static FixedQueue<byte[]> fixedQueue = new FixedQueue<byte[]>(5000000);
-    private static Queue<byte[]> testQueue = new Queue<byte[]>();
+    private static BlockingQueue<byte[]> arrayQueue  = new ArrayBlockingQueue<byte[]>(5000000);
+    private static FixedQueue<byte[]>    fixedQueue  = new FixedQueue<byte[]>(5000000);
+    private static Queue<byte[]>         testQueue   = new Queue<byte[]>();
     private static BlockingQueue<byte[]> linkedQueue = new LinkedBlockingQueue<byte[]>();
 
     public static void tArrayQueue() {
@@ -51,8 +51,7 @@ public class QueuePerfMain {
                 while (true) {
                     try {
                         Thread.sleep(100L);
-                    } catch (InterruptedException e) {
-                    }
+                    } catch (InterruptedException e) {}
                     count++;
                     num += arrayQueue.size();
                     arrayQueue.clear();
@@ -86,8 +85,7 @@ public class QueuePerfMain {
                 while (true) {
                     try {
                         Thread.sleep(100L);
-                    } catch (InterruptedException e) {
-                    }
+                    } catch (InterruptedException e) {}
                     count++;
                     num += fixedQueue.size();
                     fixedQueue.clear();
@@ -121,8 +119,7 @@ public class QueuePerfMain {
                 while (true) {
                     try {
                         Thread.sleep(100L);
-                    } catch (InterruptedException e) {
-                    }
+                    } catch (InterruptedException e) {}
                     count++;
                     num += testQueue.size();
                     testQueue.clear();
@@ -156,8 +153,7 @@ public class QueuePerfMain {
                 while (true) {
                     try {
                         Thread.sleep(100L);
-                    } catch (InterruptedException e) {
-                    }
+                    } catch (InterruptedException e) {}
                     count++;
                     num += linkedQueue.size();
                     linkedQueue.clear();

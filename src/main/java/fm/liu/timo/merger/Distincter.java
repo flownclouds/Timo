@@ -15,7 +15,6 @@ package fm.liu.timo.merger;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
-
 import fm.liu.timo.net.mysql.RowDataPacket;
 
 /**

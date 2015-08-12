@@ -32,10 +32,10 @@ public class ExecutorUtil {
     }
 
     private static class NameableThreadFactory implements ThreadFactory {
-        private final ThreadGroup group;
-        private final String namePrefix;
+        private final ThreadGroup   group;
+        private final String        namePrefix;
         private final AtomicInteger threadId;
-        private final boolean isDaemon;
+        private final boolean       isDaemon;
 
         public NameableThreadFactory(String name, boolean isDaemon) {
             SecurityManager s = System.getSecurityManager();

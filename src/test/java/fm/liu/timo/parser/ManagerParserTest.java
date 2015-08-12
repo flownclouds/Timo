@@ -15,7 +15,6 @@ package fm.liu.timo.parser;
 
 import org.junit.Assert;
 import org.junit.Test;
-
 import fm.liu.timo.manager.parser.ManagerParse;
 import fm.liu.timo.manager.parser.ManagerParseClear;
 import fm.liu.timo.manager.parser.ManagerParseReload;

@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import fm.liu.timo.config.model.Database;
 import fm.liu.timo.config.model.Table;
 import fm.liu.timo.config.model.Table.TableType;
@@ -45,14 +44,14 @@ import fm.liu.timo.route.Info;
  * @author Liu Huanting 2015年5月10日
  */
 public class RouteVisitor extends Visitor {
-    private final Database database;
-    private Set<Object> values;
-    private Table table;
-    private int info;
-    private Set<String> groupBy;
+    private final Database       database;
+    private Set<Object>          values;
+    private Table                table;
+    private int                  info;
+    private Set<String>          groupBy;
     private Map<String, Integer> orderBy;
-    private int limitSize = -1;
-    private int limitOffset = 0;
+    private int                  limitSize   = -1;
+    private int                  limitOffset = 0;
 
     public RouteVisitor(Database database) {
         this.database = database;

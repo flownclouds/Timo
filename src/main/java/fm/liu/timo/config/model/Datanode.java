@@ -19,7 +19,7 @@ import java.util.List;
  * @author Liu Huanting 2015年5月9日
  */
 public class Datanode {
-    private final int id;
+    private final int           id;
     private final List<Integer> datasources;
 
     public Datanode(int id, List<Integer> datasources) {

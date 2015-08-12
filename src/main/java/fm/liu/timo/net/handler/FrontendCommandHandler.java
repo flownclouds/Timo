@@ -27,7 +27,7 @@ import fm.liu.timo.statistic.CommandCount;
 public class FrontendCommandHandler implements NIOHandler {
 
     protected final FrontendConnection source;
-    protected final CommandCount commands;
+    protected final CommandCount       commands;
 
     public FrontendCommandHandler(FrontendConnection source) {
         this.source = source;

@@ -18,9 +18,7 @@ package fm.liu.timo.server.handler;
 
 import java.nio.ByteBuffer;
 import java.sql.SQLNonTransientException;
-
 import org.pmw.tinylog.Logger;
-
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.config.Fields;
@@ -42,8 +40,8 @@ import fm.liu.timo.util.StringUtil;
  */
 public class ExplainHandler {
 
-    private static final int FIELD_COUNT = 2;
-    private static final FieldPacket[] fields = new FieldPacket[FIELD_COUNT];
+    private static final int           FIELD_COUNT = 2;
+    private static final FieldPacket[] fields      = new FieldPacket[FIELD_COUNT];
 
     static {
         fields[0] = PacketUtil.getField("DATA_NODE", Fields.FIELD_TYPE_VAR_STRING);
@@ -52,7 +50,6 @@ public class ExplainHandler {
 
     public static void handle(String stmt, ServerConnection c, int offset) {
         stmt = stmt.substring(offset);
-
 
         Outlets outltes = getRouteResultset(c, stmt);
         if (outltes == null)

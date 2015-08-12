@@ -14,7 +14,6 @@
 package fm.liu.timo.parser.recognizer;
 
 import java.sql.SQLSyntaxErrorException;
-
 import fm.liu.timo.parser.recognizer.SQLParserDelegate;
 
 /**

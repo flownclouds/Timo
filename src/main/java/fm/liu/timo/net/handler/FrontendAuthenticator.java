@@ -16,9 +16,7 @@ package fm.liu.timo.net.handler;
 import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 import java.util.Set;
-
 import org.pmw.tinylog.Logger;
-
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.mysql.SecurityUtil;
 import fm.liu.timo.net.NIOHandler;

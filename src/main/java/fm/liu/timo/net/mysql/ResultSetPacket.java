@@ -1,7 +1,6 @@
 package fm.liu.timo.net.mysql;
 
 import java.nio.ByteBuffer;
-
 import fm.liu.timo.net.connection.FrontendConnection;
 
 public abstract class ResultSetPacket extends MySQLServerPacket {

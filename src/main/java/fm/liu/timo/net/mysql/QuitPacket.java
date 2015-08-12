@@ -14,7 +14,6 @@
 package fm.liu.timo.net.mysql;
 
 import java.nio.ByteBuffer;
-
 import fm.liu.timo.mysql.MySQLMessage;
 
 /**

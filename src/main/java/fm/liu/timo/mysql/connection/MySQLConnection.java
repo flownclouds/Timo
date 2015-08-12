@@ -18,7 +18,6 @@ import java.nio.channels.SocketChannel;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-
 import fm.liu.timo.config.Capabilities;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.mysql.ByteUtil;
@@ -67,15 +66,15 @@ public class MySQLConnection extends BackendConnection {
         return flag;
     }
 
-    private Source datasource;
-    private long id;
-    private final int datanodeID;
-    private HandshakePacket handshake;
-    private long clientFlags;
-    private boolean isAuthenticated;
-    private String username;
-    private String password;
-    private volatile String db = "";
+    private Source                   datasource;
+    private long                     id;
+    private final int                datanodeID;
+    private HandshakePacket          handshake;
+    private long                     clientFlags;
+    private boolean                  isAuthenticated;
+    private String                   username;
+    private String                   password;
+    private volatile String          db = "";
     protected volatile ResultHandler resultHandler;
 
     public MySQLConnection(SocketChannel channel, NIOProcessor processor, int datanodeID) {
@@ -157,15 +156,15 @@ public class MySQLConnection extends BackendConnection {
         return SecurityUtil.scramble411(passwd, seed);
     }
 
-    private volatile int resultStatus;
-    private volatile byte[] header;
+    private volatile int          resultStatus;
+    private volatile byte[]       header;
     private volatile List<byte[]> fields;
 
     public class ResponseStatus {
-        public static final int RESULT_STATUS_INIT = 0;
-        public static final int RESULT_STATUS_HEADER = 1;
+        public static final int RESULT_STATUS_INIT      = 0;
+        public static final int RESULT_STATUS_HEADER    = 1;
         public static final int RESULT_STATUS_FIELD_EOF = 2;
-        public static final int RESULT_STATUS_END = 3;
+        public static final int RESULT_STATUS_END       = 3;
     }
 
     private void dispose(byte[] data) {

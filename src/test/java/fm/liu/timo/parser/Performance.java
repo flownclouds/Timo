@@ -20,7 +20,7 @@ package fm.liu.timo.parser;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public interface Performance {
-    public static String SQL_BENCHMARK_SELECT =
+    public static String SQL_BENCHMARK_SELECT      =
             " seLEcT id, member_id , image_path  \t , image_size , STATUS,   gmt_modified from    wp_image wheRe \t\t\n id =  ? AND member_id\t=\t-123.456";
     // String SQL_BENCHMARK_SELECT =
     // "select ID, GMT_CREATE, GMT_MODIFIED, INBOX_FOLDER_ID, MESSAGE_ID, FEEDBACK_TYPE, TARGET_ID,

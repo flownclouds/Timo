@@ -17,7 +17,7 @@ package fm.liu.timo.route.function;
  * @author Liu Huanting 2015年5月10日
  */
 public class Range {
-    private final int node;
+    private final int  node;
     private final long min;
     private final long max;
 

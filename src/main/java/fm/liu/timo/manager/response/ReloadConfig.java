@@ -14,9 +14,7 @@
 package fm.liu.timo.manager.response;
 
 import java.util.concurrent.locks.ReentrantLock;
-
 import org.pmw.tinylog.Logger;
-
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.manager.ManagerConnection;

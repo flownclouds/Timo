@@ -14,7 +14,6 @@
 package fm.liu.timo;
 
 import java.util.Set;
-
 import fm.liu.timo.config.model.User;
 import fm.liu.timo.net.handler.FrontendPrivileges;
 

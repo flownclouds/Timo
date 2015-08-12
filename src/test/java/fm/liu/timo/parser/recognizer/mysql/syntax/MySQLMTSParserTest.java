@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
 import java.sql.SQLSyntaxErrorException;
-
 import fm.liu.timo.parser.ast.stmt.mts.MTSReleaseStatement;
 import fm.liu.timo.parser.ast.stmt.mts.MTSRollbackStatement;
 import fm.liu.timo.parser.ast.stmt.mts.MTSSavepointStatement;

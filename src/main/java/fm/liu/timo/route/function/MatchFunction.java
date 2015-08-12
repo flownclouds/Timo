@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import fm.liu.timo.config.model.Function;
 
 /**
@@ -25,7 +24,7 @@ import fm.liu.timo.config.model.Function;
  */
 public class MatchFunction implements Function {
     private final Map<Object, Integer> mapping;
-    private final int defaultNode;
+    private final int                  defaultNode;
 
     public MatchFunction(Map<Object, Integer> mapping, int defaultNode) {
         this.mapping = mapping;

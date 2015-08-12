@@ -20,17 +20,17 @@ import fm.liu.timo.parser.util.ParseUtil;
  */
 public final class ServerParseSet {
 
-    public static final int OTHER = -1;
-    public static final int AUTOCOMMIT_ON = 1;
-    public static final int AUTOCOMMIT_OFF = 2;
-    public static final int TX_READ_UNCOMMITTED = 3;
-    public static final int TX_READ_COMMITTED = 4;
-    public static final int TX_REPEATED_READ = 5;
-    public static final int TX_SERIALIZABLE = 6;
-    public static final int NAMES = 7;
-    public static final int CHARACTER_SET_CLIENT = 8;
+    public static final int OTHER                    = -1;
+    public static final int AUTOCOMMIT_ON            = 1;
+    public static final int AUTOCOMMIT_OFF           = 2;
+    public static final int TX_READ_UNCOMMITTED      = 3;
+    public static final int TX_READ_COMMITTED        = 4;
+    public static final int TX_REPEATED_READ         = 5;
+    public static final int TX_SERIALIZABLE          = 6;
+    public static final int NAMES                    = 7;
+    public static final int CHARACTER_SET_CLIENT     = 8;
     public static final int CHARACTER_SET_CONNECTION = 9;
-    public static final int CHARACTER_SET_RESULTS = 10;
+    public static final int CHARACTER_SET_RESULTS    = 10;
 
     public static int parse(String stmt, int offset) {
         int i = offset;

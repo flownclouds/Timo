@@ -19,43 +19,44 @@ import fm.liu.timo.config.Isolations;
  * @author Liu Huanting 2015年5月9日
  */
 public class SystemConfig {
-    private static final int DEFAULT_PORT = 8066;
-    private static final int DEFAULT_MANAGER_PORT = 9066;
-    private static final String DEFAULT_CHARSET = "UTF-8";
-    private static final int DEFAULT_PROCESSORS = Runtime.getRuntime().availableProcessors();
-    private static final long DEFAULT_IDLE_TIMEOUT = 8 * 3600 * 1000L;
-    private static final long DEFAULT_PROCESSOR_CHECK_PERIOD = 15 * 1000L;
-    private static final long DEFAULT_DATANODE_IDLE_CHECK_PERIOD = 60 * 1000L;
-    private static final long DEFAULT_DATANODE_HEARTBEAT_PERIOD = 10 * 1000L;
-    private static final long DEFAULT_CLUSTER_HEARTBEAT_PERIOD = 5 * 1000L;
-    private static final long DEFAULT_CLUSTER_HEARTBEAT_TIMEOUT = 10 * 1000L;
-    private static final int DEFAULT_CLUSTER_HEARTBEAT_RETRY = 10;
-    private static final String DEFAULT_CLUSTER_HEARTBEAT_USER = "_HEARTBEAT_USER_";
-    private static final String DEFAULT_CLUSTER_HEARTBEAT_PASS = "_HEARTBEAT_PASS_";
-    private static final int DEFAULT_PARSER_COMMENT_VERSION = 50148;
-    private static final int DEFAULT_SQL_RECORD_COUNT = 10;
+    private static final int    DEFAULT_PORT                       = 8066;
+    private static final int    DEFAULT_MANAGER_PORT               = 9066;
+    private static final String DEFAULT_CHARSET                    = "UTF-8";
+    private static final int    DEFAULT_PROCESSORS                 =
+            Runtime.getRuntime().availableProcessors();
+    private static final long   DEFAULT_IDLE_TIMEOUT               = 8 * 3600 * 1000L;
+    private static final long   DEFAULT_PROCESSOR_CHECK_PERIOD     = 15 * 1000L;
+    private static final long   DEFAULT_DATANODE_IDLE_CHECK_PERIOD = 60 * 1000L;
+    private static final long   DEFAULT_DATANODE_HEARTBEAT_PERIOD  = 10 * 1000L;
+    private static final long   DEFAULT_CLUSTER_HEARTBEAT_PERIOD   = 5 * 1000L;
+    private static final long   DEFAULT_CLUSTER_HEARTBEAT_TIMEOUT  = 10 * 1000L;
+    private static final int    DEFAULT_CLUSTER_HEARTBEAT_RETRY    = 10;
+    private static final String DEFAULT_CLUSTER_HEARTBEAT_USER     = "_HEARTBEAT_USER_";
+    private static final String DEFAULT_CLUSTER_HEARTBEAT_PASS     = "_HEARTBEAT_PASS_";
+    private static final int    DEFAULT_PARSER_COMMENT_VERSION     = 50148;
+    private static final int    DEFAULT_SQL_RECORD_COUNT           = 10;
 
-    private int serverPort;
-    private int managerPort;
+    private int    serverPort;
+    private int    managerPort;
     private String charset;
-    private int processors;
-    private int processorHandler;
-    private int processorExecutor;
-    private int initExecutor;
-    private int timerExecutor;
-    private int managerExecutor;
-    private long idleTimeout;
-    private long processorCheckPeriod;
-    private long dataNodeIdleCheckPeriod;
-    private long dataNodeHeartbeatPeriod;
+    private int    processors;
+    private int    processorHandler;
+    private int    processorExecutor;
+    private int    initExecutor;
+    private int    timerExecutor;
+    private int    managerExecutor;
+    private long   idleTimeout;
+    private long   processorCheckPeriod;
+    private long   dataNodeIdleCheckPeriod;
+    private long   dataNodeHeartbeatPeriod;
     private String clusterHeartbeatUser;
     private String clusterHeartbeatPass;
-    private long clusterHeartbeatPeriod;
-    private long clusterHeartbeatTimeout;
-    private int clusterHeartbeatRetry;
-    private int txIsolation;
-    private int parserCommentVersion;
-    private int sqlRecordCount;
+    private long   clusterHeartbeatPeriod;
+    private long   clusterHeartbeatTimeout;
+    private int    clusterHeartbeatRetry;
+    private int    txIsolation;
+    private int    parserCommentVersion;
+    private int    sqlRecordCount;
     private String url;
     private String username;
     private String password;
@@ -275,6 +276,5 @@ public class SystemConfig {
     public void setPassword(String password) {
         this.password = password;
     }
-
 
 }

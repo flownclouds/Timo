@@ -15,7 +15,6 @@ package fm.liu.timo.parser;
 
 import org.junit.Assert;
 import org.junit.Test;
-
 import fm.liu.timo.server.parser.ServerParse;
 import fm.liu.timo.server.parser.ServerParseSelect;
 import fm.liu.timo.server.parser.ServerParseSet;

@@ -18,7 +18,6 @@ package fm.liu.timo.parser.recognizer.mysql.syntax;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.comparison.ComparisionEqualsExpression;
 import fm.liu.timo.parser.ast.expression.logical.LogicalAndExpression;

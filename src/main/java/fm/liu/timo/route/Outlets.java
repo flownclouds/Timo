@@ -21,12 +21,12 @@ import java.util.Set;
  * @author Liu Huanting 2015年5月10日
  */
 public class Outlets {
-    private Set<Outlet> outlets;
-    private int info;
-    private Set<String> groupBy;
+    private Set<Outlet>          outlets;
+    private int                  info;
+    private Set<String>          groupBy;
     private Map<String, Integer> orderBy;
-    private int limitSize = -1;
-    private int limitOffset = 0;
+    private int                  limitSize   = -1;
+    private int                  limitOffset = 0;
 
     public Outlets() {
         this.outlets = new HashSet<Outlet>();

@@ -14,7 +14,6 @@
 package fm.liu.timo.net.mysql;
 
 import java.nio.ByteBuffer;
-
 import fm.liu.timo.mysql.BufferUtil;
 import fm.liu.timo.mysql.MySQLMessage;
 
@@ -42,13 +41,13 @@ import fm.liu.timo.mysql.MySQLMessage;
 public class HandshakePacket extends MySQLServerPacket {
     private static final byte[] FILLER_13 = new byte[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    public byte protocolVersion;
+    public byte   protocolVersion;
     public byte[] serverVersion;
-    public long threadId;
+    public long   threadId;
     public byte[] seed;
-    public int serverCapabilities;
-    public byte serverCharsetIndex;
-    public int serverStatus;
+    public int    serverCapabilities;
+    public byte   serverCharsetIndex;
+    public int    serverStatus;
     public byte[] restOfScrambleBuff;
 
     @Override

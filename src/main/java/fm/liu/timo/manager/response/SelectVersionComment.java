@@ -14,7 +14,6 @@
 package fm.liu.timo.manager.response;
 
 import java.nio.ByteBuffer;
-
 import fm.liu.timo.config.Fields;
 import fm.liu.timo.manager.ManagerConnection;
 import fm.liu.timo.mysql.PacketUtil;
@@ -28,11 +27,11 @@ import fm.liu.timo.net.mysql.RowDataPacket;
  */
 public final class SelectVersionComment {
 
-    private static final byte[] VERSION_COMMENT = "TimoManager@Alibaba".getBytes();
-    private static final int FIELD_COUNT = 1;
-    private static final ResultSetHeaderPacket header = PacketUtil.getHeader(FIELD_COUNT);
-    private static final FieldPacket[] fields = new FieldPacket[FIELD_COUNT];
-    private static final EOFPacket eof = new EOFPacket();
+    private static final byte[]                VERSION_COMMENT = "TimoManager@Alibaba".getBytes();
+    private static final int                   FIELD_COUNT     = 1;
+    private static final ResultSetHeaderPacket header          = PacketUtil.getHeader(FIELD_COUNT);
+    private static final FieldPacket[]         fields          = new FieldPacket[FIELD_COUNT];
+    private static final EOFPacket             eof             = new EOFPacket();
 
     static {
         int i = 0;

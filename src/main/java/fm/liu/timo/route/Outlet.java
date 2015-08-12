@@ -17,7 +17,7 @@ package fm.liu.timo.route;
  * @author Liu Huanting 2015年5月10日
  */
 public class Outlet {
-    private final int id;
+    private final int    id;
     private final String sql;
 
     public Outlet(int id, String sql) {

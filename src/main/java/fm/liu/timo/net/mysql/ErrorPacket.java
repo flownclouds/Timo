@@ -14,7 +14,6 @@
 package fm.liu.timo.net.mysql;
 
 import java.nio.ByteBuffer;
-
 import fm.liu.timo.mysql.BufferUtil;
 import fm.liu.timo.mysql.MySQLMessage;
 
@@ -35,14 +34,14 @@ import fm.liu.timo.mysql.MySQLMessage;
  * 
  */
 public class ErrorPacket extends MySQLServerPacket {
-    public static final byte FIELD_COUNT = (byte) 0xff;
-    private static final byte SQLSTATE_MARKER = (byte) '#';
+    public static final byte    FIELD_COUNT      = (byte) 0xff;
+    private static final byte   SQLSTATE_MARKER  = (byte) '#';
     private static final byte[] DEFAULT_SQLSTATE = "HY000".getBytes();
 
-    public byte fieldCount = FIELD_COUNT;
-    public int errno;
-    public byte mark = SQLSTATE_MARKER;
-    public byte[] sqlState = DEFAULT_SQLSTATE;
+    public byte   fieldCount = FIELD_COUNT;
+    public int    errno;
+    public byte   mark       = SQLSTATE_MARKER;
+    public byte[] sqlState   = DEFAULT_SQLSTATE;
     public byte[] message;
 
     @Override

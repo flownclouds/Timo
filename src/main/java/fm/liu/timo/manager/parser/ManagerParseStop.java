@@ -22,7 +22,7 @@ import fm.liu.timo.util.SplitUtil;
  */
 public final class ManagerParseStop {
 
-    public static final int OTHER = -1;
+    public static final int OTHER     = -1;
     public static final int HEARTBEAT = 1;
 
     public static int parse(String stmt, int offset) {

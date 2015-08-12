@@ -17,7 +17,7 @@ package fm.liu.timo.config.model;
  * @author Liu Huanting 2015年5月9日
  */
 public class Rule {
-    private final String column;
+    private final String   column;
     private final Function function;
 
     public Rule(String column, Function function) {

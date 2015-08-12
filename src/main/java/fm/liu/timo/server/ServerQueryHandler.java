@@ -14,7 +14,6 @@
 package fm.liu.timo.server;
 
 import org.pmw.tinylog.Logger;
-
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.net.handler.FrontendQueryHandler;
 import fm.liu.timo.server.handler.BeginHandler;

@@ -16,7 +16,6 @@ package fm.liu.timo.net.connection;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
-
 import fm.liu.timo.net.NIOProcessor;
 import fm.liu.timo.route.Outlet;
 import fm.liu.timo.server.session.handler.ResultHandler;

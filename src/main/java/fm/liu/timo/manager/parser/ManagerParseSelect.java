@@ -20,11 +20,11 @@ import fm.liu.timo.parser.util.ParseUtil;
  */
 public final class ManagerParseSelect {
 
-    public static final int OTHER = -1;
-    public static final int VERSION_COMMENT = 1;
+    public static final int OTHER                  = -1;
+    public static final int VERSION_COMMENT        = 1;
     public static final int SESSION_AUTO_INCREMENT = 2;
 
-    private static final char[] _VERSION_COMMENT = "VERSION_COMMENT".toCharArray();
+    private static final char[] _VERSION_COMMENT        = "VERSION_COMMENT".toCharArray();
     private static final char[] _SESSION_AUTO_INCREMENT =
             "SESSION.AUTO_INCREMENT_INCREMENT".toCharArray();
 

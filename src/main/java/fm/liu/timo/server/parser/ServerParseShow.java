@@ -20,10 +20,10 @@ import fm.liu.timo.parser.util.ParseUtil;
  */
 public final class ServerParseShow {
 
-    public static final int OTHER = -1;
-    public static final int DATABASES = 1;
-    public static final int DATASOURCES = 2;
-    public static final int Timo_STATUS = 3;
+    public static final int OTHER        = -1;
+    public static final int DATABASES    = 1;
+    public static final int DATASOURCES  = 2;
+    public static final int Timo_STATUS  = 3;
     public static final int Timo_CLUSTER = 4;
 
     public static int parse(String stmt, int offset) {
