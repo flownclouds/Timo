@@ -85,7 +85,6 @@ public class TimoServer {
             processors[i] = new NIOProcessor("Processor" + i, handler, executor);
             processors[i].startup();
         }
-        // timer.schedule(processorCheck(), 0L, system.getProcessorCheckPeriod());
 
         // startup connector
         Logger.info("Startup connector ...");
@@ -101,8 +100,10 @@ public class TimoServer {
                 System.exit(-1);
             }
         }
-        // timer.schedule(dataNodeIdleCheck(), 0L, system.getDataNodeIdleCheckPeriod());
-        // timer.schedule(dataNodeHeartbeat(), 0L, system.getDataNodeHeartbeatPeriod());
+
+        timer.schedule(processorCheck(), 0L, system.getProcessorCheckPeriod());
+        timer.schedule(dataNodeIdleCheck(), 0L, system.getDataNodeIdleCheckPeriod());
+        timer.schedule(dataNodeHeartbeat(), 0L, system.getDataNodeHeartbeatPeriod());
 
         // startup manager
         ManagerConnectionFactory mf = new ManagerConnectionFactory(variables);
@@ -161,63 +162,59 @@ public class TimoServer {
     }
 
     // 处理器定时检查任务
-    // private TimerTask processorCheck() {
-    // return new TimerTask() {
-    // @Override
-    // public void run() {
-    // timerExecutor.execute(new Runnable() {
-    // @Override
-    // public void run() {
-    // for (NIOProcessor p : processors) {
-    // p.check();
-    // }
-    // }
-    // });
-    // }
-    // };
-    // }
+
+    private TimerTask processorCheck() {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                timerExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (NIOProcessor p : processors) {
+                            p.check();
+                        }
+                    }
+                });
+            }
+        };
+    }
 
     // 数据节点定时连接空闲超时检查任务
-    // private TimerTask dataNodeIdleCheck() {
-    // return new TimerTask() {
-    // @Override
-    // public void run() {
-    // timerExecutor.execute(new Runnable() {
-    // @Override
-    // public void run() {
-    // Map<String, MySQLDataNode> nodes = config.getDataNodes();
-    // for (MySQLDataNode node : nodes.values()) {
-    // node.idleCheck();
-    // }
-    // Map<String, MySQLDataNode> _nodes = config.getBackupDataNodes();
-    // if (_nodes != null) {
-    // for (MySQLDataNode node : _nodes.values()) {
-    // node.idleCheck();
-    // }
-    // }
-    // }
-    // });
-    // }
-    // };
-    // }
-    //
-    // // 数据节点定时心跳任务
-    // private TimerTask dataNodeHeartbeat() {
-    // return new TimerTask() {
-    // @Override
-    // public void run() {
-    // timerExecutor.execute(new Runnable() {
-    // @Override
-    // public void run() {
-    // Map<String, MySQLDataNode> nodes = config.getDataNodes();
-    // for (MySQLDataNode node : nodes.values()) {
-    // node.doHeartbeat();
-    // }
-    // }
-    // });
-    // }
-    // };
-    // }
+    private TimerTask dataNodeIdleCheck() {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                timerExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Map<Integer, Node> nodes = config.getNodes();
+                        for (Node node : nodes.values()) {
+                            node.idleCheck();
+                        }
+                    }
+                });
+            }
+        };
+    }
+
+    // 数据节点定时心跳任务
+    private TimerTask dataNodeHeartbeat() {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                timerExecutor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Map<Integer, Node> nodes = config.getNodes();
+                        for (Node node : nodes.values()) {
+                            node.heartbeat();
+                        }
+                    }
+                });
+            }
+        };
+    }
+
     private int processorIndex = 0;
 
     public NIOProcessor nextProcessor() {

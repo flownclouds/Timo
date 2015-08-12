@@ -14,17 +14,20 @@
 package fm.liu.timo.net.backend;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import fm.liu.timo.config.model.Datasource;
 import fm.liu.timo.config.model.Datasource.Status;
 import fm.liu.timo.mysql.connection.MySQLConnection;
+import fm.liu.timo.net.connection.AbstractConnection.State;
 import fm.liu.timo.net.connection.BackendConnection;
 import fm.liu.timo.net.connection.Variables;
-import fm.liu.timo.net.connection.AbstractConnection.State;
 import fm.liu.timo.net.factory.BackendConnectionFactory;
 import fm.liu.timo.net.handler.BackendConnectHandler;
 import fm.liu.timo.net.handler.BackendCreateConnectionHandler;
+import fm.liu.timo.server.session.handler.VirtualHandler;
+import fm.liu.timo.util.TimeUtil;
 
 /**
  * @author Liu Huanting 2015年5月9日
@@ -119,5 +122,47 @@ public class Source {
             con.setState(State.borrowed);
         }
         return con;
+    }
+
+    public void idleCheck() {
+        int idleSize = this.idle.size();
+        int increase = config.getMinIdle() - idleSize;
+        if (increase > 0) {
+            increase = Math.min(increase, config.getMaxIdle() - this.getSize());
+        }
+        for (int i = 0; i < increase; i++) {
+            BackendConnectHandler handler = new BackendCreateConnectionHandler();
+            handler.setDB(config.getDB());
+            this.newConnection(handler);
+        }
+        int decrease = idleSize - config.getMaxIdle();
+        if (decrease > 0) {
+            ArrayList<BackendConnection> connections = get(decrease);
+            for (BackendConnection connection : connections) {
+                connection.close();
+            }
+        }
+        long lastActiveTime = TimeUtil.currentTimeMillis() - config.getIdleCheckPeriod();
+        ArrayList<BackendConnection> connections = get(idleSize / 4);
+        for (BackendConnection connection : connections) {
+            long time = Math.max(connection.getVariables().getLastReadTime(),
+                    connection.getVariables().getLastWriteTime());
+            if (time < lastActiveTime) {
+                connection.query("SELECT 1", new VirtualHandler());
+            } else {
+                release(connection);
+            }
+        }
+    }
+
+    private ArrayList<BackendConnection> get(int decrease) {
+        ArrayList<BackendConnection> connections = new ArrayList<BackendConnection>();
+        while (!idle.isEmpty() && connections.size() < decrease) {
+            BackendConnection connection = idle.poll();
+            if (connection != null) {
+                connections.add(connection);
+            }
+        }
+        return connections;
     }
 }

@@ -66,7 +66,7 @@ public class AbstractSession implements Session {
         for (Outlet out : outs.getResult()) {
             Node node = config.getNodes().get(out.getID());
             BackendConnection con = node.getSource().get();
-            con.query(out, handler);
+            con.query(out.getSql(), handler);
         }
     }
 

@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import fm.liu.timo.net.NIOProcessor;
-import fm.liu.timo.route.Outlet;
 import fm.liu.timo.server.session.handler.ResultHandler;
 
 /**
@@ -37,7 +36,7 @@ public abstract class BackendConnection extends AbstractConnection {
 
     public abstract void onConnectFailed(Throwable e);
 
-    public abstract void query(Outlet out, ResultHandler handler);
+    public abstract void query(String sql, ResultHandler handler);
 
     public abstract void release();
 

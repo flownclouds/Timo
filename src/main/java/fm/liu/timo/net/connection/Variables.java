@@ -24,6 +24,8 @@ public class Variables implements Cloneable {
     private volatile int     isolationLevel;
     private volatile int     charsetIndex;
     private volatile String  charset;
+    private volatile long    lastReadTime;
+    private volatile long    lastWriteTime;
 
     public Variables() {
         super();
@@ -85,5 +87,21 @@ public class Variables implements Cloneable {
         var.setCharsetIndex(this.getCharsetIndex());
         var.setIsolationLevel(this.getIsolationLevel());
         return var;
+    }
+
+    public long getLastReadTime() {
+        return lastReadTime;
+    }
+
+    public void setLastReadTime(long lastReadTime) {
+        this.lastReadTime = lastReadTime;
+    }
+
+    public long getLastWriteTime() {
+        return lastWriteTime;
+    }
+
+    public void setLastWriteTime(long lastWriteTime) {
+        this.lastWriteTime = lastWriteTime;
     }
 }

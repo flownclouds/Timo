@@ -53,6 +53,19 @@ public class Node {
         return chosen;
     }
 
+    public void idleCheck() {
+        for (Source source : sources.values()) {
+            if (source != null && source.isAvailable()) {
+                source.idleCheck();
+            }
+        }
+    }
+
+    public void heartbeat() {
+        // TODO Auto-generated method stub
+
+    }
+
     public int getID() {
         return id;
     }
@@ -64,4 +77,5 @@ public class Node {
     public Map<Integer, Source> getSources() {
         return sources;
     }
+
 }

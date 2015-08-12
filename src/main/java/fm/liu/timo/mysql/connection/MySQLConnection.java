@@ -33,7 +33,6 @@ import fm.liu.timo.net.mysql.ErrorPacket;
 import fm.liu.timo.net.mysql.HandshakePacket;
 import fm.liu.timo.net.mysql.MySQLPacket;
 import fm.liu.timo.net.mysql.OkPacket;
-import fm.liu.timo.route.Outlet;
 import fm.liu.timo.server.session.handler.ResultHandler;
 
 /**
@@ -308,7 +307,7 @@ public class MySQLConnection extends BackendConnection {
     }
 
     @Override
-    public void query(Outlet out, ResultHandler handler) {
+    public void query(String sql, ResultHandler handler) {
         if (this.isClosed()) {
             this.setResultHandler(null);
             handler.close(this, "backend connection already closed!");
@@ -317,7 +316,7 @@ public class MySQLConnection extends BackendConnection {
         this.setResultHandler(handler);
         this.setState(State.running);
         CommandPacket packet = new CommandPacket(CommandPacket.COM_QUERY);
-        packet.arg = out.getSql().getBytes();
+        packet.arg = sql.getBytes();
         packet.write(this);
     }
 

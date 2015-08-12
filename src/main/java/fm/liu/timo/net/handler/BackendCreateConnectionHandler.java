@@ -15,7 +15,6 @@ package fm.liu.timo.net.handler;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import fm.liu.timo.net.connection.BackendConnection;
-import fm.liu.timo.route.Outlet;
 import fm.liu.timo.server.session.handler.OKResultHandler;
 import fm.liu.timo.server.session.handler.ResultHandler;
 
@@ -38,8 +37,7 @@ public class BackendCreateConnectionHandler implements BackendConnectHandler {
     @Override
     public void acquired(BackendConnection con) {
         ResultHandler handler = new InitDBHandler();
-        Outlet out = new Outlet(-1, "USE " + db);
-        con.query(out, handler);
+        con.query("USE " + db, handler);
     }
 
     @Override
