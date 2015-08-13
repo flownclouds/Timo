@@ -259,7 +259,7 @@ public class MySQLConnection extends BackendConnection {
                 if (resultHandler != null) {
                     final ResultHandler temp = resultHandler;
                     resultHandler = null;
-                    temp.close(this, "connectionError");
+                    temp.close("connectionError");
                 } else if (handler instanceof MySQLAuthenticatorHandler) {
                     MySQLAuthenticatorHandler theHandler = (MySQLAuthenticatorHandler) handler;
                     theHandler.error(t);
@@ -274,11 +274,10 @@ public class MySQLConnection extends BackendConnection {
             // 由线程池去执行关闭后的操作
             final ResultHandler handler = resultHandler;
             resultHandler = null;
-            final MySQLConnection backend = this;
             this.processor.getExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
-                    handler.close(backend, null);// 可能会被调用多次
+                    handler.close(null);// 可能会被调用多次
                 }
             });
         }
@@ -310,7 +309,7 @@ public class MySQLConnection extends BackendConnection {
     public void query(String sql, ResultHandler handler) {
         if (this.isClosed()) {
             this.setResultHandler(null);
-            handler.close(this, "backend connection already closed!");
+            handler.close("backend connection already closed!");
             return;
         }
         this.setResultHandler(handler);

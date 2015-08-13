@@ -103,7 +103,7 @@ public class TimoServer {
 
         timer.schedule(processorCheck(), 0L, system.getProcessorCheckPeriod());
         timer.schedule(dataNodeIdleCheck(), 0L, system.getDataNodeIdleCheckPeriod());
-        timer.schedule(dataNodeHeartbeat(), 0L, system.getDataNodeHeartbeatPeriod());
+        timer.schedule(dataNodeHeartbeat(), 0L, system.getHeartbeatTimeout());
 
         // startup manager
         ManagerConnectionFactory mf = new ManagerConnectionFactory(variables);

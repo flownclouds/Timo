@@ -13,6 +13,7 @@
  */
 package fm.liu.timo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
@@ -45,11 +46,11 @@ public class TimoConfig {
         this.users = conf.getUsers();
         this.databases = conf.getDatabases();
         this.datasources = conf.getDatasources();
-        this.nodes = initDatanodes(conf.getDatanodes(), conf.getDatasources());
+        this.nodes = initDatanodes(conf.getDatanodes(), conf.getDatasources(), conf.getHandovers());
     }
 
     private Map<Integer, Node> initDatanodes(Map<Integer, Datanode> datanodes,
-            Map<Integer, Datasource> datasources) {
+            Map<Integer, Datasource> datasources, Map<Integer, ArrayList<Integer>> handovers) {
         Map<Integer, Node> nodes = new HashMap<Integer, Node>();
         Variables variables = new Variables();
         variables.setCharset(system.getCharset());
@@ -58,10 +59,10 @@ public class TimoConfig {
             Map<Integer, Source> sources = new HashMap<Integer, Source>();
             for (Integer i : datanode.getDatasources()) {
                 Datasource datasource = datasources.get(i);
-                Source source = new Source(datasource, i, variables);
+                Source source = new Source(datasource, i, variables, system.getHeartbeatPeriod());
                 sources.put(i, source);
             }
-            Node node = new Node(datanode.getID(), sources);
+            Node node = new Node(datanode.getID(), sources, handovers);
             nodes.put(datanode.getID(), node);
         }
         return nodes;

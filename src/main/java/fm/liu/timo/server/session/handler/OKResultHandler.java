@@ -24,7 +24,7 @@ public abstract class OKResultHandler implements ResultHandler {
 
     protected abstract void success(BackendConnection con);
 
-    protected abstract void failed(BackendConnection con, String err);
+    protected abstract void failed(String err);
 
     @Override
     public void ok(byte[] ok, BackendConnection con) {
@@ -34,34 +34,34 @@ public abstract class OKResultHandler implements ResultHandler {
     @Override
     public void error(byte[] err, BackendConnection con) {
         String error = new String(err);
-        failed(con, error);
+        failed(error);
         closeConnection(con, error);
     }
 
     @Override
     public void field(byte[] header, List<byte[]> fields, byte[] eof, BackendConnection con) {
         String error = "unexpected response";
-        failed(con, error);
+        failed(error);
         closeConnection(con, error);
     }
 
     @Override
     public void row(byte[] row, BackendConnection con) {
         String error = "unexpected response";
-        failed(con, error);
+        failed(error);
         closeConnection(con, error);
     }
 
     @Override
     public void eof(byte[] eof, BackendConnection con) {
         String error = "unexpected response";
-        failed(con, error);
+        failed(error);
         closeConnection(con, error);
     }
 
     @Override
-    public void close(BackendConnection con, String reason) {
-        failed(con, reason);
+    public void close(String reason) {
+        failed(reason);
     }
 
     private void closeConnection(BackendConnection con, String error) {

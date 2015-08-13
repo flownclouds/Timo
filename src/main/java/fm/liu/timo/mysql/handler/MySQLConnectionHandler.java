@@ -48,7 +48,7 @@ public class MySQLConnectionHandler extends BackendHandler {
         dataQueue.clear();
         ResultHandler handler = con.getResultHandler();
         if (handler != null) {
-            handler.close(con, "connection error");
+            handler.close("connection error");
         }
     }
 
@@ -124,7 +124,7 @@ public class MySQLConnectionHandler extends BackendHandler {
         resultStatus = RESULT_STATUS_INIT;
         ResultHandler handler = con.getResultHandler();
         if (handler != null) {
-            handler.close(con, "handle data error");
+            handler.close("handle data error");
         }
     }
 

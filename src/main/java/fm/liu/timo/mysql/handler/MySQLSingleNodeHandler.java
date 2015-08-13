@@ -79,7 +79,7 @@ public class MySQLSingleNodeHandler extends SessionResultHandler {
     }
 
     @Override
-    public void close(BackendConnection con, String reason) {
+    public void close(String reason) {
         ErrorPacket err = new ErrorPacket();
         err.packetId = ++packetId;
         err.errno = ErrorCode.ER_YES;

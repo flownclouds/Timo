@@ -26,6 +26,6 @@ public class VirtualHandler implements ResultHandler {
     public void eof(byte[] eof, BackendConnection con) {}
 
     @Override
-    public void close(BackendConnection con, String reason) {}
+    public void close(String reason) {}
 
 }

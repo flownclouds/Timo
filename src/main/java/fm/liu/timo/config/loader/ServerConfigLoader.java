@@ -40,15 +40,16 @@ import fm.liu.timo.route.function.RangeFunction;
  * @author Liu Huanting 2015年5月9日
  */
 public class ServerConfigLoader {
-    private final String                   url;
-    private final String                   username;
-    private final String                   password;
-    private final Map<Integer, Datasource> datasources;
-    private final Map<Integer, Datanode>   datanodes;
-    private final Map<String, Database>    databases;
-    private final Map<Integer, Rule>       rules;
-    private final Map<Integer, Function>   functions;
-    private final Map<String, User>        users;
+    private final String                           url;
+    private final String                           username;
+    private final String                           password;
+    private final Map<Integer, Datasource>         datasources;
+    private final Map<Integer, Datanode>           datanodes;
+    private final Map<Integer, ArrayList<Integer>> handovers;
+    private final Map<String, Database>            databases;
+    private final Map<Integer, Rule>               rules;
+    private final Map<Integer, Function>           functions;
+    private final Map<String, User>                users;
 
     public ServerConfigLoader(String url, String username, String password) {
         this.url = url;
@@ -56,13 +57,14 @@ public class ServerConfigLoader {
         this.password = password;
         this.datasources = new HashMap<Integer, Datasource>();
         this.datanodes = new HashMap<Integer, Datanode>();
+        this.handovers = new HashMap<Integer, ArrayList<Integer>>();
         this.databases = new HashMap<String, Database>();
         this.rules = new HashMap<Integer, Rule>();
         this.functions = new HashMap<Integer, Function>();
         this.users = new HashMap<String, User>();
         try {
             load();
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             System.exit(-1);
         }
@@ -75,7 +77,7 @@ public class ServerConfigLoader {
         loadRules(con);
         loadDatasources(con);
         loadDatanodes(con);
-        loadFailOver(con);
+        loadHandovers(con);
         loadDatabase(con);
         loadUsers(con);
         con.close();
@@ -192,7 +194,7 @@ public class ServerConfigLoader {
             for (Datasource datasource : datasources.values()) {
                 int nodeID = datasource.getDatanodeID();
                 if (id == nodeID) {
-                    ds.add(nodeID);
+                    ds.add(datasource.getID());
                 }
             }
             Datanode datanode = new Datanode(id, ds);
@@ -200,11 +202,19 @@ public class ServerConfigLoader {
         }
     }
 
-    private void loadFailOver(Connection con) throws SQLException {
-        String sql = "SELECT `datasource_id`,`failover_id`,`priority` FROM `failovers`";
+    private void loadHandovers(Connection con) throws SQLException {
+        String sql = "SELECT DISTINCT `datasource_id` FROM `handovers`";
         ResultSet result = con.createStatement().executeQuery(sql);
         while (result.next()) {
-
+            int id = result.getInt("datasource_id");
+            sql = "SELECT `handover_id` FROM `handovers` WHERE `datasource_id`=" + id
+                    + " ORDER BY `priority`";
+            ResultSet rs = con.createStatement().executeQuery(sql);
+            ArrayList<Integer> sources = new ArrayList<>();
+            while (rs.next()) {
+                sources.add(rs.getInt("handover_id"));
+            }
+            handovers.put(id, sources);
         }
     }
 
@@ -277,5 +287,9 @@ public class ServerConfigLoader {
 
     public Map<Integer, Datasource> getDatasources() {
         return datasources;
+    }
+
+    public Map<Integer, ArrayList<Integer>> getHandovers() {
+        return handovers;
     }
 }

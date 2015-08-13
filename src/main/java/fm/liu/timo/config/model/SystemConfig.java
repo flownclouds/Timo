@@ -27,7 +27,6 @@ public class SystemConfig {
     private static final long   DEFAULT_IDLE_TIMEOUT               = 8 * 3600 * 1000L;
     private static final long   DEFAULT_PROCESSOR_CHECK_PERIOD     = 15 * 1000L;
     private static final long   DEFAULT_DATANODE_IDLE_CHECK_PERIOD = 60 * 1000L;
-    private static final long   DEFAULT_DATANODE_HEARTBEAT_PERIOD  = 10 * 1000L;
     private static final long   DEFAULT_CLUSTER_HEARTBEAT_PERIOD   = 5 * 1000L;
     private static final long   DEFAULT_CLUSTER_HEARTBEAT_TIMEOUT  = 10 * 1000L;
     private static final int    DEFAULT_CLUSTER_HEARTBEAT_RETRY    = 10;
@@ -35,6 +34,8 @@ public class SystemConfig {
     private static final String DEFAULT_CLUSTER_HEARTBEAT_PASS     = "_HEARTBEAT_PASS_";
     private static final int    DEFAULT_PARSER_COMMENT_VERSION     = 50148;
     private static final int    DEFAULT_SQL_RECORD_COUNT           = 10;
+    private static final int    DEFAULT_HEARTBEAT_PERIOD           = 1000;
+    private static final int    DEFAULT_HEARTBEAT_TIMEOUT          = 300;
 
     private int    serverPort;
     private int    managerPort;
@@ -48,7 +49,6 @@ public class SystemConfig {
     private long   idleTimeout;
     private long   processorCheckPeriod;
     private long   dataNodeIdleCheckPeriod;
-    private long   dataNodeHeartbeatPeriod;
     private String clusterHeartbeatUser;
     private String clusterHeartbeatPass;
     private long   clusterHeartbeatPeriod;
@@ -60,6 +60,8 @@ public class SystemConfig {
     private String url;
     private String username;
     private String password;
+    private int    heartbeatPeriod;
+    private int    heartbeatTimeout;
 
     public SystemConfig() {
         this.serverPort = DEFAULT_PORT;
@@ -74,7 +76,6 @@ public class SystemConfig {
         this.idleTimeout = DEFAULT_IDLE_TIMEOUT;
         this.processorCheckPeriod = DEFAULT_PROCESSOR_CHECK_PERIOD;
         this.dataNodeIdleCheckPeriod = DEFAULT_DATANODE_IDLE_CHECK_PERIOD;
-        this.dataNodeHeartbeatPeriod = DEFAULT_DATANODE_HEARTBEAT_PERIOD;
         this.clusterHeartbeatUser = DEFAULT_CLUSTER_HEARTBEAT_USER;
         this.clusterHeartbeatPass = DEFAULT_CLUSTER_HEARTBEAT_PASS;
         this.clusterHeartbeatPeriod = DEFAULT_CLUSTER_HEARTBEAT_PERIOD;
@@ -83,6 +84,8 @@ public class SystemConfig {
         this.txIsolation = Isolations.REPEATED_READ;
         this.parserCommentVersion = DEFAULT_PARSER_COMMENT_VERSION;
         this.sqlRecordCount = DEFAULT_SQL_RECORD_COUNT;
+        this.heartbeatPeriod = DEFAULT_HEARTBEAT_PERIOD;
+        this.heartbeatTimeout = DEFAULT_HEARTBEAT_TIMEOUT;
     }
 
     public String getCharset() {
@@ -181,14 +184,6 @@ public class SystemConfig {
         this.dataNodeIdleCheckPeriod = dataNodeIdleCheckPeriod;
     }
 
-    public long getDataNodeHeartbeatPeriod() {
-        return dataNodeHeartbeatPeriod;
-    }
-
-    public void setDataNodeHeartbeatPeriod(long dataNodeHeartbeatPeriod) {
-        this.dataNodeHeartbeatPeriod = dataNodeHeartbeatPeriod;
-    }
-
     public String getClusterHeartbeatUser() {
         return clusterHeartbeatUser;
     }
@@ -277,4 +272,19 @@ public class SystemConfig {
         this.password = password;
     }
 
+    public int getHeartbeatPeriod() {
+        return heartbeatPeriod;
+    }
+
+    public void setHeartbeatPeriod(int heartbeatPeriod) {
+        this.heartbeatPeriod = heartbeatPeriod;
+    }
+
+    public int getHeartbeatTimeout() {
+        return heartbeatTimeout;
+    }
+
+    public void setHeartbeatTimeout(int heartbeatTimeout) {
+        this.heartbeatTimeout = heartbeatTimeout;
+    }
 }

@@ -30,5 +30,5 @@ public interface ResultHandler {
 
     void eof(byte[] eof, BackendConnection con);
 
-    void close(BackendConnection con, String reason);
+    void close(String reason);
 }

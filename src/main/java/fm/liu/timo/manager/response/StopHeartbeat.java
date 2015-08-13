@@ -13,8 +13,16 @@
  */
 package fm.liu.timo.manager.response;
 
+import java.util.Map;
+import org.pmw.tinylog.Logger;
+import fm.liu.timo.TimoServer;
 import fm.liu.timo.manager.ManagerConnection;
+import fm.liu.timo.manager.parser.ManagerParseStop;
+import fm.liu.timo.net.backend.Node;
 import fm.liu.timo.net.mysql.OkPacket;
+import fm.liu.timo.parser.util.Pair;
+import fm.liu.timo.util.FormatUtil;
+import fm.liu.timo.util.TimeUtil;
 
 /**
  * 暂停数据节点心跳检测
@@ -25,21 +33,22 @@ public final class StopHeartbeat {
 
     public static void execute(String stmt, ManagerConnection c) {
         int count = 0;
-        // Pair<String[], Integer> keys = ManagerParseStop.getPair(stmt);
-        // if (keys.getKey() != null && keys.getValue() != null) {
-        // long time = keys.getValue().intValue() * 1000L;
-        // Map<String, MySQLDataNode> dns = TimoServer.getInstance().getConfig().getDataNodes();
-        // for (String key : keys.getKey()) {
-        // MySQLDataNode dn = dns.get(key);
-        // if (dn != null) {
-        // dn.setHeartbeatRecoveryTime(TimeUtil.currentTimeMillis() + time);
-        // ++count;
-        // StringBuilder s = new StringBuilder();
-        // s.append(dn.getName()).append(" stop heartbeat '");
-        // logger.warn(s.append(FormatUtil.formatTime(time, 3)).append("' by manager."));
-        // }
-        // }
-        // }
+        Pair<String[], Integer> keys = ManagerParseStop.getPair(stmt);
+        if (keys.getKey() != null && keys.getValue() != null) {
+            long time = keys.getValue().intValue() * 1000L;
+            Map<Integer, Node> dns = TimoServer.getInstance().getConfig().getNodes();
+            for (String key : keys.getKey()) {
+                Node dn = dns.get(key);
+                if (dn != null) {
+                    dn.setHeartbeatRecoveryTime(TimeUtil.currentTimeMillis() + time);
+                    ++count;
+                    StringBuilder s = new StringBuilder();
+                    s.append("datanode ").append(dn.getID()).append(" stop heartbeat '");
+                    Logger.warn(s.append(FormatUtil.formatTime(time, 3)).append("' by manager.")
+                            .toString());
+                }
+            }
+        }
         OkPacket packet = new OkPacket();
         packet.packetId = 1;
         packet.affectedRows = count;

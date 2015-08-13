@@ -13,20 +13,27 @@
  */
 package fm.liu.timo.net.backend;
 
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 import fm.liu.timo.config.model.Datasource.Type;
+import fm.liu.timo.util.TimeUtil;
 
 /**
  * @author Liu Huanting 2015年5月9日
  */
 public class Node {
-    private final int                  id;
-    private volatile Source            source;
-    private final Map<Integer, Source> sources;
+    private final int                              id;
+    private final Map<Integer, Source>             sources;
+    private final Map<Integer, ArrayList<Integer>> handovers;
+    private final ReentrantLock                    lock = new ReentrantLock();
+    private volatile Source                        source;
+    private volatile long                          heartbeatRecoveryTime;
 
-    public Node(int id, Map<Integer, Source> sources) {
+    public Node(int id, Map<Integer, Source> sources, Map<Integer, ArrayList<Integer>> handovers) {
         this.id = id;
         this.sources = sources;
+        this.handovers = handovers;
     }
 
     public boolean init() {
@@ -62,8 +69,19 @@ public class Node {
     }
 
     public void heartbeat() {
-        // TODO Auto-generated method stub
-
+        if (TimeUtil.currentTimeMillis() < heartbeatRecoveryTime) {
+            for (Source source : sources.values()) {
+                if (source != null && source.isAvailable()) {
+                    source.getHeartbeat().pause();
+                }
+            }
+            return;
+        }
+        for (Source source : sources.values()) {
+            if (source != null && source.isAvailable()) {
+                source.heartbeat(this);
+            }
+        }
     }
 
     public int getID() {
@@ -76,6 +94,29 @@ public class Node {
 
     public Map<Integer, Source> getSources() {
         return sources;
+    }
+
+    public void setHeartbeatRecoveryTime(long heartbeatRecoveryTime) {
+        this.heartbeatRecoveryTime = heartbeatRecoveryTime;
+    }
+
+    public void handover(int id) throws Exception {
+        ArrayList<Integer> handover = handovers.get(id);
+        if (handover == null) {
+            throw new Exception("cann't switch source " + id + " without handover infomation");
+        }
+        lock.lock();
+        try {
+            for (Integer standby : handover) {
+                Source ds = sources.get(standby);
+                if (ds.isAvailable()) {
+                    source = ds;
+                    break;
+                }
+            }
+        } finally {
+            lock.unlock();
+        }
     }
 
 }

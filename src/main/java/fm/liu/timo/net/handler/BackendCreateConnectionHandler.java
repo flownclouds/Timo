@@ -48,8 +48,8 @@ public class BackendCreateConnectionHandler implements BackendConnectHandler {
     public class InitDBHandler extends OKResultHandler {
 
         @Override
-        protected void failed(BackendConnection con, String error) {
-            connecFailed("caught unexpected row response:" + error, con);
+        protected void failed(String reason) {
+            connecFailed("caught unexpected row response:" + reason);
         }
 
         @Override
@@ -58,11 +58,11 @@ public class BackendCreateConnectionHandler implements BackendConnectHandler {
         }
     }
 
-    private void connecFailed(String string, BackendConnection con) {
+    public void connecFailed(String reason) {
         finished.incrementAndGet();
     }
 
-    private void connectSuccess(BackendConnection con) {
+    public void connectSuccess(BackendConnection con) {
         finished.incrementAndGet();
         con.release();
     }

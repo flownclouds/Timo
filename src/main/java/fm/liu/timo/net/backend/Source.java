@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import fm.liu.timo.config.model.Datasource;
 import fm.liu.timo.config.model.Datasource.Status;
+import fm.liu.timo.heartbeat.Heartbeat;
 import fm.liu.timo.mysql.connection.MySQLConnection;
 import fm.liu.timo.net.connection.AbstractConnection.State;
 import fm.liu.timo.net.connection.BackendConnection;
@@ -26,6 +27,8 @@ import fm.liu.timo.net.connection.Variables;
 import fm.liu.timo.net.factory.BackendConnectionFactory;
 import fm.liu.timo.net.handler.BackendConnectHandler;
 import fm.liu.timo.net.handler.BackendCreateConnectionHandler;
+import fm.liu.timo.net.handler.InnerCreateConnectionHandler;
+import fm.liu.timo.server.session.handler.ResultHandler;
 import fm.liu.timo.server.session.handler.VirtualHandler;
 import fm.liu.timo.util.TimeUtil;
 
@@ -36,15 +39,17 @@ public class Source {
     private Datasource                                       config;
     private final int                                        datanodeID;
     private final BackendConnectionFactory                   factory;
+    private final Heartbeat                                  heartbeat;
     private final ConcurrentHashMap<Long, BackendConnection> connections =
             new ConcurrentHashMap<Long, BackendConnection>();
     private final ConcurrentLinkedQueue<BackendConnection>   idle        =
             new ConcurrentLinkedQueue<BackendConnection>();
 
-    public Source(Datasource config, int datanodeID, Variables variables) {
+    public Source(Datasource config, int datanodeID, Variables variables, int heartbeatPeriod) {
         this.config = config;
         this.datanodeID = datanodeID;
         this.factory = new BackendConnectionFactory(variables) {};
+        this.heartbeat = new Heartbeat(this, heartbeatPeriod);
     }
 
     public boolean init() {
@@ -164,5 +169,26 @@ public class Source {
             }
         }
         return connections;
+    }
+
+    public void query(String sql, ResultHandler handler) {
+        BackendConnection conn = this.get();
+        if (conn == null) {
+            InnerCreateConnectionHandler innerHandler =
+                    new InnerCreateConnectionHandler(sql, handler);
+            this.newConnection(innerHandler);
+        } else {
+            conn.query(sql, handler);
+        }
+    }
+
+    public void heartbeat(Node node) {
+        if (isAvailable() && !heartbeat.isStoped()) {
+            heartbeat.heartbeat(node);
+        }
+    }
+
+    public Heartbeat getHeartbeat() {
+        return heartbeat;
     }
 }

@@ -10,5 +10,7 @@
         <property name="url">jdbc:mysql://127.0.0.1:3306/timo_config</property>
         <property name="username">test</property>
         <property name="password">test</property>
+        <property name="heartbeatPeriod">3000</property>
+        <property name="heartbeatTimeout">300</property>
     </system>
 </timo:server>

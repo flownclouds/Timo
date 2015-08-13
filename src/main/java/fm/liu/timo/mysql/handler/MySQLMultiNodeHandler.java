@@ -185,7 +185,7 @@ public class MySQLMultiNodeHandler extends SessionResultHandler {
     }
 
     @Override
-    public void close(BackendConnection con, String reason) {
+    public void close(String reason) {
         if (decrement()) {
             ErrorPacket err = new ErrorPacket();
             err.packetId = ++packetId;
