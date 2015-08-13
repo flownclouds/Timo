@@ -99,7 +99,7 @@ public final class NIOConnector extends Thread {
         try {
             if (finishConnect(c, (SocketChannel) c.getChannel())) {
                 clearSelectionKey(key);
-                c.setID(ID_GENERATOR.getId());
+                c.setID(ID_GENERATOR.getID());
                 c.getProcessor().addBackend(c);
                 MySQLConnection msqlCon = (MySQLConnection) c;
                 msqlCon.getDatasource().add(c);
@@ -143,7 +143,7 @@ public final class NIOConnector extends Thread {
         private long         connectId = 0L;
         private final Object lock      = new Object();
 
-        private long getId() {
+        private long getID() {
             synchronized (lock) {
                 if (connectId >= MAX_VALUE) {
                     connectId = 0L;

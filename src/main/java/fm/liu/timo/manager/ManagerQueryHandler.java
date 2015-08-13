@@ -14,8 +14,8 @@
 package fm.liu.timo.manager;
 
 import org.pmw.tinylog.Logger;
-import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.manager.handler.ClearHandler;
+import fm.liu.timo.manager.handler.DescHandler;
 import fm.liu.timo.manager.handler.ReloadHandler;
 import fm.liu.timo.manager.handler.RollbackHandler;
 import fm.liu.timo.manager.handler.SelectHandler;
@@ -26,6 +26,7 @@ import fm.liu.timo.manager.parser.ManagerParse;
 import fm.liu.timo.manager.response.KillConnection;
 import fm.liu.timo.manager.response.Offline;
 import fm.liu.timo.manager.response.Online;
+import fm.liu.timo.manager.response.ResponseUtil;
 import fm.liu.timo.net.handler.FrontendQueryHandler;
 import fm.liu.timo.net.mysql.OkPacket;
 
@@ -48,6 +49,9 @@ public class ManagerQueryHandler implements FrontendQueryHandler {
         }
         int rs = ManagerParse.parse(sql);
         switch (rs & 0xff) {
+            case ManagerParse.DESC:
+                DescHandler.handle(sql, c, rs);
+                break;
             case ManagerParse.SELECT:
                 SelectHandler.handle(sql, c, rs >>> 8);
                 break;
@@ -82,7 +86,7 @@ public class ManagerQueryHandler implements FrontendQueryHandler {
                 ClearHandler.handle(sql, c, rs >>> 8);
                 break;
             default:
-                c.writeErrMessage(ErrorCode.ER_YES, "Unsupported statement");
+                ResponseUtil.error(c);
         }
     }
 

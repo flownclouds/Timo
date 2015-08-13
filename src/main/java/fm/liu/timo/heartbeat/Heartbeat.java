@@ -94,8 +94,7 @@ public class Heartbeat {
     }
 
     public void pause() {
-        // TODO Auto-generated method stub
-
+        this.updateStatus(HeartbeatStatus.PAUSED);
     }
 
     public void updateStatus(HeartbeatStatus status) {

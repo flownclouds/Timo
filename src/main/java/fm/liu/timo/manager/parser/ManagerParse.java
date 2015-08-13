@@ -33,6 +33,7 @@ public final class ManagerParse {
     public static final int OFFLINE   = 9;
     public static final int ONLINE    = 10;
     public static final int CLEAR     = 11;
+    public static final int DESC      = 12;
 
     public static int parse(String stmt) {
         for (int i = 0; i < stmt.length(); i++) {
@@ -46,6 +47,9 @@ public final class ManagerParse {
                 case 'C':
                 case 'c':
                     return cCheck(stmt, i);
+                case 'D':
+                case 'd':
+                    return dCheck(stmt, i);
                 case 'S':
                 case 's':
                     return sCheck(stmt, i);
@@ -60,6 +64,18 @@ public final class ManagerParse {
                     return rCheck(stmt, i);
                 default:
                     return OTHER;
+            }
+        }
+        return OTHER;
+    }
+
+    private static int dCheck(String stmt, int offset) {
+        if (stmt.length() > offset + "ESC ".length()) {
+            char c1 = stmt.charAt(++offset);
+            char c2 = stmt.charAt(++offset);
+            char c3 = stmt.charAt(++offset);
+            if ((c1 == 'E' || c1 == 'e') && (c2 == 'S' || c2 == 's') && (c3 == 'C' || c3 == 'c')) {
+                return DESC;
             }
         }
         return OTHER;

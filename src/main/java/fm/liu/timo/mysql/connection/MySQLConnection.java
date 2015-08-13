@@ -66,7 +66,7 @@ public class MySQLConnection extends BackendConnection {
     }
 
     private Source                   datasource;
-    private long                     id;
+    private long                     threadID;
     private final int                datanodeID;
     private HandshakePacket          handshake;
     private long                     clientFlags;
@@ -369,12 +369,12 @@ public class MySQLConnection extends BackendConnection {
         this.handshake = handshake;
     }
 
-    public long getID() {
-        return id;
+    public long getThreadID() {
+        return threadID;
     }
 
-    public void setID(long id) {
-        this.id = id;
+    public void setThreadID(long id) {
+        this.threadID = id;
     }
 
     public int getDatanodeID() {

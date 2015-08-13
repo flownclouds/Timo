@@ -13,80 +13,77 @@
  */
 package fm.liu.timo.manager.response;
 
-import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Collection;
 import fm.liu.timo.TimoServer;
-import fm.liu.timo.config.Fields;
 import fm.liu.timo.manager.ManagerConnection;
-import fm.liu.timo.mysql.PacketUtil;
+import fm.liu.timo.manager.handler.ShowHandler;
+import fm.liu.timo.manager.response.ResponseUtil.Head;
+import fm.liu.timo.mysql.connection.MySQLConnection;
 import fm.liu.timo.net.NIOProcessor;
 import fm.liu.timo.net.connection.BackendConnection;
-import fm.liu.timo.net.mysql.EOFPacket;
-import fm.liu.timo.net.mysql.FieldPacket;
-import fm.liu.timo.net.mysql.ResultSetHeaderPacket;
-import fm.liu.timo.net.mysql.RowDataPacket;
-import fm.liu.timo.util.IntegerUtil;
-import fm.liu.timo.util.LongUtil;
-import fm.liu.timo.util.StringUtil;
+import fm.liu.timo.util.TimeUtil;
 
 /**
  * 查询后端连接
  * 
- * @author xianmao.hexm 2012-5-10
  */
-public class ShowBackend {
-
-    private static final int                   FIELD_COUNT = 14;
-    private static final ResultSetHeaderPacket header      = PacketUtil.getHeader(FIELD_COUNT);
-    private static final FieldPacket[]         fields      = new FieldPacket[FIELD_COUNT];
-    private static final EOFPacket             eof         = new EOFPacket();
+public class ShowBackend extends ShowHandler {
+    private static final ArrayList<Head> heads = new ArrayList<Head>();
 
     static {
-        int i = 0;
-        byte packetId = 0;
-        header.packetId = ++packetId;
-        fields[i] = PacketUtil.getField("processor", Fields.FIELD_TYPE_VAR_STRING);
-        fields[i++].packetId = ++packetId;
-        fields[i] = PacketUtil.getField("id", Fields.FIELD_TYPE_LONG);
-        fields[i++].packetId = ++packetId;
-        fields[i] = PacketUtil.getField("host", Fields.FIELD_TYPE_VAR_STRING);
-        fields[i++].packetId = ++packetId;
-        fields[i] = PacketUtil.getField("port", Fields.FIELD_TYPE_LONG);
-        fields[i++].packetId = ++packetId;
-        eof.packetId = ++packetId;
+        heads.add(new Head("processor", "所属的Processor"));
+        heads.add(new Head("id", "编号"));
+        heads.add(new Head("connect_id", "连接号"));
+        heads.add(new Head("dnid", "DNID"));
+        heads.add(new Head("host", "主机信息"));
+        heads.add(new Head("db", "物理数据库"));
+        heads.add(new Head("port", "本地端口号"));
+        heads.add(new Head("up_time", "启动时长（秒）"));
+        //        heads.add(new Head("state", "连接状态"));
+        heads.add(new Head("send_queue", "发送队列大小"));
     }
 
-    public static void execute(ManagerConnection c) {
-        ByteBuffer buffer = c.allocate();
-        buffer = header.write(buffer, c);
-        for (FieldPacket field : fields) {
-            buffer = field.write(buffer, c);
-        }
-        buffer = eof.write(buffer, c);
-        byte packetId = eof.packetId;
-        String charset = c.getCharset();
-        for (NIOProcessor p : TimoServer.getInstance().getProcessors()) {
-            for (BackendConnection bc : p.getBackends().values()) {
-                if (bc != null) {
-                    RowDataPacket row = getRow(bc, charset);
-                    row.packetId = ++packetId;
-                    buffer = row.write(buffer, c);
+    @Override
+    public String getInfo() {
+        return "显示后端连接情况";
+    }
+
+    @Override
+    public void execute(ManagerConnection c) {
+        ResponseUtil.write(c, heads, getRows());
+    }
+
+    @Override
+    public ArrayList<Head> getHeads() {
+        return heads;
+    }
+
+    @Override
+    public ArrayList<Object[]> getRows() {
+        ArrayList<Object[]> rows = new ArrayList<>();
+        NIOProcessor[] processors = TimoServer.getInstance().getProcessors();
+        for (NIOProcessor processor : processors) {
+            Collection<BackendConnection> backends = processor.getBackends().values();
+            for (BackendConnection backend : backends) {
+                if (backend != null) {
+                    Object[] row = new Object[heads.size()];
+                    int i = 0;
+                    row[i++] = processor.getName();
+                    row[i++] = backend.getID();
+                    row[i++] = ((MySQLConnection) backend).getThreadID();
+                    row[i++] = backend.getDatanodeID();
+                    row[i++] = backend.getHost() + ":" + backend.getPort();
+                    row[i++] = ((MySQLConnection) backend).getDatasource().getConfig().getDB();
+                    row[i++] = backend.getLocalPort();
+                    row[i++] = (TimeUtil.currentTimeMillis() - backend.getVariables().getUpTime())
+                            / 1000;
+                    row[i++] = ((MySQLConnection) backend).getWriteQueue().size();
+                    rows.add(row);
                 }
             }
         }
-        EOFPacket lastEof = new EOFPacket();
-        lastEof.packetId = ++packetId;
-        buffer = lastEof.write(buffer, c);
-        c.write(buffer);
-    }
-
-    private static RowDataPacket getRow(BackendConnection c, String charset) {
-        RowDataPacket row = new RowDataPacket(FIELD_COUNT);
-        row.add(c.getProcessor().getName().getBytes());
-        row.add(LongUtil.toBytes(c.getID()));
-        row.add(StringUtil.encode(c.getHost(), charset));
-        row.add(IntegerUtil.toBytes(c.getPort()));
-        row.add(IntegerUtil.toBytes(c.getPort()));
-        return row;
+        return rows;
     }
 
 }

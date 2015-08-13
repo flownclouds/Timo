@@ -23,6 +23,7 @@ import fm.liu.timo.net.NIOActor;
 import fm.liu.timo.net.NIOHandler;
 import fm.liu.timo.net.NIOProcessor;
 import fm.liu.timo.net.mysql.MySQLPacket;
+import fm.liu.timo.util.TimeUtil;
 
 /**
  * @author xianmao.hexm
@@ -83,6 +84,10 @@ public abstract class AbstractConnection implements NIOConnection {
         this.processor = processor;
         this.setReadBuffer(processor.getBufferPool().allocate());
         this.actor = new NIOActor(this);
+        long now = TimeUtil.currentTimeMillis();
+        this.variables.setUpTime(now);
+        this.variables.setLastReadTime(now);
+        this.variables.setLastWriteTime(now);
     }
 
     public SocketChannel getChannel() {
@@ -301,6 +306,10 @@ public abstract class AbstractConnection implements NIOConnection {
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public int getLocalPort() {
+        return localPort;
     }
 
     public NIOActor getActor() {

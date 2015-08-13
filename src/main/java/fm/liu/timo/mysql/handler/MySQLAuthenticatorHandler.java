@@ -90,7 +90,7 @@ public class MySQLAuthenticatorHandler implements NIOHandler {
         HandshakePacket packet = new HandshakePacket();
         packet.read(data);
         con.setHandshake(packet);
-        con.setID(packet.threadId);
+        con.setThreadID(packet.threadId);
         int charsetIndex = packet.serverCharsetIndex & 0xff;
         String charset = CharsetUtil.getCharset(charsetIndex);
         if (charset == null) {

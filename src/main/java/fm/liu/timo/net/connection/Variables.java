@@ -26,6 +26,7 @@ public class Variables implements Cloneable {
     private volatile String  charset;
     private volatile long    lastReadTime;
     private volatile long    lastWriteTime;
+    private volatile long    upTime;
 
     public Variables() {
         super();
@@ -103,5 +104,13 @@ public class Variables implements Cloneable {
 
     public void setLastWriteTime(long lastWriteTime) {
         this.lastWriteTime = lastWriteTime;
+    }
+
+    public long getUpTime() {
+        return upTime;
+    }
+
+    public void setUpTime(long upTime) {
+        this.upTime = upTime;
     }
 }
