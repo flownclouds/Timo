@@ -6,8 +6,12 @@ import fm.liu.timo.manager.ManagerConnection;
 import fm.liu.timo.manager.response.ResponseUtil;
 import fm.liu.timo.manager.response.ResponseUtil.Head;
 import fm.liu.timo.manager.response.ShowBackend;
+import fm.liu.timo.manager.response.ShowConnection;
+import fm.liu.timo.manager.response.ShowHeartbeat;
 import fm.liu.timo.manager.response.ShowProcessor;
 import fm.liu.timo.manager.response.ShowServer;
+import fm.liu.timo.manager.response.ShowSession;
+import fm.liu.timo.manager.response.ShowThread;
 import fm.liu.timo.manager.response.ShowVersion;
 
 public class DescHandler {
@@ -20,19 +24,18 @@ public class DescHandler {
         map.put("server", new ShowServer());
         map.put("version", new ShowVersion());
         map.put("processor", new ShowProcessor());
-        map.put("thread", new ShowBackend());
-        map.put("buffer", new ShowBackend());
-        map.put("connection", new ShowBackend());
-        map.put("session", new ShowBackend());
-        map.put("heartbeat", new ShowBackend());
-        map.put("latency", new ShowBackend());
+        map.put("thread", new ShowThread());
+        map.put("connection", new ShowConnection());
+        map.put("session", new ShowSession());
+        map.put("heartbeat", new ShowHeartbeat());
+        map.put("latency", null);
         map.put("database", new ShowBackend());
         map.put("datanode", new ShowBackend());
         map.put("datasource", new ShowBackend());
         map.put("backend", new ShowBackend());
         map.put("command", new ShowBackend());
         map.put("operation", new ShowBackend());
-        map.put("tableinfo", new ShowBackend());
+        map.put("table", new ShowBackend());
         map.put("help", new ShowBackend());
     }
 

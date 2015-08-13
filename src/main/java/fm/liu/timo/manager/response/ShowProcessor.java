@@ -21,7 +21,7 @@ public class ShowProcessor extends ShowHandler {
 
     @Override
     public String getInfo() {
-        return "show information about processors";
+        return "show the status of processors";
     }
 
     @Override

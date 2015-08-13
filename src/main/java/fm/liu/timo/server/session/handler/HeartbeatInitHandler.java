@@ -28,7 +28,7 @@ public class HeartbeatInitHandler extends OKResultHandler {
                 break;
             case INITED:
                 status = HeartbeatInitStatus.FINISHED;
-                heartbeat.updateStatus(HeartbeatStatus.IDLE);
+                heartbeat.updateStatus(HeartbeatStatus.OK);
                 heartbeat.updateConnection(con);
                 break;
             default:

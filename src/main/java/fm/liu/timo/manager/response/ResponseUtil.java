@@ -51,6 +51,9 @@ public class ResponseUtil {
             for (Object[] values : rows) {
                 RowDataPacket row = new RowDataPacket(size);
                 for (Object value : values) {
+                    if (value == null) {
+                        value = "NULL";
+                    }
                     row.add(StringUtil.encode(value.toString(), c.getCharset()));
                 }
                 row.packetId = ++packetId;

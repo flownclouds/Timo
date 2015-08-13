@@ -112,4 +112,7 @@ public class ServerConnection extends FrontendConnection {
         return 0;
     }
 
+    public Session getSession() {
+        return session;
+    }
 }

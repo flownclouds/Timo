@@ -26,7 +26,7 @@ public class ShowServer extends ShowHandler {
 
     @Override
     public String getInfo() {
-        return "show information about timo-server";
+        return "show the status of timo-server";
     }
 
     @Override

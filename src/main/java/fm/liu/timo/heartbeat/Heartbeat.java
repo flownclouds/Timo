@@ -25,7 +25,7 @@ public class Heartbeat {
     private HeartbeatHandler           handler;
 
     public enum HeartbeatStatus {
-        CHECKING, IDLE, PAUSED, STOPED
+        CHECKING, OK, PAUSED, STOPED
     }
 
     public Heartbeat(Source source, int period) {
@@ -44,7 +44,7 @@ public class Heartbeat {
             if (counter.incrementAndGet() > RETRY) {
                 handover();
             } else {
-                this.updateStatus(HeartbeatStatus.IDLE);
+                this.updateStatus(HeartbeatStatus.OK);
                 this.connection.close();
                 this.connection = null;
                 connect();
@@ -116,6 +116,18 @@ public class Heartbeat {
     public void update() {
         this.lastActiveTime = TimeUtil.currentTimeMillis();
         this.counter.set(0);
-        this.status = HeartbeatStatus.IDLE;
+        this.status = HeartbeatStatus.OK;
+    }
+
+    public int getErrorCount() {
+        return counter.intValue();
+    }
+
+    public HeartbeatStatus getStatus() {
+        return status;
+    }
+
+    public long getLastActiveTime() {
+        return lastActiveTime;
     }
 }

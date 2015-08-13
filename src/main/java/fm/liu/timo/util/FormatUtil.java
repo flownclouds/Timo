@@ -13,6 +13,9 @@
  */
 package fm.liu.timo.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * 格式化工具
  * 
@@ -129,6 +132,29 @@ public final class FormatUtil {
             index++;
         }
         return buf.toString();
+    }
+
+    private static final ThreadLocal<SimpleDateFormat> time = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        }
+    };
+
+    public static String formatTime(long millis) {
+        return time.get().format(new Date(millis));
+    }
+
+    private static final ThreadLocal<SimpleDateFormat> millisTime =
+            new ThreadLocal<SimpleDateFormat>() {
+                @Override
+                protected SimpleDateFormat initialValue() {
+                    return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SSS");
+                }
+            };
+
+    public static String formatMillisTime(long millis) {
+        return millisTime.get().format(new Date(millis));
     }
 
 }

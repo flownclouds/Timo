@@ -33,7 +33,7 @@ public class ShowBackend extends ShowHandler {
 
     @Override
     public String getInfo() {
-        return "show information about backend connections";
+        return "show the status of backend connections";
     }
 
     @Override
