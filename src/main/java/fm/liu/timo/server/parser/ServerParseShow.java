@@ -23,8 +23,8 @@ public final class ServerParseShow {
     public static final int OTHER        = -1;
     public static final int DATABASES    = 1;
     public static final int DATASOURCES  = 2;
-    public static final int Timo_STATUS  = 3;
-    public static final int Timo_CLUSTER = 4;
+    public static final int TIMO_STATUS  = 3;
+    public static final int TIMO_CLUSTER = 4;
 
     public static int parse(String stmt, int offset) {
         int i = offset;
@@ -84,7 +84,7 @@ public final class ServerParseShow {
             if ((c1 == 't' || c1 == 'T') && (c2 == 'a' || c2 == 'A') && (c3 == 't' || c3 == 'T')
                     && (c4 == 'u' || c4 == 'U') && (c5 == 's' || c5 == 'S')
                     && (stmt.length() == ++offset || ParseUtil.isEOF(stmt.charAt(offset)))) {
-                return Timo_STATUS;
+                return TIMO_STATUS;
             }
         }
         return OTHER;
@@ -103,7 +103,7 @@ public final class ServerParseShow {
                     && (c4 == 'T' || c4 == 't') && (c5 == 'E' || c5 == 'e')
                     && (c6 == 'R' || c6 == 'r')
                     && (stmt.length() == ++offset || ParseUtil.isEOF(stmt.charAt(offset)))) {
-                return Timo_CLUSTER;
+                return TIMO_CLUSTER;
             }
         }
         return OTHER;

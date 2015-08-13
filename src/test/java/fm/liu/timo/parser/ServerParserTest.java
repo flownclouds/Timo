@@ -122,11 +122,11 @@ public class ServerParserTest {
 
     @Test
     public void testShowTimoStatus() {
-        Assert.assertEquals(ServerParseShow.Timo_STATUS,
+        Assert.assertEquals(ServerParseShow.TIMO_STATUS,
                 ServerParseShow.parse("show timo_status", 4));
-        Assert.assertEquals(ServerParseShow.Timo_STATUS,
+        Assert.assertEquals(ServerParseShow.TIMO_STATUS,
                 ServerParseShow.parse("show timo_status ", 4));
-        Assert.assertEquals(ServerParseShow.Timo_STATUS,
+        Assert.assertEquals(ServerParseShow.TIMO_STATUS,
                 ServerParseShow.parse(" SHOW Timo_STATUS", " SHOW".length()));
         Assert.assertEquals(ServerParseShow.OTHER,
                 ServerParseShow.parse(" show timo_statu", " SHOW".length()));
@@ -138,11 +138,11 @@ public class ServerParserTest {
 
     @Test
     public void testShowTimoCluster() {
-        Assert.assertEquals(ServerParseShow.Timo_CLUSTER,
+        Assert.assertEquals(ServerParseShow.TIMO_CLUSTER,
                 ServerParseShow.parse("show timo_cluster", 4));
-        Assert.assertEquals(ServerParseShow.Timo_CLUSTER,
+        Assert.assertEquals(ServerParseShow.TIMO_CLUSTER,
                 ServerParseShow.parse("Show timo_CLUSTER ", 4));
-        Assert.assertEquals(ServerParseShow.Timo_CLUSTER,
+        Assert.assertEquals(ServerParseShow.TIMO_CLUSTER,
                 ServerParseShow.parse(" show  Timo_cluster", 5));
         Assert.assertEquals(ServerParseShow.OTHER, ServerParseShow.parse(" show timo_clust", 5));
         Assert.assertEquals(ServerParseShow.OTHER, ServerParseShow.parse(" show timo_cluster2", 5));

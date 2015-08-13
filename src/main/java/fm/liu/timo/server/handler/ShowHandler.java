@@ -33,7 +33,7 @@ public final class ShowHandler {
             case ServerParseShow.DATASOURCES:
                 ShowDataSources.response(c);
                 break;
-            case ServerParseShow.Timo_STATUS:
+            case ServerParseShow.TIMO_STATUS:
                 ShowTimoStatus.response(c);
                 break;
             default:
