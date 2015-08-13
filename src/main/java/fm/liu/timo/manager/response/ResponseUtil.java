@@ -26,7 +26,7 @@ public class ResponseUtil {
 
         public Head(String name) {
             this.name = name;
-            this.desc = "";
+            this.desc = name;
         }
     }
 
@@ -64,5 +64,9 @@ public class ResponseUtil {
 
     public static void error(ManagerConnection c) {
         c.writeErrMessage(ErrorCode.ER_YES, "unsupported statement");
+    }
+
+    public static void error(ManagerConnection c, String reason) {
+        c.writeErrMessage(ErrorCode.ER_YES, reason);
     }
 }
