@@ -1,6 +1,7 @@
 package fm.liu.timo.manager.response;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,6 +23,13 @@ public class ShowHelp extends ShowHandler {
             helps.put("show @@" + entry.getKey(),
                     entry.getValue() == null ? "unsupported yet" : entry.getValue().getInfo());
         }
+        helps.put("stop @@heartbeat [datanode_id]:[time(s)]",
+                "pause heartbeat for a while on the datanode you've chosen");
+        helps.put("kill @@connection [connection_id]", "kill the connection you've chosen");
+        helps.put("reload @@config", "reload the config online");
+        helps.put("rollback @@config", "rollback the config to the early time");
+        helps.put("online", "turn timo-server to online");
+        helps.put("offline", "turn timo-server to offline");
     }
 
     @Override
@@ -37,11 +45,14 @@ public class ShowHelp extends ShowHandler {
     @Override
     public ArrayList<Object[]> getRows() {
         ArrayList<Object[]> rows = new ArrayList<>();
-        for (Entry<String, String> entry : helps.entrySet()) {
+        ArrayList<String> keys = new ArrayList<>();
+        keys.addAll(helps.keySet());
+        Collections.sort(keys);
+        for (String key : keys) {
             Object[] row = new Object[heads.size()];
             int i = 0;
-            row[i++] = entry.getKey();
-            row[i++] = entry.getValue();
+            row[i++] = key;
+            row[i++] = helps.get(key);
             rows.add(row);
         }
         return rows;
