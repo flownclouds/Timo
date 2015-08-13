@@ -7,7 +7,11 @@ import fm.liu.timo.manager.response.ResponseUtil;
 import fm.liu.timo.manager.response.ResponseUtil.Head;
 import fm.liu.timo.manager.response.ShowBackend;
 import fm.liu.timo.manager.response.ShowConnection;
+import fm.liu.timo.manager.response.ShowDatabase;
+import fm.liu.timo.manager.response.ShowDatanode;
+import fm.liu.timo.manager.response.ShowDatasource;
 import fm.liu.timo.manager.response.ShowHeartbeat;
+import fm.liu.timo.manager.response.ShowHelp;
 import fm.liu.timo.manager.response.ShowProcessor;
 import fm.liu.timo.manager.response.ShowServer;
 import fm.liu.timo.manager.response.ShowSession;
@@ -29,14 +33,14 @@ public class DescHandler {
         map.put("session", new ShowSession());
         map.put("heartbeat", new ShowHeartbeat());
         map.put("latency", null);
-        map.put("database", new ShowBackend());
-        map.put("datanode", new ShowBackend());
-        map.put("datasource", new ShowBackend());
+        map.put("database", new ShowDatabase());
+        map.put("datanode", new ShowDatanode());
+        map.put("datasource", new ShowDatasource());
         map.put("backend", new ShowBackend());
-        map.put("command", new ShowBackend());
-        map.put("operation", new ShowBackend());
-        map.put("table", new ShowBackend());
-        map.put("help", new ShowBackend());
+        map.put("command", null);
+        map.put("operation", null);
+        map.put("table", null);
+        map.put("help", new ShowHelp());
     }
 
     public static void handle(String stmt, ManagerConnection c, int offset) {

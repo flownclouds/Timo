@@ -97,6 +97,10 @@ public class Source {
         return connections.size();
     }
 
+    public int getIdleSize() {
+        return idle.size();
+    }
+
     public void remove(MySQLConnection con) {
         if (idle.contains(con)) {
             idle.remove(con);
