@@ -14,10 +14,10 @@
 package fm.liu.timo.manager.handler;
 
 import static fm.liu.timo.manager.parser.ManagerParseSwitch.DATASOURCE;
-import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.manager.ManagerConnection;
 import fm.liu.timo.manager.parser.ManagerParseSwitch;
-import fm.liu.timo.manager.response.SwitchDataSource;
+import fm.liu.timo.manager.response.ResponseUtil;
+import fm.liu.timo.manager.response.SwitchDatasource;
 
 /**
  * @author xianmao.hexm
@@ -27,10 +27,10 @@ public final class SwitchHandler {
     public static void handler(String stmt, ManagerConnection c, int offset) {
         switch (ManagerParseSwitch.parse(stmt, offset)) {
             case DATASOURCE:
-                SwitchDataSource.response(stmt, c);
+                SwitchDatasource.response(stmt, c);
                 break;
             default:
-                c.writeErrMessage(ErrorCode.ER_YES, "Unsupported statement");
+                ResponseUtil.error(c);
         }
     }
 

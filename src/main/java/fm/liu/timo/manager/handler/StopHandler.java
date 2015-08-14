@@ -13,9 +13,9 @@
  */
 package fm.liu.timo.manager.handler;
 
-import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.manager.ManagerConnection;
 import fm.liu.timo.manager.parser.ManagerParseStop;
+import fm.liu.timo.manager.response.ResponseUtil;
 import fm.liu.timo.manager.response.StopHeartbeat;
 
 /**
@@ -29,7 +29,7 @@ public final class StopHandler {
                 StopHeartbeat.execute(stmt, c);
                 break;
             default:
-                c.writeErrMessage(ErrorCode.ER_YES, "Unsupported statement");
+                ResponseUtil.error(c);
         }
     }
 

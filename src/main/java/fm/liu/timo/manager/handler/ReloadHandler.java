@@ -13,11 +13,10 @@
  */
 package fm.liu.timo.manager.handler;
 
-import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.manager.ManagerConnection;
 import fm.liu.timo.manager.parser.ManagerParseReload;
 import fm.liu.timo.manager.response.ReloadConfig;
-import fm.liu.timo.manager.response.ReloadUser;
+import fm.liu.timo.manager.response.ResponseUtil;
 
 /**
  * @author xianmao.hexm
@@ -30,14 +29,8 @@ public final class ReloadHandler {
             case ManagerParseReload.CONFIG:
                 ReloadConfig.execute(c);
                 break;
-            case ManagerParseReload.ROUTE:
-                c.writeErrMessage(ErrorCode.ER_YES, "Unsupported statement");
-                break;
-            case ManagerParseReload.USER:
-                ReloadUser.execute(c);
-                break;
             default:
-                c.writeErrMessage(ErrorCode.ER_YES, "Unsupported statement");
+                ResponseUtil.error(c);
         }
     }
 

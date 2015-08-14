@@ -62,6 +62,10 @@ public class ServerConnection extends FrontendConnection {
     }
 
     public void execute(String sql, int type) {
+        if (!TimoServer.getInstance().isOnline()) {
+            writeErrMessage(ErrorCode.ER_ACCESS_DENIED_ERROR, "Timo-server is offline");
+            return;
+        }
         // 检查当前使用的DB
         String db = this.db;
         if (db == null) {

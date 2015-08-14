@@ -38,7 +38,7 @@ public final class StopHeartbeat {
             long time = keys.getValue().intValue() * 1000L;
             Map<Integer, Node> dns = TimoServer.getInstance().getConfig().getNodes();
             for (String key : keys.getKey()) {
-                Node dn = dns.get(key);
+                Node dn = dns.get(Integer.parseInt(key));
                 if (dn != null) {
                     dn.setHeartbeatRecoveryTime(TimeUtil.currentTimeMillis() + time);
                     ++count;

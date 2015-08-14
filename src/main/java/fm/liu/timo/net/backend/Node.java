@@ -100,7 +100,8 @@ public class Node {
         this.heartbeatRecoveryTime = heartbeatRecoveryTime;
     }
 
-    public void handover(int id) throws Exception {
+    public boolean handover(int id) throws Exception {
+        boolean success = false;
         ArrayList<Integer> handover = handovers.get(id);
         if (handover == null) {
             throw new Exception("cann't switch source " + id + " without handover infomation");
@@ -111,12 +112,14 @@ public class Node {
                 Source ds = sources.get(standby);
                 if (ds.isAvailable()) {
                     source = ds;
+                    success = true;
                     break;
                 }
             }
         } finally {
             lock.unlock();
         }
+        return success;
     }
 
 }

@@ -15,9 +15,9 @@ package fm.liu.timo.manager.handler;
 
 import static fm.liu.timo.manager.parser.ManagerParseSelect.SESSION_AUTO_INCREMENT;
 import static fm.liu.timo.manager.parser.ManagerParseSelect.VERSION_COMMENT;
-import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.manager.ManagerConnection;
 import fm.liu.timo.manager.parser.ManagerParseSelect;
+import fm.liu.timo.manager.response.ResponseUtil;
 import fm.liu.timo.manager.response.SelectSessionAutoIncrement;
 import fm.liu.timo.manager.response.SelectVersionComment;
 
@@ -35,7 +35,7 @@ public final class SelectHandler {
                 SelectSessionAutoIncrement.execute(c);
                 break;
             default:
-                c.writeErrMessage(ErrorCode.ER_YES, "Unsupported statement");
+                ResponseUtil.error(c);
         }
     }
 

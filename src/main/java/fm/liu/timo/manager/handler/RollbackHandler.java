@@ -13,11 +13,10 @@
  */
 package fm.liu.timo.manager.handler;
 
-import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.manager.ManagerConnection;
 import fm.liu.timo.manager.parser.ManagerParseRollback;
+import fm.liu.timo.manager.response.ResponseUtil;
 import fm.liu.timo.manager.response.RollbackConfig;
-import fm.liu.timo.manager.response.RollbackUser;
 
 /**
  * @author xianmao.hexm
@@ -29,14 +28,8 @@ public final class RollbackHandler {
             case ManagerParseRollback.CONFIG:
                 RollbackConfig.execute(c);
                 break;
-            case ManagerParseRollback.ROUTE:
-                c.writeErrMessage(ErrorCode.ER_YES, "Unsupported statement");
-                break;
-            case ManagerParseRollback.USER:
-                RollbackUser.execute(c);
-                break;
             default:
-                c.writeErrMessage(ErrorCode.ER_YES, "Unsupported statement");
+                ResponseUtil.error(c);
         }
     }
 

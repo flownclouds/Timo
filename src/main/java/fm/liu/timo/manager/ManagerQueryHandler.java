@@ -14,7 +14,6 @@
 package fm.liu.timo.manager;
 
 import org.pmw.tinylog.Logger;
-import fm.liu.timo.manager.handler.ClearHandler;
 import fm.liu.timo.manager.handler.DescHandler;
 import fm.liu.timo.manager.handler.ReloadHandler;
 import fm.liu.timo.manager.handler.RollbackHandler;
@@ -81,9 +80,6 @@ public class ManagerQueryHandler implements FrontendQueryHandler {
                 break;
             case ManagerParse.ROLLBACK:
                 RollbackHandler.handle(sql, c, rs >>> 8);
-                break;
-            case ManagerParse.CLEAR:
-                ClearHandler.handle(sql, c, rs >>> 8);
                 break;
             default:
                 ResponseUtil.error(c);
