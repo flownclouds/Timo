@@ -123,6 +123,7 @@ public class ServerConfigLoader {
                         }
                     }
                     function = new MatchFunction(match, defaultNode);
+                    break;
                 case "RANGE":
                     Set<Range> ranges = new HashSet<Range>();
                     while (r.next()) {
