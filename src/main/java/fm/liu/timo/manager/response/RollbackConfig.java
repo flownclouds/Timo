@@ -29,7 +29,7 @@ public final class RollbackConfig {
         final ReentrantLock lock = TimoServer.getInstance().getConfig().getLock();
         lock.lock();
         try {
-            if (rollback()) {
+            if (TimoServer.getInstance().getConfig().rollback()) {
                 Logger.info("Rollback config success by manager");
                 OkPacket ok = new OkPacket();
                 ok.packetId = 1;
@@ -43,11 +43,6 @@ public final class RollbackConfig {
         } finally {
             lock.unlock();
         }
-    }
-
-    private static boolean rollback() {
-        // TODO
-        return true;
     }
 
 }

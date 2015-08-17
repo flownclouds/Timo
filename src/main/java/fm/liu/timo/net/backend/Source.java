@@ -193,4 +193,11 @@ public class Source {
     public Heartbeat getHeartbeat() {
         return heartbeat;
     }
+
+    public void clear() {
+        for (BackendConnection connection : connections.values()) {
+            connection.close();
+        }
+        heartbeat.stop();
+    }
 }

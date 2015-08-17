@@ -29,7 +29,7 @@ public final class ReloadConfig {
         final ReentrantLock lock = TimoServer.getInstance().getConfig().getLock();
         lock.lock();
         try {
-            if (reload()) {
+            if (TimoServer.getInstance().getConfig().reload()) {
                 Logger.info("Reload config success by manager");
                 OkPacket ok = new OkPacket();
                 ok.packetId = 1;
@@ -43,12 +43,6 @@ public final class ReloadConfig {
         } finally {
             lock.unlock();
         }
-    }
-
-    private static boolean reload() {
-        // TODO
-
-        return true;
     }
 
 }

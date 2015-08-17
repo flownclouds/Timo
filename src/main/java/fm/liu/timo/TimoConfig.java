@@ -14,9 +14,11 @@
 package fm.liu.timo;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
+import org.pmw.tinylog.Logger;
 import fm.liu.timo.config.loader.ServerConfigLoader;
 import fm.liu.timo.config.loader.SystemConfigLoader;
 import fm.liu.timo.config.model.Database;
@@ -27,17 +29,19 @@ import fm.liu.timo.config.model.User;
 import fm.liu.timo.net.backend.Node;
 import fm.liu.timo.net.backend.Source;
 import fm.liu.timo.net.connection.Variables;
+import fm.liu.timo.util.TimeUtil;
 
 /**
  * @author Liu Huanting 2015年5月10日
  */
 public class TimoConfig {
-    private volatile SystemConfig          system;
-    private volatile Map<String, User>     users;
-    private volatile Map<String, Database> databases;
-    private volatile Map<Integer, Node>    nodes;
-    private ReentrantLock                  lock = new ReentrantLock();
-    private final Map<Integer, Datasource> datasources;
+    private volatile SystemConfig             system;
+    private volatile Map<String, User>        users;
+    private volatile Map<String, Database>    databases;
+    private volatile Map<Integer, Node>       nodes;
+    private volatile Map<Integer, Datasource> datasources;
+    private ReentrantLock                     lock = new ReentrantLock();
+    private long                              lastReloadTime;
 
     public TimoConfig() {
         this.system = new SystemConfigLoader().getSystemConfig();
@@ -66,6 +70,90 @@ public class TimoConfig {
             nodes.put(datanode.getID(), node);
         }
         return nodes;
+    }
+
+    private volatile SystemConfig             _system;
+    private volatile Map<String, User>        _users;
+    private volatile Map<String, Database>    _databases;
+    private volatile Map<Integer, Node>       _nodes;
+    private volatile Map<Integer, Datasource> _datasources;
+
+    public boolean reload() {
+        boolean success = false;
+        _system = this.system;
+        _users = this.users;
+        _databases = this.databases;
+        _datasources = this.datasources;
+        _nodes = this.nodes;
+        lock.lock();
+        try {
+            this.system = new SystemConfigLoader().getSystemConfig();
+            ServerConfigLoader conf = new ServerConfigLoader(system.getUrl(), system.getUsername(),
+                    system.getPassword());
+            this.users = conf.getUsers();
+            this.databases = conf.getDatabases();
+            this.datasources = conf.getDatasources();
+            this.nodes =
+                    initDatanodes(conf.getDatanodes(), conf.getDatasources(), conf.getHandovers());
+            for (Node node : nodes.values()) {
+                if (!node.init()) {
+                    throw new Exception(
+                            "node " + node.getID() + " init failed in config reloading.");
+                }
+            }
+            success = true;
+        } catch (Exception e) {
+            this.system = _system;
+            this.users = _users;
+            this.databases = _databases;
+            this.datasources = _datasources;
+            this.nodes = _nodes;
+            Logger.warn("reload config failed due to {}", e);
+        } finally {
+            lock.unlock();
+        }
+        if (success) {
+            for (Node node : _nodes.values()) {
+                node.clear();
+            }
+            lastReloadTime = TimeUtil.currentTimeMillis();
+        }
+        return success;
+    }
+
+    public boolean rollback() {
+        if (lastReloadTime == 0) {
+            return false;
+        }
+        Collection<Node> backNodes = this.nodes.values();
+        boolean success = false;
+        lock.lock();
+        try {
+            for (Node node : _nodes.values()) {
+                if (!node.init()) {
+                    throw new Exception(
+                            "node " + node.getID() + " init failed in config reloading.");
+                }
+            }
+            this.system = _system;
+            this.users = _users;
+            this.databases = _databases;
+            this.datasources = _datasources;
+            this.nodes = _nodes;
+            success = true;
+        } catch (Exception e) {
+            for (Node node : _nodes.values()) {
+                node.clear();
+            }
+        } finally {
+            lock.unlock();
+        }
+        if (success) {
+            for (Node node : backNodes) {
+                node.clear();
+            }
+        }
+        return success;
     }
 
     public SystemConfig getSystem() {

@@ -122,4 +122,10 @@ public class Node {
         return success;
     }
 
+    public void clear() {
+        for (Source source : sources.values()) {
+            source.clear();
+        }
+    }
+
 }

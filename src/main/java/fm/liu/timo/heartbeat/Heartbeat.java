@@ -68,7 +68,7 @@ public class Heartbeat {
     }
 
     private void handover() {
-        this.updateStatus(HeartbeatStatus.STOPED);
+        this.stop();
         Datasource config = source.getConfig();
         if (this.connection != null) {
             this.connection.close();
@@ -129,5 +129,9 @@ public class Heartbeat {
 
     public long getLastActiveTime() {
         return lastActiveTime;
+    }
+
+    public void stop() {
+        this.status = HeartbeatStatus.STOPED;
     }
 }
