@@ -317,6 +317,7 @@ public class MySQLConnection extends BackendConnection {
         CommandPacket packet = new CommandPacket(CommandPacket.COM_QUERY);
         packet.arg = sql.getBytes();
         packet.write(this);
+        variables.update();
     }
 
     public void setResultHandler(ResultHandler handler) {

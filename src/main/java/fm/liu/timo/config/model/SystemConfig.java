@@ -36,6 +36,7 @@ public class SystemConfig {
     private static final int    DEFAULT_SQL_RECORD_COUNT           = 10;
     private static final int    DEFAULT_HEARTBEAT_PERIOD           = 1000;
     private static final int    DEFAULT_HEARTBEAT_TIMEOUT          = 300;
+    private static final int    DEFAULT_QUERY_TIMEOUT              = 300;
 
     private int    serverPort;
     private int    managerPort;
@@ -62,6 +63,7 @@ public class SystemConfig {
     private String password;
     private int    heartbeatPeriod;
     private int    heartbeatTimeout;
+    private int    queryTimeout;
 
     public SystemConfig() {
         this.serverPort = DEFAULT_PORT;
@@ -86,6 +88,7 @@ public class SystemConfig {
         this.sqlRecordCount = DEFAULT_SQL_RECORD_COUNT;
         this.heartbeatPeriod = DEFAULT_HEARTBEAT_PERIOD;
         this.heartbeatTimeout = DEFAULT_HEARTBEAT_TIMEOUT;
+        this.setQueryTimeout(DEFAULT_QUERY_TIMEOUT);
     }
 
     public String getCharset() {
@@ -286,5 +289,13 @@ public class SystemConfig {
 
     public void setHeartbeatTimeout(int heartbeatTimeout) {
         this.heartbeatTimeout = heartbeatTimeout;
+    }
+
+    public int getQueryTimeout() {
+        return queryTimeout * 1000;
+    }
+
+    public void setQueryTimeout(int queryTimeout) {
+        this.queryTimeout = queryTimeout;
     }
 }

@@ -13,6 +13,7 @@
  */
 package fm.liu.timo;
 
+import java.util.Map;
 import java.util.Set;
 import fm.liu.timo.config.model.User;
 import fm.liu.timo.net.handler.FrontendPrivileges;
@@ -30,23 +31,15 @@ public class TimoPrivileges implements FrontendPrivileges {
 
     @Override
     public boolean userExists(String user, String host) {
-        // TimoConfig conf = TimoServer.getInstance().getConfig();
-        // Map<String, Set<String>> quarantineHosts = conf.getQuarantine().getHosts();
-        // if (quarantineHosts.containsKey(host)) {
-        // boolean rs = quarantineHosts.get(host).contains(user);
-        // if (!rs) {
-        // ALARM.error(new StringBuilder().append(Alarms.QUARANTINE_ATTACK).append("[host=")
-        // .append(host).append(",user=").append(user).append(']').toString());
-        // }
-        // return rs;
-        // } else {
-        // if (user != null && user.equals(conf.getSystem().getClusterHeartbeatUser())) {
-        // return true;
-        // } else {
-        // return conf.getUsers().containsKey(user);
-        // }
-        // }
-        return true;
+        Map<String, User> users = TimoServer.getInstance().getConfig().getUsers();
+        if (users.containsKey(user)) {
+            Set<String> hosts = users.get(user).getHosts();
+            if (!hosts.isEmpty() && !hosts.contains(host)) {
+                return false;
+            }
+            return true;
+        }
+        return false;
     }
 
     @Override

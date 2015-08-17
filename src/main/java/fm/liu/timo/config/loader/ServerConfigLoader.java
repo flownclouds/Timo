@@ -266,7 +266,9 @@ public class ServerConfigLoader {
             String[] hos = host.split(",");
             Set<String> hosts = new HashSet<String>();
             for (String h : hos) {
-                hosts.add(h);
+                if (!h.equals("")) {
+                    hosts.add(h);
+                }
             }
             User user = new User(username, password, databases, hosts);
             users.put(username, user);

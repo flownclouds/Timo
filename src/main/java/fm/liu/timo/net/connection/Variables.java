@@ -15,6 +15,7 @@ package fm.liu.timo.net.connection;
 
 import fm.liu.timo.config.Isolations;
 import fm.liu.timo.mysql.CharsetUtil;
+import fm.liu.timo.util.TimeUtil;
 
 /**
  * @author Liu Huanting 2015年5月9日
@@ -24,9 +25,8 @@ public class Variables implements Cloneable {
     private volatile int     isolationLevel;
     private volatile int     charsetIndex;
     private volatile String  charset;
-    private volatile long    lastReadTime;
-    private volatile long    lastWriteTime;
     private volatile long    upTime;
+    private long             lastActiveTime;
 
     public Variables() {
         super();
@@ -90,27 +90,19 @@ public class Variables implements Cloneable {
         return var;
     }
 
-    public long getLastReadTime() {
-        return lastReadTime;
-    }
-
-    public void setLastReadTime(long lastReadTime) {
-        this.lastReadTime = lastReadTime;
-    }
-
-    public long getLastWriteTime() {
-        return lastWriteTime;
-    }
-
-    public void setLastWriteTime(long lastWriteTime) {
-        this.lastWriteTime = lastWriteTime;
-    }
-
     public long getUpTime() {
         return upTime;
     }
 
     public void setUpTime(long upTime) {
         this.upTime = upTime;
+    }
+
+    public long getLastActiveTime() {
+        return lastActiveTime;
+    }
+
+    public void update() {
+        this.lastActiveTime = TimeUtil.currentTimeMillis();
     }
 }

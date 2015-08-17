@@ -26,6 +26,7 @@ import fm.liu.timo.net.connection.FrontendConnection;
 import fm.liu.timo.net.connection.NIOConnection;
 import fm.liu.timo.statistic.CommandCount;
 import fm.liu.timo.util.ExecutorUtil;
+import fm.liu.timo.util.TimeUtil;
 
 /**
  * @author xianmao.hexm
@@ -44,14 +45,17 @@ public final class NIOProcessor {
     private final CommandCount                            commands;
     private long                                          netInBytes;
     private long                                          netOutBytes;
+    private int                                           queryTimeout;
 
     public NIOProcessor(String name) throws IOException {
         this(name, DEFAULT_BUFFER_SIZE, DEFAULT_BUFFER_CHUNK_SIZE, AVAILABLE_PROCESSORS,
                 AVAILABLE_PROCESSORS);
     }
 
-    public NIOProcessor(String name, int handler, int executor) throws IOException {
+    public NIOProcessor(String name, int handler, int executor, int queryTimeout)
+            throws IOException {
         this(name, DEFAULT_BUFFER_SIZE, DEFAULT_BUFFER_CHUNK_SIZE, handler, executor);
+        this.queryTimeout = queryTimeout;
     }
 
     public NIOProcessor(String name, int buffer, int chunk, int handler, int executor)
@@ -153,19 +157,21 @@ public final class NIOProcessor {
         Iterator<Entry<Long, FrontendConnection>> it = frontends.entrySet().iterator();
         while (it.hasNext()) {
             FrontendConnection c = it.next().getValue();
-
             // 删除空连接
             if (c == null) {
                 it.remove();
                 continue;
             }
-
-            // 清理已关闭连接，否则空闲检查。
+            // 清理已关闭连接，否则空闲超时检查。
             if (c.isClosed()) {
                 it.remove();
                 c.cleanup();
             } else {
-                // c.idleCheck();
+                // 空闲超时检查
+                if (TimeUtil.currentTimeMillis() - c.getVariables().getLastActiveTime() > c
+                        .getIdleTimeout()) {
+                    c.close();
+                }
             }
         }
     }
@@ -175,19 +181,20 @@ public final class NIOProcessor {
         Iterator<Entry<Long, BackendConnection>> it = backends.entrySet().iterator();
         while (it.hasNext()) {
             BackendConnection c = it.next().getValue();
-
             // 删除空连接
             if (c == null) {
                 it.remove();
                 continue;
             }
-
-            // 清理已关闭连接，否则空闲检查。
+            // 查询超时检查。
+            if (c.isRunning() && TimeUtil.currentTimeMillis()
+                    - c.getVariables().getLastActiveTime() > queryTimeout) {
+                c.close();
+            }
+            // 清理已关闭连接
             if (c.isClosed()) {
                 it.remove();
                 c.cleanup();
-            } else {
-                // c.idleCheck();
             }
         }
     }

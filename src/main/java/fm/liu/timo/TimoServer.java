@@ -82,7 +82,8 @@ public class TimoServer {
         int executor = system.getProcessorExecutor();
         processors = new NIOProcessor[system.getProcessors()];
         for (int i = 0; i < processors.length; i++) {
-            processors[i] = new NIOProcessor("Processor" + i, handler, executor);
+            processors[i] =
+                    new NIOProcessor("Processor" + i, handler, executor, system.getQueryTimeout());
             processors[i].startup();
         }
 
@@ -107,14 +108,12 @@ public class TimoServer {
 
         // startup manager
         ManagerConnectionFactory mf = new ManagerConnectionFactory(variables);
-        mf.setIdleTimeout(system.getIdleTimeout());
         manager = new NIOAcceptor(NAME + "Manager", system.getManagerPort(), mf);
         manager.start();
         Logger.info("{} is started and listening on {}", manager.getName(), manager.getPort());
 
         // startup server
         ServerConnectionFactory sf = new ServerConnectionFactory(variables);
-        sf.setIdleTimeout(system.getIdleTimeout());
         server = new NIOAcceptor(NAME + "Server", system.getServerPort(), sf);
         server.start();
 

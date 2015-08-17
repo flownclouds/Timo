@@ -86,8 +86,7 @@ public abstract class AbstractConnection implements NIOConnection {
         this.actor = new NIOActor(this);
         long now = TimeUtil.currentTimeMillis();
         this.variables.setUpTime(now);
-        this.variables.setLastReadTime(now);
-        this.variables.setLastWriteTime(now);
+        this.variables.update();
     }
 
     public SocketChannel getChannel() {

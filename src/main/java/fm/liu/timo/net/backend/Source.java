@@ -154,9 +154,7 @@ public class Source {
         long lastActiveTime = TimeUtil.currentTimeMillis() - config.getIdleCheckPeriod();
         ArrayList<BackendConnection> connections = get(idleSize / 4);
         for (BackendConnection connection : connections) {
-            long time = Math.max(connection.getVariables().getLastReadTime(),
-                    connection.getVariables().getLastWriteTime());
-            if (time < lastActiveTime) {
+            if (connection.getVariables().getLastActiveTime() < lastActiveTime) {
                 connection.query("SELECT 1", new VirtualHandler());
             } else {
                 release(connection);
