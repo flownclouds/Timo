@@ -56,7 +56,7 @@ public class MySQLDMLSelectParserTest extends AbstractSyntaxTest {
 
     public void testSelectUnion() throws SQLSyntaxErrorException {
         String sql =
-                "(select id from t1) union all (select id from t2) union all (select id from t3) ordeR By d desC limit 1 offset ?";
+                "(select id from t1) union all (select id from t2) union all (select id from t3) ordeR By d desC limit 1 offset 2";
         MySQLLexer lexer = new MySQLLexer(sql);
         MySQLDMLSelectParser parser = new MySQLDMLSelectParser(lexer, new MySQLExprParser(lexer));
         DMLSelectUnionStatement select = (DMLSelectUnionStatement) parser.selectUnion();
@@ -64,7 +64,7 @@ public class MySQLDMLSelectParserTest extends AbstractSyntaxTest {
         Assert.assertEquals(3, select.getSelectStmtList().size());
         String output = output2MySQL(select, sql);
         Assert.assertEquals(
-                "(SELECT id FROM t1) UNION ALL (SELECT id FROM t2) UNION ALL (SELECT id FROM t3) ORDER BY d DESC LIMIT ?, 1",
+                "(SELECT id FROM t1) UNION ALL (SELECT id FROM t2) UNION ALL (SELECT id FROM t3) ORDER BY d DESC LIMIT 2 , 1",
                 output);
 
         sql = "(select id from t1) union  select id from t2 order by id union aLl (select id from t3) ordeR By d asC";
@@ -108,7 +108,7 @@ public class MySQLDMLSelectParserTest extends AbstractSyntaxTest {
         Assert.assertNotNull(select);
         output = output2MySQL(select, sql);
         Assert.assertEquals(
-                "SELECT * FROM offer AS A STRAIGHT_JOIN wp_image AS B USE KEY FOR JOIN (t1, t2) ON a.member_id = b.member_id INNER JOIN product_visit AS C WHERE a.member_id = c.member_id AND c.member_id = 'abc'",
+                "SELECT * FROM offer AS a STRAIGHT_JOIN wp_image AS b USE KEY FOR JOIN (t1, t2) ON a.member_id = b.member_id INNER JOIN product_visit AS c WHERE a.member_id = c.member_id AND c.member_id = 'abc'",
                 output);
 
         sql = "SELect all tb1.id,tb2.id from tb1,tb2 where tb1.id2=tb2.id2";

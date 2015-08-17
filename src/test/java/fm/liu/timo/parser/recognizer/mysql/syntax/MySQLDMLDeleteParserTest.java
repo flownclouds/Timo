@@ -20,8 +20,6 @@ import java.sql.SQLSyntaxErrorException;
 import fm.liu.timo.parser.ast.stmt.dml.DMLDeleteStatement;
 import fm.liu.timo.parser.recognizer.mysql.MySQLToken;
 import fm.liu.timo.parser.recognizer.mysql.lexer.MySQLLexer;
-import fm.liu.timo.parser.recognizer.mysql.syntax.MySQLDMLDeleteParser;
-import fm.liu.timo.parser.recognizer.mysql.syntax.MySQLExprParser;
 import junit.framework.Assert;
 
 /**
@@ -35,7 +33,7 @@ public class MySQLDMLDeleteParserTest extends AbstractSyntaxTest {
         DMLDeleteStatement delete = parser.delete();
         parser.match(MySQLToken.EOF);
         String output = output2MySQL(delete, sql);
-        Assert.assertEquals("DELETE LOW_PRIORITY id1.id, id FROM t1 AS A WHERE col1 = ?", output);
+        Assert.assertEquals("DELETE LOW_PRIORITY id1.id, id FROM t1 AS a WHERE col1 = ?", output);
 
         sql = "deLetE from id1.id  using t1  ";
         lexer = new MySQLLexer(sql);
@@ -51,24 +49,8 @@ public class MySQLDMLDeleteParserTest extends AbstractSyntaxTest {
         delete = parser.delete();
         parser.match(MySQLToken.EOF);
         output = output2MySQL(delete, sql);
-        Assert.assertEquals("DELETE offer.*, wp_image.* FROM offer AS A, wp_image AS B WHERE "
+        Assert.assertEquals("DELETE offer.*, wp_image.* FROM offer AS a, wp_image AS b WHERE "
                 + "a.member_id = b.member_id AND a.member_id = 'abc'", output);
-
-        sql = "deLetE from id1.id where col1='adf' limit 1,?";
-        lexer = new MySQLLexer(sql);
-        parser = new MySQLDMLDeleteParser(lexer, new MySQLExprParser(lexer));
-        delete = parser.delete();
-        parser.match(MySQLToken.EOF);
-        output = output2MySQL(delete, sql);
-        Assert.assertEquals("DELETE FROM id1.id WHERE col1 = 'adf' LIMIT 1, ?", output);
-
-        sql = "deLetE from id where col1='adf' ordEr by d liMit ? offset 2";
-        lexer = new MySQLLexer(sql);
-        parser = new MySQLDMLDeleteParser(lexer, new MySQLExprParser(lexer));
-        delete = parser.delete();
-        parser.match(MySQLToken.EOF);
-        output = output2MySQL(delete, sql);
-        Assert.assertEquals("DELETE FROM id WHERE col1 = 'adf' ORDER BY d LIMIT 2, ?", output);
 
         sql = "deLetE id.* from t1,t2 where col1='adf'            and col2=1";
         lexer = new MySQLLexer(sql);
@@ -92,7 +74,7 @@ public class MySQLDMLDeleteParserTest extends AbstractSyntaxTest {
         delete = parser.delete();
         parser.match(MySQLToken.EOF);
         output = output2MySQL(delete, sql);
-        Assert.assertEquals("DELETE FROM t1 WHERE t1.id1 = 'abc' ORDER BY a LIMIT 0, 5", output);
+        Assert.assertEquals("DELETE FROM t1 WHERE t1.id1 = 'abc' ORDER BY a LIMIT 0 , 5", output);
 
         sql = "deLetE from t1";
         lexer = new MySQLLexer(sql);

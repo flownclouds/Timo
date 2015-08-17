@@ -49,7 +49,6 @@ import fm.liu.timo.parser.ast.expression.logical.LogicalNotExpression;
 import fm.liu.timo.parser.ast.expression.logical.LogicalOrExpression;
 import fm.liu.timo.parser.ast.expression.logical.LogicalXORExpression;
 import fm.liu.timo.parser.ast.expression.logical.NegativeValueExpression;
-import fm.liu.timo.parser.ast.expression.misc.AssignmentExpression;
 import fm.liu.timo.parser.ast.expression.misc.InExpressionList;
 import fm.liu.timo.parser.ast.expression.misc.QueryExpression;
 import fm.liu.timo.parser.ast.expression.misc.UserExpression;
@@ -62,7 +61,6 @@ import fm.liu.timo.parser.ast.expression.primary.UsrDefVarPrimary;
 import fm.liu.timo.parser.ast.expression.primary.Wildcard;
 import fm.liu.timo.parser.ast.expression.primary.literal.LiteralBitField;
 import fm.liu.timo.parser.ast.expression.primary.literal.LiteralHexadecimal;
-import fm.liu.timo.parser.ast.expression.primary.literal.LiteralNull;
 import fm.liu.timo.parser.ast.expression.primary.literal.LiteralNumber;
 import fm.liu.timo.parser.ast.expression.primary.literal.LiteralString;
 import fm.liu.timo.parser.ast.expression.string.LikeExpression;
@@ -73,7 +71,6 @@ import fm.liu.timo.parser.ast.expression.type.CollateExpression;
 import fm.liu.timo.parser.ast.fragment.VariableScope;
 import fm.liu.timo.parser.ast.stmt.dml.DMLSelectStatement;
 import fm.liu.timo.parser.recognizer.mysql.lexer.MySQLLexer;
-import fm.liu.timo.parser.recognizer.mysql.syntax.MySQLExprParser;
 import junit.framework.Assert;
 
 /**
@@ -213,85 +210,6 @@ public class MySQLExprParserTest extends AbstractSyntaxTest {
         Assert.assertEquals(ArithmeticSubtractExpression.class, uex.getOperand().getClass());
         uex = (UnaryOperatorExpression) bex.getRightOprand();
         Assert.assertEquals(LogicalOrExpression.class, uex.getOperand().getClass());
-    }
-
-    public void testAssignment() throws Exception {
-        String sql = "a /*dd*/:=b:=c";
-        MySQLExprParser parser = new MySQLExprParser(new MySQLLexer(sql));
-        Expression expr = parser.expression();
-        String output = output2MySQL(expr, sql);
-        Assert.assertEquals("a := b := c", output);
-        Assert.assertEquals(AssignmentExpression.class, expr.getClass());
-        AssignmentExpression ass = (AssignmentExpression) expr;
-        Assert.assertEquals(AssignmentExpression.class, ass.getRightOprand().getClass());
-        ass = (AssignmentExpression) ass.getRightOprand();
-        Assert.assertEquals("b", ((Identifier) ass.getLeftOprand()).getIdText());
-
-        sql = "c=@var:=1";
-        parser = new MySQLExprParser(new MySQLLexer(sql));
-        expr = parser.expression();
-        output = output2MySQL(expr, sql);
-        Assert.assertEquals("c = (@var := 1)", output);
-        Assert.assertEquals(ComparisionEqualsExpression.class, expr.getClass());
-        ass = (AssignmentExpression) ((BinaryOperatorExpression) expr).getRightOprand();
-        UsrDefVarPrimary usr = (UsrDefVarPrimary) ass.getLeftOprand();
-        Assert.assertEquals("@var", usr.getVarText());
-
-        sql = "a:=b or c &&d :=0b1101 or b'01'&0xabc";
-        parser = new MySQLExprParser(new MySQLLexer(sql));
-        expr = parser.expression();
-        output = output2MySQL(expr, sql);
-        Assert.assertEquals("a := b OR c AND d := b'1101' OR b'01' & x'abc'", output);
-        Assert.assertEquals(AssignmentExpression.class, expr.getClass());
-        ass = (AssignmentExpression) expr;
-        Assert.assertEquals(AssignmentExpression.class, ass.getRightOprand().getClass());
-        ass = (AssignmentExpression) ass.getRightOprand();
-        Assert.assertEquals(LogicalOrExpression.class, ass.getLeftOprand().getClass());
-        Assert.assertEquals(LogicalOrExpression.class, ass.getRightOprand().getClass());
-        LogicalOrExpression lor = (LogicalOrExpression) ass.getLeftOprand();
-        Assert.assertEquals(LogicalAndExpression.class, lor.getOperand(1).getClass());
-        lor = (LogicalOrExpression) ass.getRightOprand();
-        Assert.assertEquals(LiteralBitField.class, lor.getOperand(0).getClass());
-        Assert.assertEquals(BitAndExpression.class, lor.getOperand(1).getClass());
-
-        sql = "a:=((b or (c &&d)) :=((0b1101 or (b'01'&0xabc))))";
-        parser = new MySQLExprParser(new MySQLLexer(sql));
-        expr = parser.expression();
-        output = output2MySQL(expr, sql);
-        Assert.assertEquals("a := b OR c AND d := b'1101' OR b'01' & x'abc'", output);
-        Assert.assertEquals(AssignmentExpression.class, expr.getClass());
-        ass = (AssignmentExpression) expr;
-        Assert.assertEquals(AssignmentExpression.class, ass.getRightOprand().getClass());
-        ass = (AssignmentExpression) ass.getRightOprand();
-        Assert.assertEquals(LogicalOrExpression.class, ass.getLeftOprand().getClass());
-        Assert.assertEquals(LogicalOrExpression.class, ass.getRightOprand().getClass());
-        lor = (LogicalOrExpression) ass.getLeftOprand();
-        Assert.assertEquals(LogicalAndExpression.class, lor.getOperand(1).getClass());
-        lor = (LogicalOrExpression) ass.getRightOprand();
-        Assert.assertEquals(LiteralBitField.class, lor.getOperand(0).getClass());
-        Assert.assertEquals(BitAndExpression.class, lor.getOperand(1).getClass());
-
-        sql = "(a:=b) or c &&(d :=0b1101 or b'01')&0xabc ^null";
-        parser = new MySQLExprParser(new MySQLLexer(sql));
-        expr = parser.expression();
-        output = output2MySQL(expr, sql);
-        Assert.assertEquals("(a := b) OR c AND (d := b'1101' OR b'01') & x'abc' ^ NULL", output);
-        Assert.assertEquals(LogicalOrExpression.class, expr.getClass());
-        lor = (LogicalOrExpression) expr;
-        Assert.assertEquals(AssignmentExpression.class, lor.getOperand(0).getClass());
-        Assert.assertEquals(LogicalAndExpression.class, lor.getOperand(1).getClass());
-        LogicalAndExpression land = (LogicalAndExpression) lor.getOperand(1);
-        Assert.assertEquals(Identifier.class, land.getOperand(0).getClass());
-        Assert.assertEquals(BitAndExpression.class, land.getOperand(1).getClass());
-        BitAndExpression band = (BitAndExpression) land.getOperand(1);
-        Assert.assertEquals(AssignmentExpression.class, band.getLeftOprand().getClass());
-        Assert.assertEquals(BitXORExpression.class, band.getRightOprand().getClass());
-        ass = (AssignmentExpression) band.getLeftOprand();
-        Assert.assertEquals(LogicalOrExpression.class, ass.getRightOprand().getClass());
-        BitXORExpression bxor = (BitXORExpression) band.getRightOprand();
-        Assert.assertEquals(LiteralHexadecimal.class, bxor.getLeftOprand().getClass());
-        Assert.assertEquals(LiteralNull.class, bxor.getRightOprand().getClass());
-
     }
 
     public void testLogical() throws Exception {
@@ -612,7 +530,7 @@ public class MySQLExprParserTest extends AbstractSyntaxTest {
         parser = new MySQLExprParser(new MySQLLexer(sql));
         expr = parser.expression();
         output = output2MySQL(expr, sql);
-        Assert.assertEquals("a + b % - ((SELECT id FROM t1 LIMIT 0, 1) - e)", output);
+        Assert.assertEquals("a + b % - ((SELECT id FROM t1 LIMIT 0 , 1) - e)", output);
         add = (ArithmeticAddExpression) expr;
         mod = (ArithmeticModExpression) add.getRightOprand();
         mi = (MinusExpression) mod.getRightOprand();
@@ -691,7 +609,7 @@ public class MySQLExprParserTest extends AbstractSyntaxTest {
         MySQLExprParser parser = new MySQLExprParser(new MySQLLexer(sql));
         Expression expr = parser.expression();
         String output = output2MySQL(expr, sql);
-        Assert.assertEquals("1 >= ANY (SELECT id FROM t1 LIMIT 0, 1)", output);
+        Assert.assertEquals("1 >= ANY (SELECT id FROM t1 LIMIT 0 , 1)", output);
         Assert.assertEquals(ComparisionGreaterThanOrEqualsExpression.class, expr.getClass());
 
         sql = "1 >= any (select id from t1 limit 1) > aLl(select tb1.id from tb1 t1,tb2 as t2 where t1.id=t2.id limit 1)";
@@ -699,7 +617,7 @@ public class MySQLExprParserTest extends AbstractSyntaxTest {
         expr = parser.expression();
         output = output2MySQL(expr, sql);
         Assert.assertEquals(
-                "1 >= ANY (SELECT id FROM t1 LIMIT 0, 1) > ALL (SELECT tb1.id FROM tb1 AS T1, tb2 AS T2 WHERE t1.id = t2.id LIMIT 0, 1)",
+                "1 >= ANY (SELECT id FROM t1 LIMIT 0 , 1) > ALL (SELECT tb1.id FROM tb1 AS t1, tb2 AS t2 WHERE t1.id = t2.id LIMIT 0 , 1)",
                 output);
         ComparisionGreaterThanExpression gt = (ComparisionGreaterThanExpression) expr;
         ComparisionGreaterThanOrEqualsExpression ge =
@@ -906,13 +824,13 @@ public class MySQLExprParserTest extends AbstractSyntaxTest {
         parser = new MySQLExprParser(new MySQLLexer(sql));
         expr = parser.expression();
         output = output2MySQL(expr, sql);
-        Assert.assertEquals("NOW()", output);
+        Assert.assertEquals("CURTIMTSTAMP()", output);
 
         sql = "CurRent_TimesTamp  ()";
         parser = new MySQLExprParser(new MySQLLexer(sql));
         expr = parser.expression();
         output = output2MySQL(expr, sql);
-        Assert.assertEquals("NOW()", output);
+        Assert.assertEquals("CURTIMTSTAMP()", output);
 
         sql = "localTimE";
         parser = new MySQLExprParser(new MySQLLexer(sql));
@@ -1207,7 +1125,7 @@ public class MySQLExprParserTest extends AbstractSyntaxTest {
         expr = parser.expression();
         output = output2MySQL(expr, sql);
         Assert.assertEquals(
-                "GROUP_CONCAT(DISTINCT expr1, expr2, expr3 ORDER BY col_name1 DESC, col_name2 SEPARATOR  )",
+                "GROUP_CONCAT(DISTINCT expr1, expr2, expr3 ORDER BY col_name1 DESC, col_name2 SEPARATOR ' ')",
                 output);
 
         sql = "GROUP_CONCAT(a||b,expr2,expr3 ORDER BY col_name1 asc,col_name2 SEPARATOR '@ ')";
@@ -1215,7 +1133,7 @@ public class MySQLExprParserTest extends AbstractSyntaxTest {
         expr = parser.expression();
         output = output2MySQL(expr, sql);
         Assert.assertEquals(
-                "GROUP_CONCAT(a OR b, expr2, expr3 ORDER BY col_name1 ASC, col_name2 SEPARATOR @ )",
+                "GROUP_CONCAT(a OR b, expr2, expr3 ORDER BY col_name1 ASC, col_name2 SEPARATOR '@ ')",
                 output);
 
         sql = "GROUP_CONCAT(expr1 ORDER BY col_name1 asc,col_name2 SEPARATOR 'str_val ')";
@@ -1223,33 +1141,34 @@ public class MySQLExprParserTest extends AbstractSyntaxTest {
         expr = parser.expression();
         output = output2MySQL(expr, sql);
         Assert.assertEquals(
-                "GROUP_CONCAT(expr1 ORDER BY col_name1 ASC, col_name2 SEPARATOR str_val )", output);
+                "GROUP_CONCAT(expr1 ORDER BY col_name1 ASC, col_name2 SEPARATOR 'str_val ')",
+                output);
 
         sql = "GROUP_CONCAT(DISTINCT test_score ORDER BY test_score DESC )";
         parser = new MySQLExprParser(new MySQLLexer(sql));
         expr = parser.expression();
         output = output2MySQL(expr, sql);
         Assert.assertEquals(
-                "GROUP_CONCAT(DISTINCT test_score ORDER BY test_score DESC SEPARATOR ,)", output);
+                "GROUP_CONCAT(DISTINCT test_score ORDER BY test_score DESC SEPARATOR ',')", output);
 
         sql = "GROUP_CONCAT(DISTINCT test_score ORDER BY test_score asc )";
         parser = new MySQLExprParser(new MySQLLexer(sql));
         expr = parser.expression();
         output = output2MySQL(expr, sql);
-        Assert.assertEquals("GROUP_CONCAT(DISTINCT test_score ORDER BY test_score ASC SEPARATOR ,)",
-                output);
+        Assert.assertEquals(
+                "GROUP_CONCAT(DISTINCT test_score ORDER BY test_score ASC SEPARATOR ',')", output);
 
         sql = "GROUP_CONCAT(c1)";
         parser = new MySQLExprParser(new MySQLLexer(sql));
         expr = parser.expression();
         output = output2MySQL(expr, sql);
-        Assert.assertEquals("GROUP_CONCAT(c1 SEPARATOR ,)", output);
+        Assert.assertEquals("GROUP_CONCAT(c1 SEPARATOR ',')", output);
 
         sql = "GROUP_CONCAT(c1 separator '')";
         parser = new MySQLExprParser(new MySQLLexer(sql));
         expr = parser.expression();
         output = output2MySQL(expr, sql);
-        Assert.assertEquals("GROUP_CONCAT(c1 SEPARATOR )", output);
+        Assert.assertEquals("GROUP_CONCAT(c1 SEPARATOR '')", output);
 
         sql = "default";
         parser = new MySQLExprParser(new MySQLLexer(sql));

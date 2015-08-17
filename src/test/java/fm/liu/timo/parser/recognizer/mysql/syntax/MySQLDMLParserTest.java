@@ -22,7 +22,6 @@ import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.comparison.ComparisionEqualsExpression;
 import fm.liu.timo.parser.ast.expression.logical.LogicalAndExpression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
-import fm.liu.timo.parser.ast.expression.primary.ParamMarker;
 import fm.liu.timo.parser.ast.fragment.GroupBy;
 import fm.liu.timo.parser.ast.fragment.Limit;
 import fm.liu.timo.parser.ast.fragment.OrderBy;
@@ -38,9 +37,6 @@ import fm.liu.timo.parser.ast.fragment.tableref.TableReference;
 import fm.liu.timo.parser.ast.fragment.tableref.TableReferences;
 import fm.liu.timo.parser.ast.stmt.dml.DMLSelectStatement;
 import fm.liu.timo.parser.recognizer.mysql.lexer.MySQLLexer;
-import fm.liu.timo.parser.recognizer.mysql.syntax.MySQLDMLParser;
-import fm.liu.timo.parser.recognizer.mysql.syntax.MySQLDMLSelectParser;
-import fm.liu.timo.parser.recognizer.mysql.syntax.MySQLExprParser;
 import fm.liu.timo.parser.util.ListUtil;
 import fm.liu.timo.parser.util.Pair;
 import junit.framework.Assert;
@@ -111,52 +107,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         String output = output2MySQL(limit, sql);
         Assert.assertEquals(1, limit.getOffset());
         Assert.assertEquals(2, limit.getSize());
-        Assert.assertEquals("LIMIT 1, 2", output);
-
-        sql = "limit 1,?";
-        lexer = new MySQLLexer(sql);
-        parser = getDMLParser(lexer);
-        limit = parser.limit();
-        output = output2MySQL(limit, sql);
-        Assert.assertEquals(1, limit.getOffset());
-        Assert.assertEquals(new ParamMarker(1), limit.getSize());
-        Assert.assertEquals("LIMIT 1, ?", output);
-
-        sql = "limit ?,9";
-        lexer = new MySQLLexer(sql);
-        parser = getDMLParser(lexer);
-        limit = parser.limit();
-        output = output2MySQL(limit, sql);
-        Assert.assertEquals(new ParamMarker(1), limit.getOffset());
-        Assert.assertEquals(9, limit.getSize());
-        Assert.assertEquals("LIMIT ?, 9", output);
-
-        sql = "limit ?,?";
-        lexer = new MySQLLexer(sql);
-        parser = getDMLParser(lexer);
-        limit = parser.limit();
-        output = output2MySQL(limit, sql);
-        Assert.assertEquals(new ParamMarker(1), limit.getOffset());
-        Assert.assertEquals(new ParamMarker(2), limit.getSize());
-        Assert.assertEquals("LIMIT ?, ?", output);
-
-        sql = "limit ? d";
-        lexer = new MySQLLexer(sql);
-        parser = getDMLParser(lexer);
-        limit = parser.limit();
-        output = output2MySQL(limit, sql);
-        Assert.assertEquals(0, limit.getOffset());
-        Assert.assertEquals(new ParamMarker(1), limit.getSize());
-        Assert.assertEquals("LIMIT 0, ?", output);
-
-        sql = "limit 9 f";
-        lexer = new MySQLLexer(sql);
-        parser = getDMLParser(lexer);
-        limit = parser.limit();
-        output = output2MySQL(limit, sql);
-        Assert.assertEquals(0, limit.getOffset());
-        Assert.assertEquals(9, limit.getSize());
-        Assert.assertEquals("LIMIT 0, 9", output);
+        Assert.assertEquals("LIMIT 1 , 2", output);
 
         sql = "limit 9 ofFset 0";
         lexer = new MySQLLexer(sql);
@@ -165,34 +116,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         output = output2MySQL(limit, sql);
         Assert.assertEquals(0, limit.getOffset());
         Assert.assertEquals(9, limit.getSize());
-        Assert.assertEquals("LIMIT 0, 9", output);
-
-        sql = "limit ? offset 0";
-        lexer = new MySQLLexer(sql);
-        parser = getDMLParser(lexer);
-        limit = parser.limit();
-        output = output2MySQL(limit, sql);
-        Assert.assertEquals(0, limit.getOffset());
-        Assert.assertEquals(new ParamMarker(1), limit.getSize());
-        Assert.assertEquals("LIMIT 0, ?", output);
-
-        sql = "limit ? offset ?";
-        lexer = new MySQLLexer(sql);
-        parser = getDMLParser(lexer);
-        limit = parser.limit();
-        output = output2MySQL(limit, sql);
-        Assert.assertEquals(new ParamMarker(2), limit.getOffset());
-        Assert.assertEquals(new ParamMarker(1), limit.getSize());
-        Assert.assertEquals("LIMIT ?, ?", output);
-
-        sql = "limit 9 offset ?";
-        lexer = new MySQLLexer(sql);
-        parser = getDMLParser(lexer);
-        limit = parser.limit();
-        output = output2MySQL(limit, sql);
-        Assert.assertEquals(new ParamMarker(1), limit.getOffset());
-        Assert.assertEquals(9, limit.getSize());
-        Assert.assertEquals("LIMIT ?, 9", output);
+        Assert.assertEquals("LIMIT 0 , 9", output);
 
     }
 
@@ -276,7 +200,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         List<TableReference> list = trs.getTableReferenceList();
         Assert.assertEquals(1, list.size());
         Assert.assertEquals(SubqueryFactor.class, list.get(0).getClass());
-        Assert.assertEquals("(SELECT * FROM `select`) AS `SELECT`", output);
+        Assert.assertEquals("(SELECT * FROM `select`) AS `select`", output);
 
         sql = "(((selecT * from any)union select `select` from `from` order by dd) as 'a1', (((t2)))), t3";
         lexer = new MySQLLexer(sql);
@@ -341,7 +265,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         Assert.assertEquals(TableRefFactor.class, list.get(0).getClass());
         Expression ex = ((InnerJoin) (trs.getTableReferenceList()).get(0)).getOnCond();
         Assert.assertEquals(ex.getClass(), ComparisionEqualsExpression.class);
-        Assert.assertEquals("(tb1 AS T1) INNER JOIN (tb2 AS T2) ON t1.name = t2.name", output);
+        Assert.assertEquals("(tb1 AS t1) INNER JOIN (tb2 AS t2) ON t1.name = t2.name", output);
 
         sql = "(tb1 as t1)inner join tb2 as t2 using (c1)";
         lexer = new MySQLLexer(sql);
@@ -350,7 +274,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         output = output2MySQL(trs, sql);
         List<String> using_list = ((InnerJoin) (trs.getTableReferenceList()).get(0)).getUsing();
         Assert.assertEquals(1, using_list.size());
-        Assert.assertEquals("(tb1 AS T1) INNER JOIN tb2 AS T2 USING (c1)", output);
+        Assert.assertEquals("(tb1 AS t1) INNER JOIN tb2 AS t2 USING (c1)", output);
 
         sql = "(tb1 as t1)inner join tb2 as t2 using (c1,c2)";
         lexer = new MySQLLexer(sql);
@@ -359,7 +283,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         output = output2MySQL(trs, sql);
         using_list = ((InnerJoin) (trs.getTableReferenceList()).get(0)).getUsing();
         Assert.assertEquals(2, using_list.size());
-        Assert.assertEquals("(tb1 AS T1) INNER JOIN tb2 AS T2 USING (c1, c2)", output);
+        Assert.assertEquals("(tb1 AS t1) INNER JOIN tb2 AS t2 USING (c1, c2)", output);
 
         sql = "tb1 as t1 use index (i1,i2,i3)";
         lexer = new MySQLLexer(sql);
@@ -376,7 +300,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         Assert.assertEquals(3, indexhint.getIndexList().size());
         Assert.assertEquals("USE", indexhint.getAction().name());
         Assert.assertEquals("INDEX", indexhint.getType().name());
-        Assert.assertEquals("tb1 AS T1 USE INDEX (i1, i2, i3)", output);
+        Assert.assertEquals("tb1 AS t1 USE INDEX (i1, i2, i3)", output);
 
         sql = "tb1 as t1 use index (i1,i2,i3),tb2 as t2 use index (i1,i2,i3)";
         lexer = new MySQLLexer(sql);
@@ -398,7 +322,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         Assert.assertEquals(3, indexhint.getIndexList().size());
         Assert.assertEquals("USE", indexhint.getAction().name());
         Assert.assertEquals("INDEX", indexhint.getType().name());
-        Assert.assertEquals("tb1 AS T1 USE INDEX (i1, i2, i3), tb2 AS T2 USE INDEX (i1, i2, i3)",
+        Assert.assertEquals("tb1 AS t1 USE INDEX (i1, i2, i3), tb2 AS t2 USE INDEX (i1, i2, i3)",
                 output);
 
         sql = "tb1 as t1";
@@ -411,9 +335,9 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         Assert.assertEquals(TableRefFactor.class, list.get(0).getClass());
         Assert.assertEquals("tb1",
                 ((TableRefFactor) (trs.getTableReferenceList()).get(0)).getTable().getIdText());
-        Assert.assertEquals("T1",
+        Assert.assertEquals("t1",
                 ((TableRefFactor) (trs.getTableReferenceList()).get(0)).getAlias());
-        Assert.assertEquals("tb1 AS T1", output);
+        Assert.assertEquals("tb1 AS t1", output);
 
         sql = "tb1 t1";
         lexer = new MySQLLexer(sql);
@@ -425,9 +349,9 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         Assert.assertEquals(TableRefFactor.class, list.get(0).getClass());
         Assert.assertEquals("tb1",
                 ((TableRefFactor) (trs.getTableReferenceList()).get(0)).getTable().getIdText());
-        Assert.assertEquals("T1",
+        Assert.assertEquals("t1",
                 ((TableRefFactor) (trs.getTableReferenceList()).get(0)).getAlias());
-        Assert.assertEquals("tb1 AS T1", output);
+        Assert.assertEquals("tb1 AS t1", output);
 
         sql = "tb1,tb2,tb3";
         lexer = new MySQLLexer(sql);
@@ -595,7 +519,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         trs = parser.tableRefs();
         output = output2MySQL(trs, sql);
         Assert.assertEquals(
-                "offer AS A STRAIGHT_JOIN wp_image AS B USE KEY FOR JOIN (t1, t2) ON a.member_id = b.member_id INNER JOIN product_visit AS C",
+                "offer AS a STRAIGHT_JOIN wp_image AS b USE KEY FOR JOIN (t1, t2) ON a.member_id = b.member_id INNER JOIN product_visit AS c",
                 output);
 
         sql = "tb1 ignore index for order by(i1)";
@@ -716,7 +640,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         Assert.assertEquals("INDEX", indexhint.getType().name());
         Assert.assertEquals("JOIN", indexhint.getScope().name());
         TableRefFactor rtf = (TableRefFactor) ((OuterJoin) list.get(0)).getRightTableRef();
-        Assert.assertEquals("T2", rtf.getAlias());
+        Assert.assertEquals("t2", rtf.getAlias());
         Assert.assertEquals("tb2", rtf.getTable().getIdText());
         hintlist = rtf.getHintList();
         Assert.assertEquals(1, hintlist.size());
@@ -730,7 +654,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         Assert.assertEquals(ComparisionEqualsExpression.class,
                 ((OuterJoin) list.get(0)).getOnCond().getClass());
         Assert.assertEquals("(tb1 FORCE INDEX FOR JOIN (i1, i2)) "
-                + "LEFT JOIN tb2 AS T2 USE INDEX (i1, i2, i3) ON t1.id1 = t2.id1", output);
+                + "LEFT JOIN tb2 AS t2 USE INDEX (i1, i2, i3) ON t1.id1 = t2.id1", output);
 
         sql = " (((tb1 force index for join (i1,i2),tb3),tb4),tb5) "
                 + "left outer join (tb2 as t2 use index (i1,i2,i3)) using(id1)";
@@ -774,7 +698,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         Assert.assertEquals("tb5",
                 ((TableRefFactor) (ltr.getTableReferenceList().get(1))).getTable().getIdText());
         TableReferences rtr = (TableReferences) ((OuterJoin) list.get(0)).getRightTableRef();
-        Assert.assertEquals("T2", ((TableRefFactor) rtr.getTableReferenceList().get(0)).getAlias());
+        Assert.assertEquals("t2", ((TableRefFactor) rtr.getTableReferenceList().get(0)).getAlias());
         Assert.assertEquals("tb2",
                 ((TableRefFactor) rtr.getTableReferenceList().get(0)).getTable().getIdText());
         hintlist = ((TableRefFactor) rtr.getTableReferenceList().get(0)).getHintList();
@@ -789,7 +713,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         using_list = ((OuterJoin) (trs.getTableReferenceList()).get(0)).getUsing();
         Assert.assertEquals(1, using_list.size());
         Assert.assertEquals("(tb1 FORCE INDEX FOR JOIN (i1, i2), tb3, tb4, tb5) "
-                + "LEFT JOIN (tb2 AS T2 USE INDEX (i1, i2, i3)) USING (id1)", output);
+                + "LEFT JOIN (tb2 AS t2 USE INDEX (i1, i2, i3)) USING (id1)", output);
 
         sql = "(tb1 force index for join (i1,i2),tb3) "
                 + "left outer join tb2 as t2 use index (i1,i2,i3) using(id1,id2)";
@@ -798,7 +722,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         trs = parser.tableRefs();
         output = output2MySQL(trs, sql);
         Assert.assertEquals("(tb1 FORCE INDEX FOR JOIN (i1, i2), tb3) "
-                + "LEFT JOIN tb2 AS T2 USE INDEX (i1, i2, i3) USING (id1, id2)", output);
+                + "LEFT JOIN tb2 AS t2 USE INDEX (i1, i2, i3) USING (id1, id2)", output);
 
         sql = "(tb1 force index for join (i1,i2),tb3) left outer join (tb2 as t2 use index (i1,i2,i3)) using(id1,id2)";
         lexer = new MySQLLexer(sql);
@@ -806,28 +730,28 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         trs = parser.tableRefs();
         output = output2MySQL(trs, sql);
         Assert.assertEquals("(tb1 FORCE INDEX FOR JOIN (i1, i2), tb3) "
-                + "LEFT JOIN (tb2 AS T2 USE INDEX (i1, i2, i3)) USING (id1, id2)", output);
+                + "LEFT JOIN (tb2 AS t2 USE INDEX (i1, i2, i3)) USING (id1, id2)", output);
 
         sql = "tb1 as t1 cross join tb2 as t2 use index(i1)using(id1)";
         lexer = new MySQLLexer(sql);
         parser = getDMLParser(lexer);
         trs = parser.tableRefs();
         output = output2MySQL(trs, sql);
-        Assert.assertEquals("tb1 AS T1 INNER JOIN tb2 AS T2 USE INDEX (i1) USING (id1)", output);
+        Assert.assertEquals("tb1 AS t1 INNER JOIN tb2 AS t2 USE INDEX (i1) USING (id1)", output);
 
         sql = "(tb1 as t1) cross join tb2 as t2 use index(i1)using(id1)";
         lexer = new MySQLLexer(sql);
         parser = getDMLParser(lexer);
         trs = parser.tableRefs();
         output = output2MySQL(trs, sql);
-        Assert.assertEquals("(tb1 AS T1) INNER JOIN tb2 AS T2 USE INDEX (i1) USING (id1)", output);
+        Assert.assertEquals("(tb1 AS t1) INNER JOIN tb2 AS t2 USE INDEX (i1) USING (id1)", output);
 
         sql = "tb1 as _latin't1' cross join tb2 as t2 use index(i1)";
         lexer = new MySQLLexer(sql);
         parser = getDMLParser(lexer);
         trs = parser.tableRefs();
         output = output2MySQL(trs, sql);
-        Assert.assertEquals("tb1 AS _LATIN't1' INNER JOIN tb2 AS T2 USE INDEX (i1)", output);
+        Assert.assertEquals("tb1 AS _latin't1' INNER JOIN tb2 AS t2 USE INDEX (i1)", output);
 
         sql = "((select '  @  from' from `from`)) as t1 cross join tb2 as t2 use index()";
         lexer = new MySQLLexer(sql);
@@ -838,10 +762,10 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         Assert.assertEquals(1, list.size());
         Assert.assertEquals(InnerJoin.class, list.get(0).getClass());
         SubqueryFactor lsf = (SubqueryFactor) ((InnerJoin) list.get(0)).getLeftTableRef();
-        Assert.assertEquals("T1", lsf.getAlias());
+        Assert.assertEquals("t1", lsf.getAlias());
         Assert.assertEquals(DMLSelectStatement.class, lsf.getSubquery().getClass());
         rtf = (TableRefFactor) ((InnerJoin) list.get(0)).getRightTableRef();
-        Assert.assertEquals("T2", rtf.getAlias());
+        Assert.assertEquals("t2", rtf.getAlias());
         hintlist = rtf.getHintList();
         Assert.assertEquals(1, hintlist.size());
         indexhint = hintlist.get(0);
@@ -850,7 +774,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         Assert.assertEquals("ALL", indexhint.getScope().name());
         Assert.assertEquals("tb2", rtf.getTable().getIdText());
         Assert.assertEquals(
-                "(SELECT '  @  from' FROM `from`) AS T1 " + "INNER JOIN tb2 AS T2 USE INDEX ()",
+                "(SELECT '  @  from' FROM `from`) AS t1 " + "INNER JOIN tb2 AS t2 USE INDEX ()",
                 output);
 
         sql = "(tb1 as t1) straight_join (tb2 as t2)";
@@ -858,14 +782,14 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         parser = getDMLParser(lexer);
         trs = parser.tableRefs();
         output = output2MySQL(trs, sql);
-        Assert.assertEquals("(tb1 AS T1) STRAIGHT_JOIN (tb2 AS T2)", output);
+        Assert.assertEquals("(tb1 AS t1) STRAIGHT_JOIN (tb2 AS t2)", output);
 
         sql = "tb1 straight_join tb2 as t2 on tb1.id=tb2.id";
         lexer = new MySQLLexer(sql);
         parser = getDMLParser(lexer);
         trs = parser.tableRefs();
         output = output2MySQL(trs, sql);
-        Assert.assertEquals("tb1 STRAIGHT_JOIN tb2 AS T2 ON tb1.id = tb2.id", output);
+        Assert.assertEquals("tb1 STRAIGHT_JOIN tb2 AS t2 ON tb1.id = tb2.id", output);
 
         sql = "tb1 left outer join tb2 on tb1.id=tb2.id";
         lexer = new MySQLLexer(sql);
@@ -986,7 +910,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         parser = getDMLParser(lexer);
         trs = parser.tableRefs();
         output = output2MySQL(trs, sql);
-        Assert.assertEquals("(tb1 AS T1) NATURAL JOIN (tb2 AS T2)", output);
+        Assert.assertEquals("(tb1 AS t1) NATURAL JOIN (tb2 AS t2)", output);
 
         sql = "(select (select * from tb1) from `select` "
                 + "where `any`=any(select id2 from tb2))any  ";
@@ -996,9 +920,9 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         output = output2MySQL(trs, sql);
         list = trs.getTableReferenceList();
         Assert.assertEquals(SubqueryFactor.class, list.get(0).getClass());
-        Assert.assertEquals("ANY", ((SubqueryFactor) list.get(0)).getAlias());
+        Assert.assertEquals("any", ((SubqueryFactor) list.get(0)).getAlias());
         Assert.assertEquals("(SELECT SELECT * FROM tb1 FROM `select` "
-                + "WHERE `any` = ANY (SELECT id2 FROM tb2)) AS ANY", output);
+                + "WHERE `any` = ANY (SELECT id2 FROM tb2)) AS any", output);
 
         sql = "((tb1),(tb3 as t3,`select`),tb2 use key for join (i1,i2))"
                 + " left join tb4 join tb5 using ()";
@@ -1017,7 +941,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
                 .getTableReferenceList();
         list = ((TableReferences) list.get(1)).getTableReferenceList();
         Assert.assertEquals(2, list.size());
-        Assert.assertEquals("(tb1, tb3 AS T3, `select`, tb2 USE KEY FOR JOIN (i1, i2))"
+        Assert.assertEquals("(tb1, tb3 AS t3, `select`, tb2 USE KEY FOR JOIN (i1, i2))"
                 + " LEFT JOIN (tb4 INNER JOIN tb5) USING ()", output);
 
         sql = "((select `select` from `from` ) tb1),(tb3 as t3,`select`),tb2 use key for join (i1,i2) "
@@ -1045,7 +969,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         using_list = oj.getUsing();
         Assert.assertEquals(2, using_list.size());
         Assert.assertEquals(
-                "(SELECT `select` FROM `from`) AS TB1, tb3 AS T3, `select`, tb2 USE KEY FOR JOIN (i1, i2) LEFT JOIN tb4 USING (i1, i2) STRAIGHT_JOIN tb5",
+                "(SELECT `select` FROM `from`) AS tb1, tb3 AS t3, `select`, tb2 USE KEY FOR JOIN (i1, i2) LEFT JOIN tb4 USING (i1, i2) STRAIGHT_JOIN tb5",
                 output);
 
         sql = "(`select`,(tb1 as t1 use index for join()ignore key for group by (i1)))"
@@ -1071,7 +995,7 @@ public class MySQLDMLParserTest extends AbstractSyntaxTest {
         list = ((TableReferences) rsj.getRightTableRef()).getTableReferenceList();
         Assert.assertEquals(OuterJoin.class, list.get(0).getClass());
         Assert.assertEquals(
-                "(`select`, tb1 AS T1 USE INDEX FOR JOIN () IGNORE KEY FOR GROUP BY (i1)) "
+                "(`select`, tb1 AS t1 USE INDEX FOR JOIN () IGNORE KEY FOR GROUP BY (i1)) "
                         + "INNER JOIN tb2 ON cd1 = any RIGHT JOIN (tb3 STRAIGHT_JOIN (tb4 USE INDEX () "
                         + "LEFT JOIN (tb6, tb7) ON id3 = ALL (SELECT `all` FROM `all`)) ON id2 = ANY (SELECT * FROM any))"
                         + " USING (i1)",

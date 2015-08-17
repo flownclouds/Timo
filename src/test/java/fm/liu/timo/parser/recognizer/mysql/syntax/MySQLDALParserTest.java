@@ -25,8 +25,6 @@ import fm.liu.timo.parser.ast.stmt.ddl.DescTableStatement;
 import fm.liu.timo.parser.ast.stmt.mts.MTSSetTransactionStatement;
 import fm.liu.timo.parser.recognizer.mysql.MySQLToken;
 import fm.liu.timo.parser.recognizer.mysql.lexer.MySQLLexer;
-import fm.liu.timo.parser.recognizer.mysql.syntax.MySQLDALParser;
-import fm.liu.timo.parser.recognizer.mysql.syntax.MySQLExprParser;
 import junit.framework.Assert;
 
 /**
@@ -205,7 +203,7 @@ public class MySQLDALParserTest extends AbstractSyntaxTest {
         show = (DALShowStatement) parser.show();
         parser.match(MySQLToken.EOF);
         output = output2MySQL(show, sql);
-        Assert.assertEquals("SHOW BINLOG EVENTS IN 'a' FROM 1 LIMIT 1, 2", output);
+        Assert.assertEquals("SHOW BINLOG EVENTS IN 'a' FROM 1 LIMIT 1 , 2", output);
 
         sql = "SHOW binlog events from 1 limit 1,2  ";
         lexer = new MySQLLexer(sql);
@@ -213,7 +211,7 @@ public class MySQLDALParserTest extends AbstractSyntaxTest {
         show = (DALShowStatement) parser.show();
         parser.match(MySQLToken.EOF);
         output = output2MySQL(show, sql);
-        Assert.assertEquals("SHOW BINLOG EVENTS FROM 1 LIMIT 1, 2", output);
+        Assert.assertEquals("SHOW BINLOG EVENTS FROM 1 LIMIT 1 , 2", output);
 
         sql = "SHOW binlog events ";
         lexer = new MySQLLexer(sql);
@@ -453,7 +451,7 @@ public class MySQLDALParserTest extends AbstractSyntaxTest {
         show = (DALShowStatement) parser.show();
         parser.match(MySQLToken.EOF);
         output = output2MySQL(show, sql);
-        Assert.assertEquals("SHOW ERRORS LIMIT 0, 1", output);
+        Assert.assertEquals("SHOW ERRORS LIMIT 0 , 1", output);
 
         sql = "SHOW count(*) errors";
         lexer = new MySQLLexer(sql);
@@ -711,7 +709,7 @@ public class MySQLDALParserTest extends AbstractSyntaxTest {
         parser.match(MySQLToken.EOF);
         output = output2MySQL(show, sql);
         Assert.assertEquals("SHOW PROFILE ALL, BLOCK IO, CONTEXT SWITCHES, CPU, IPC, MEMORY, "
-                + "PAGE FAULTS, SOURCE, SWAPS FOR QUERY 2 LIMIT 2, 1", output);
+                + "PAGE FAULTS, SOURCE, SWAPS FOR QUERY 2 LIMIT 2 , 1", output);
 
         sql = "SHOW profile";
         lexer = new MySQLLexer(sql);
@@ -1025,7 +1023,7 @@ public class MySQLDALParserTest extends AbstractSyntaxTest {
         show = (DALShowStatement) parser.show();
         parser.match(MySQLToken.EOF);
         output = output2MySQL(show, sql);
-        Assert.assertEquals("SHOW WARNINGS LIMIT 1, 2", output);
+        Assert.assertEquals("SHOW WARNINGS LIMIT 1 , 2", output);
 
         sql = "SHOW warnings";
         lexer = new MySQLLexer(sql);
