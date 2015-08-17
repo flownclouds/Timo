@@ -12,6 +12,6 @@
         <property name="password">test</property> <!-- 配置库密码 -->
         <property name="heartbeatPeriod">3000</property> <!-- 心跳检测周期（ms） -->
         <property name="heartbeatTimeout">300</property> <!-- 心跳超时时间 （ms）-->
-        <property name="queryTimeout">5</property> <!-- 查询超时时间（s） -->
+        <property name="queryTimeout">300</property> <!-- 查询超时时间（s） -->
     </system>
 </timo:server>

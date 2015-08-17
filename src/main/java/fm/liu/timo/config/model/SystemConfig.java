@@ -25,15 +25,9 @@ public class SystemConfig {
     private static final int    DEFAULT_PROCESSORS                 =
             Runtime.getRuntime().availableProcessors();
     private static final long   DEFAULT_IDLE_TIMEOUT               = 8 * 3600 * 1000L;
-    private static final long   DEFAULT_PROCESSOR_CHECK_PERIOD     = 15 * 1000L;
+    private static final long   DEFAULT_PROCESSOR_CHECK_PERIOD     = 10 * 1000L;
     private static final long   DEFAULT_DATANODE_IDLE_CHECK_PERIOD = 60 * 1000L;
-    private static final long   DEFAULT_CLUSTER_HEARTBEAT_PERIOD   = 5 * 1000L;
-    private static final long   DEFAULT_CLUSTER_HEARTBEAT_TIMEOUT  = 10 * 1000L;
-    private static final int    DEFAULT_CLUSTER_HEARTBEAT_RETRY    = 10;
-    private static final String DEFAULT_CLUSTER_HEARTBEAT_USER     = "_HEARTBEAT_USER_";
-    private static final String DEFAULT_CLUSTER_HEARTBEAT_PASS     = "_HEARTBEAT_PASS_";
     private static final int    DEFAULT_PARSER_COMMENT_VERSION     = 50148;
-    private static final int    DEFAULT_SQL_RECORD_COUNT           = 10;
     private static final int    DEFAULT_HEARTBEAT_PERIOD           = 1000;
     private static final int    DEFAULT_HEARTBEAT_TIMEOUT          = 300;
     private static final int    DEFAULT_QUERY_TIMEOUT              = 300;
@@ -50,14 +44,8 @@ public class SystemConfig {
     private long   idleTimeout;
     private long   processorCheckPeriod;
     private long   dataNodeIdleCheckPeriod;
-    private String clusterHeartbeatUser;
-    private String clusterHeartbeatPass;
-    private long   clusterHeartbeatPeriod;
-    private long   clusterHeartbeatTimeout;
-    private int    clusterHeartbeatRetry;
     private int    txIsolation;
     private int    parserCommentVersion;
-    private int    sqlRecordCount;
     private String url;
     private String username;
     private String password;
@@ -78,14 +66,8 @@ public class SystemConfig {
         this.idleTimeout = DEFAULT_IDLE_TIMEOUT;
         this.processorCheckPeriod = DEFAULT_PROCESSOR_CHECK_PERIOD;
         this.dataNodeIdleCheckPeriod = DEFAULT_DATANODE_IDLE_CHECK_PERIOD;
-        this.clusterHeartbeatUser = DEFAULT_CLUSTER_HEARTBEAT_USER;
-        this.clusterHeartbeatPass = DEFAULT_CLUSTER_HEARTBEAT_PASS;
-        this.clusterHeartbeatPeriod = DEFAULT_CLUSTER_HEARTBEAT_PERIOD;
-        this.clusterHeartbeatTimeout = DEFAULT_CLUSTER_HEARTBEAT_TIMEOUT;
-        this.clusterHeartbeatRetry = DEFAULT_CLUSTER_HEARTBEAT_RETRY;
         this.txIsolation = Isolations.REPEATED_READ;
         this.parserCommentVersion = DEFAULT_PARSER_COMMENT_VERSION;
-        this.sqlRecordCount = DEFAULT_SQL_RECORD_COUNT;
         this.heartbeatPeriod = DEFAULT_HEARTBEAT_PERIOD;
         this.heartbeatTimeout = DEFAULT_HEARTBEAT_TIMEOUT;
         this.setQueryTimeout(DEFAULT_QUERY_TIMEOUT);
@@ -187,46 +169,6 @@ public class SystemConfig {
         this.dataNodeIdleCheckPeriod = dataNodeIdleCheckPeriod;
     }
 
-    public String getClusterHeartbeatUser() {
-        return clusterHeartbeatUser;
-    }
-
-    public void setClusterHeartbeatUser(String clusterHeartbeatUser) {
-        this.clusterHeartbeatUser = clusterHeartbeatUser;
-    }
-
-    public String getClusterHeartbeatPass() {
-        return clusterHeartbeatPass;
-    }
-
-    public void setClusterHeartbeatPass(String clusterHeartbeatPass) {
-        this.clusterHeartbeatPass = clusterHeartbeatPass;
-    }
-
-    public long getClusterHeartbeatPeriod() {
-        return clusterHeartbeatPeriod;
-    }
-
-    public void setClusterHeartbeatPeriod(long clusterHeartbeatPeriod) {
-        this.clusterHeartbeatPeriod = clusterHeartbeatPeriod;
-    }
-
-    public long getClusterHeartbeatTimeout() {
-        return clusterHeartbeatTimeout;
-    }
-
-    public void setClusterHeartbeatTimeout(long clusterHeartbeatTimeout) {
-        this.clusterHeartbeatTimeout = clusterHeartbeatTimeout;
-    }
-
-    public int getClusterHeartbeatRetry() {
-        return clusterHeartbeatRetry;
-    }
-
-    public void setClusterHeartbeatRetry(int clusterHeartbeatRetry) {
-        this.clusterHeartbeatRetry = clusterHeartbeatRetry;
-    }
-
     public int getTxIsolation() {
         return txIsolation;
     }
@@ -241,14 +183,6 @@ public class SystemConfig {
 
     public void setParserCommentVersion(int parserCommentVersion) {
         this.parserCommentVersion = parserCommentVersion;
-    }
-
-    public int getSqlRecordCount() {
-        return sqlRecordCount;
-    }
-
-    public void setSqlRecordCount(int sqlRecordCount) {
-        this.sqlRecordCount = sqlRecordCount;
     }
 
     public String getUrl() {

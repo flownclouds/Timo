@@ -75,6 +75,10 @@ public abstract class AbstractConnection implements NIOConnection {
         }
     }
 
+    public String getStateDesc() {
+        return State.getStateDesc(state);
+    }
+
     public boolean isRunning() {
         return this.state == State.running;
     }

@@ -45,15 +45,11 @@ public class TimoPrivileges implements FrontendPrivileges {
     @Override
     public String getPassword(String user) {
         TimoConfig conf = TimoServer.getInstance().getConfig();
-        if (user != null && user.equals(conf.getSystem().getClusterHeartbeatUser())) {
-            return conf.getSystem().getClusterHeartbeatPass();
+        User uc = conf.getUsers().get(user);
+        if (uc != null) {
+            return uc.getPassword();
         } else {
-            User uc = conf.getUsers().get(user);
-            if (uc != null) {
-                return uc.getPassword();
-            } else {
-                return null;
-            }
+            return null;
         }
     }
 

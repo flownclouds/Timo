@@ -27,7 +27,7 @@ public class ShowBackend extends ShowHandler {
         heads.add(new Head("db", "database"));
         heads.add(new Head("port"));
         heads.add(new Head("up_time", "uptime(s)"));
-        //        heads.add(new Head("state", "连接状态"));
+        heads.add(new Head("state", "connection state"));
         heads.add(new Head("send_queue"));
     }
 
@@ -60,6 +60,7 @@ public class ShowBackend extends ShowHandler {
                     row[i++] = backend.getLocalPort();
                     row[i++] = (TimeUtil.currentTimeMillis() - backend.getVariables().getUpTime())
                             / 1000;
+                    row[i++] = backend.getStateDesc();
                     row[i++] = ((MySQLConnection) backend).getWriteQueue().size();
                     rows.add(row);
                 }
