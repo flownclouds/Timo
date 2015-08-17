@@ -24,7 +24,7 @@ limitations under the License.
     <fileSets>
         <fileSet>
             <directory>assembly/bin</directory>
-            <outputDirectory>bin</outputDirectory>
+            <outputDirectory>timo-server/bin</outputDirectory>
             <fileMode>0755</fileMode>
             <lineEnding>keep</lineEnding>
             <includes>
@@ -33,20 +33,19 @@ limitations under the License.
         </fileSet>
         <fileSet>
             <directory>assembly/conf</directory>
-            <outputDirectory>conf</outputDirectory>
+            <outputDirectory>timo-server/conf</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>assembly/logs</directory>
-            <outputDirectory>logs</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>assembly/lib</directory>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>timo-server/logs</outputDirectory>
+            <excludes>
+                <exclude>*</exclude>
+            </excludes>
         </fileSet>
     </fileSets>
     <dependencySets>
         <dependencySet>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>timo-server/lib</outputDirectory>
             <scope>runtime</scope>
         </dependencySet>
     </dependencySets>

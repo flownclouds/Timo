@@ -5,12 +5,6 @@ CURR_DIR=`pwd`
 cd `dirname "$0"`/..
 TIMO_HOME=`pwd`
 cd $CURR_DIR
-if [ -z "$TIMO_HOME" ] ; then
-    echo
-    echo "Error: TIMO_HOME environment variable is not defined correctly."
-    echo
-    exit 1
-fi
 #==============================================================================
 
 #==============================================================================
