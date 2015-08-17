@@ -104,7 +104,7 @@ public class Node {
         boolean success = false;
         ArrayList<Integer> handover = handovers.get(id);
         if (handover == null) {
-            throw new Exception("cann't switch source " + id + " without handover infomation");
+            throw new Exception("cann't handover source " + id + " without infomation");
         }
         lock.lock();
         try {

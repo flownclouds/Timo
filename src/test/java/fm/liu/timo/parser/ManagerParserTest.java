@@ -288,18 +288,18 @@ public class ManagerParserTest {
 
     @Test
     public void testSwitchPool() {
-        Assert.assertEquals(ManagerParse.SWITCH,
-                0xff & ManagerParse.parse("switch @@pool offer2$0-2"));
-        Assert.assertEquals(ManagerParse.SWITCH,
-                0xff & ManagerParse.parse("SWITCH @@POOL offer2$0-2"));
-        Assert.assertEquals(ManagerParse.SWITCH,
-                0xff & ManagerParse.parse("switch @@pool offer2$0-2 :2"));
+        Assert.assertEquals(ManagerParse.HANDOVER,
+                0xff & ManagerParse.parse("haNdoVer @@pool offer2$0-2"));
+        Assert.assertEquals(ManagerParse.HANDOVER,
+                0xff & ManagerParse.parse("HANDOVER @@POOL offer2$0-2"));
+        Assert.assertEquals(ManagerParse.HANDOVER,
+                0xff & ManagerParse.parse("handover @@pool offer2$0-2 :2"));
     }
 
     @Test
     public void testComment() {
-        Assert.assertEquals(ManagerParse.SWITCH,
-                0xff & ManagerParse.parse("/* abc */switch @@pool offer2$0-2"));
+        Assert.assertEquals(ManagerParse.HANDOVER,
+                0xff & ManagerParse.parse("/* abc */handover @@pool offer2$0-2"));
         Assert.assertEquals(ManagerParse.SHOW, 0xff & ManagerParse.parse(" /** 111**/Show @@help"));
         Assert.assertEquals(ManagerParse.SELECT,
                 0xff & ManagerParse.parse(" /***/ select * from t "));

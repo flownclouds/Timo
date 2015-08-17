@@ -20,7 +20,7 @@ import fm.liu.timo.util.SplitUtil;
 /**
  * @author xianmao.hexm 2011-5-12 下午04:11:25
  */
-public final class ManagerParseSwitch {
+public final class ManagerParseHandover {
 
     public static final int OTHER      = -1;
     public static final int DATASOURCE = 1;

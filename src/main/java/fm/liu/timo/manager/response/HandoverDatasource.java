@@ -16,7 +16,7 @@ package fm.liu.timo.manager.response;
 import java.util.Map;
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.manager.ManagerConnection;
-import fm.liu.timo.manager.parser.ManagerParseSwitch;
+import fm.liu.timo.manager.parser.ManagerParseHandover;
 import fm.liu.timo.net.backend.Node;
 import fm.liu.timo.net.mysql.OkPacket;
 import fm.liu.timo.parser.util.Pair;
@@ -26,10 +26,10 @@ import fm.liu.timo.parser.util.Pair;
  * 
  * @author xianmao.hexm 2011-5-31 下午01:19:36
  */
-public final class SwitchDatasource {
+public final class HandoverDatasource {
 
     public static void response(String stmt, ManagerConnection c) {
-        Pair<String[], Integer> pair = ManagerParseSwitch.getPair(stmt);
+        Pair<String[], Integer> pair = ManagerParseHandover.getPair(stmt);
         Map<Integer, Node> nodes = TimoServer.getInstance().getConfig().getNodes();
         for (String key : pair.getKey()) {
             Node dn = nodes.get(Integer.parseInt(key));
@@ -43,7 +43,7 @@ public final class SwitchDatasource {
                         packet.write(c);
                         return;
                     } else {
-                        ResponseUtil.error(c, "switch datasource failed");
+                        ResponseUtil.error(c, "handover datasource failed");
                         return;
                     }
                 } catch (Exception e) {

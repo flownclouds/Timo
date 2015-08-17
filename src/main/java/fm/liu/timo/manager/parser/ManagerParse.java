@@ -25,7 +25,7 @@ public final class ManagerParse {
     public static final int SELECT    = 1;
     public static final int SET       = 2;
     public static final int SHOW      = 3;
-    public static final int SWITCH    = 4;
+    public static final int HANDOVER  = 4;
     public static final int KILL_CONN = 5;
     public static final int STOP      = 6;
     public static final int RELOAD    = 7;
@@ -50,6 +50,9 @@ public final class ManagerParse {
                 case 'D':
                 case 'd':
                     return dCheck(stmt, i);
+                case 'H':
+                case 'h':
+                    return hCheck(stmt, i);
                 case 'S':
                 case 's':
                     return sCheck(stmt, i);
@@ -64,6 +67,26 @@ public final class ManagerParse {
                     return rCheck(stmt, i);
                 default:
                     return OTHER;
+            }
+        }
+        return OTHER;
+    }
+
+    private static int hCheck(String stmt, int offset) {
+        if (stmt.length() > offset + 8) {
+            char c1 = stmt.charAt(++offset);
+            char c2 = stmt.charAt(++offset);
+            char c3 = stmt.charAt(++offset);
+            char c4 = stmt.charAt(++offset);
+            char c5 = stmt.charAt(++offset);
+            char c6 = stmt.charAt(++offset);
+            char c7 = stmt.charAt(++offset);
+            char c8 = stmt.charAt(++offset);
+            if ((c1 == 'A' || c1 == 'a') && (c2 == 'N' || c2 == 'n') && (c3 == 'D' || c3 == 'd')
+                    && (c4 == 'O' || c4 == 'o') && (c5 == 'V' || c5 == 'v')
+                    && (c6 == 'E' || c6 == 'e') && (c7 == 'R' || c7 == 'r')
+                    && (c8 == ' ' || c8 == '\t' || c8 == '\r' || c8 == '\n')) {
+                return (offset << 8) | HANDOVER;
             }
         }
         return OTHER;
@@ -154,9 +177,6 @@ public final class ManagerParse {
                 case 'H':
                 case 'h':
                     return show(stmt, offset);
-                case 'W':
-                case 'w':
-                    return swh(stmt, offset);
                 case 'T':
                 case 't':
                     return stop(stmt, offset);
@@ -267,23 +287,6 @@ public final class ManagerParse {
             if ((c1 == 'O' || c1 == 'o') && (c2 == 'W' || c2 == 'w')
                     && (c3 == ' ' || c3 == '\t' || c3 == '\r' || c3 == '\n')) {
                 return (offset << 8) | SHOW;
-            }
-        }
-        return OTHER;
-    }
-
-    // SWITCH' '
-    private static int swh(String stmt, int offset) {
-        if (stmt.length() > offset + 5) {
-            char c1 = stmt.charAt(++offset);
-            char c2 = stmt.charAt(++offset);
-            char c3 = stmt.charAt(++offset);
-            char c4 = stmt.charAt(++offset);
-            char c5 = stmt.charAt(++offset);
-            if ((c1 == 'I' || c1 == 'i') && (c2 == 'T' || c2 == 't') && (c3 == 'C' || c3 == 'c')
-                    && (c4 == 'H' || c4 == 'h')
-                    && (c5 == ' ' || c5 == '\t' || c5 == '\r' || c5 == '\n')) {
-                return (offset << 8) | SWITCH;
             }
         }
         return OTHER;

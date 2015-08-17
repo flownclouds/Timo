@@ -30,7 +30,8 @@ public class ShowHelp extends ShowHandler {
         helps.put("rollback @@config", "rollback the config to the early time");
         helps.put("online", "turn timo-server to online");
         helps.put("offline", "turn timo-server to offline");
-        helps.put("switch @@datasource [datanode_id]", "switch datanode's datasource to the next");
+        helps.put("handover @@datasource [datanode_id]",
+                "handover datanode's datasource to the next");
     }
 
     @Override

@@ -20,7 +20,7 @@ import fm.liu.timo.manager.handler.RollbackHandler;
 import fm.liu.timo.manager.handler.SelectHandler;
 import fm.liu.timo.manager.handler.ShowHandler;
 import fm.liu.timo.manager.handler.StopHandler;
-import fm.liu.timo.manager.handler.SwitchHandler;
+import fm.liu.timo.manager.handler.HandoverHandler;
 import fm.liu.timo.manager.parser.ManagerParse;
 import fm.liu.timo.manager.response.KillConnection;
 import fm.liu.timo.manager.response.Offline;
@@ -60,8 +60,8 @@ public class ManagerQueryHandler implements FrontendQueryHandler {
             case ManagerParse.SHOW:
                 ShowHandler.handle(sql, c, rs >>> 8);
                 break;
-            case ManagerParse.SWITCH:
-                SwitchHandler.handler(sql, c, rs >>> 8);
+            case ManagerParse.HANDOVER:
+                HandoverHandler.handler(sql, c, rs >>> 8);
                 break;
             case ManagerParse.KILL_CONN:
                 KillConnection.response(sql, rs >>> 8, c);

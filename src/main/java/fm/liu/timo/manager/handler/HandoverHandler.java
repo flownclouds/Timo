@@ -13,21 +13,21 @@
  */
 package fm.liu.timo.manager.handler;
 
-import static fm.liu.timo.manager.parser.ManagerParseSwitch.DATASOURCE;
+import static fm.liu.timo.manager.parser.ManagerParseHandover.DATASOURCE;
 import fm.liu.timo.manager.ManagerConnection;
-import fm.liu.timo.manager.parser.ManagerParseSwitch;
+import fm.liu.timo.manager.parser.ManagerParseHandover;
 import fm.liu.timo.manager.response.ResponseUtil;
-import fm.liu.timo.manager.response.SwitchDatasource;
+import fm.liu.timo.manager.response.HandoverDatasource;
 
 /**
  * @author xianmao.hexm
  */
-public final class SwitchHandler {
+public final class HandoverHandler {
 
     public static void handler(String stmt, ManagerConnection c, int offset) {
-        switch (ManagerParseSwitch.parse(stmt, offset)) {
+        switch (ManagerParseHandover.parse(stmt, offset)) {
             case DATASOURCE:
-                SwitchDatasource.response(stmt, c);
+                HandoverDatasource.response(stmt, c);
                 break;
             default:
                 ResponseUtil.error(c);
