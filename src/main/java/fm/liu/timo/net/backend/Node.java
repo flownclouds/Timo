@@ -20,6 +20,7 @@ import fm.liu.timo.config.model.Datasource.Type;
 import fm.liu.timo.util.TimeUtil;
 
 /**
+ * 数据节点
  * @author Liu Huanting 2015年5月9日
  */
 public class Node {

@@ -38,6 +38,7 @@ import fm.liu.timo.route.function.RangeFunction;
 
 /**
  * @author Liu Huanting 2015年5月9日
+ * 配置库配置加载器
  */
 public class ServerConfigLoader {
     private final String                           url;
@@ -83,6 +84,9 @@ public class ServerConfigLoader {
         con.close();
     }
 
+    /**
+     * 加载拆分函数
+     */
     private void loadFunctions(Connection con) throws SQLException {
         String sql = "SELECT `id`,`type` FROM `functions`";
         ResultSet result = con.createStatement().executeQuery(sql);
@@ -144,6 +148,9 @@ public class ServerConfigLoader {
         }
     }
 
+    /**
+     * 加载拆分规则
+     */
     private void loadRules(Connection con) throws SQLException {
         String sql = "SELECT `id`,`column_name`,`function_id` FROM `rules`";
         ResultSet result = con.createStatement().executeQuery(sql);
@@ -160,6 +167,9 @@ public class ServerConfigLoader {
         }
     }
 
+    /**
+     * 加载数据源
+     */
     private void loadDatasources(Connection con) throws SQLException {
         String sql =
                 "SELECT `id`,`datanode_id`,`host`,`port`,`username`,`password`,`db`,`datasource_type`,`datasource_status`,`character_type`,`init_con`,`max_con`,`min_idle`,`max_idle`,`idle_check_period` FROM `datasources`";
@@ -186,6 +196,9 @@ public class ServerConfigLoader {
         }
     }
 
+    /**
+     * 加载数据节点
+     */
     private void loadDatanodes(Connection con) throws SQLException {
         String sql = "SELECT `id` FROM `datanodes`";
         ResultSet result = con.createStatement().executeQuery(sql);
@@ -203,6 +216,9 @@ public class ServerConfigLoader {
         }
     }
 
+    /**
+     * 加载节点切换信息
+     */
     private void loadHandovers(Connection con) throws SQLException {
         String sql = "SELECT DISTINCT `datasource_id` FROM `handovers`";
         ResultSet result = con.createStatement().executeQuery(sql);
@@ -219,6 +235,9 @@ public class ServerConfigLoader {
         }
     }
 
+    /**
+     * 加载逻辑数据库
+     */
     private void loadDatabase(Connection con) throws SQLException {
         String sql = "SELECT `id`,`name` FROM `dbs`";
         ResultSet result = con.createStatement().executeQuery(sql);
@@ -230,6 +249,9 @@ public class ServerConfigLoader {
         }
     }
 
+    /**
+     * 加载逻辑表
+     */
     private Map<String, Table> loadTables(int id, Connection con) throws SQLException {
         String sql = "SELECT `name`,`type`,`datanodes`,`rule_id` FROM `tables` WHERE db_id=" + id;
         Map<String, Table> tables = new HashMap<String, Table>();
@@ -251,6 +273,9 @@ public class ServerConfigLoader {
         return tables;
     }
 
+    /**
+     * 加载用户信息
+     */
     private void loadUsers(Connection con) throws SQLException {
         String sql = "SELECT `username`,`password`,`dbs`,`hosts` FROM `users`";
         ResultSet result = con.createStatement().executeQuery(sql);

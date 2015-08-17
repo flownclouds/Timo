@@ -69,14 +69,11 @@ public class TimoServer {
     }
 
     public void startup() throws IOException {
-        // server startup
         Logger.info("===============================================");
         Logger.info("{} is ready to startup ...", NAME);
+        // 初始化配置
         SystemConfig system = config.getSystem();
-        timer.schedule(updateTime(), 0L, TIME_UPDATE_PERIOD);
-        Variables variables = new Variables();
-        variables.setCharset(system.getCharset());
-        // startup processors
+        // 启动线程池
         Logger.info("Startup processors ...");
         int handler = system.getProcessorHandler();
         int executor = system.getProcessorExecutor();
@@ -87,12 +84,11 @@ public class TimoServer {
             processors[i].startup();
         }
 
-        // startup connector
         Logger.info("Startup connector ...");
         connector = new NIOConnector(NAME + "Connector");
         connector.start();
 
-        // init dataNodes
+        // 初始化数据节点
         Map<Integer, Node> nodes = config.getNodes();
         Logger.info("Initialize dataNodes ...");
         for (Node node : nodes.values()) {
@@ -102,22 +98,24 @@ public class TimoServer {
             }
         }
 
+        // 初始化定时任务
+        timer.schedule(updateTime(), 0L, TIME_UPDATE_PERIOD);
         timer.schedule(processorCheck(), 0L, system.getProcessorCheckPeriod());
         timer.schedule(dataNodeIdleCheck(), 0L, system.getDataNodeIdleCheckPeriod());
         timer.schedule(dataNodeHeartbeat(), 0L, system.getHeartbeatTimeout());
 
-        // startup manager
+        // 初始化管理端和服务端
+        Variables variables = new Variables();
+        variables.setCharset(system.getCharset());
         ManagerConnectionFactory mf = new ManagerConnectionFactory(variables);
         manager = new NIOAcceptor(NAME + "Manager", system.getManagerPort(), mf);
         manager.start();
         Logger.info("{} is started and listening on {}", manager.getName(), manager.getPort());
-
-        // startup server
         ServerConnectionFactory sf = new ServerConnectionFactory(variables);
         server = new NIOAcceptor(NAME + "Server", system.getServerPort(), sf);
         server.start();
 
-        // server started
+        // 启动完成
         Logger.info("{} is started and listening on {}", server.getName(), server.getPort());
         Logger.info("===============================================");
     }
@@ -161,7 +159,6 @@ public class TimoServer {
     }
 
     // 处理器定时检查任务
-
     private TimerTask processorCheck() {
         return new TimerTask() {
             @Override

@@ -26,6 +26,7 @@ import fm.liu.timo.route.visitor.RouteVisitor;
 import fm.liu.timo.server.parser.ServerParse;
 
 /**
+ * 路由计算器
  * @author Liu Huanting 2015年5月10日
  */
 public class Router {

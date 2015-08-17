@@ -78,6 +78,9 @@ public class TimoConfig {
     private volatile Map<Integer, Node>       _nodes;
     private volatile Map<Integer, Datasource> _datasources;
 
+    /**
+     * reload @@config
+     */
     public boolean reload() {
         boolean success = false;
         _system = this.system;
@@ -121,6 +124,9 @@ public class TimoConfig {
         return success;
     }
 
+    /**
+     * rollback @@config
+     */
     public boolean rollback() {
         if (lastReloadTime == 0) {
             return false;

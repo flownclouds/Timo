@@ -18,6 +18,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Liu Huanting 2015年5月9日
+ * 逻辑数据表配置信息
  */
 public class Table {
     private final int           databaseID;

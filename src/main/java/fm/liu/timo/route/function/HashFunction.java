@@ -21,6 +21,10 @@ import fm.liu.timo.util.StringUtil;
 
 /**
  * @author Liu Huanting 2015年5月10日
+ * <pre>
+ * 哈希后对1024取余
+ * 根据范围进行路由
+ * </pre>
  */
 public class HashFunction implements Function {
     private final static int size = 1024;

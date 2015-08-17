@@ -17,6 +17,7 @@ import java.util.Set;
 
 /**
  * @author Liu Huanting 2015年5月9日
+ * 用户配置信息
  */
 public class User {
     private final String      username;

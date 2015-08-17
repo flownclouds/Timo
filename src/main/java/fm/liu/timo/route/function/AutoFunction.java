@@ -21,6 +21,10 @@ import fm.liu.timo.util.StringUtil;
 
 /**
  * @author Liu Huanting 2015年5月10日
+ * <pre>
+ * 自动哈希函数
+ * 根据节点数取余后路由
+ * </pre>
  */
 public class AutoFunction implements Function {
     private int size;

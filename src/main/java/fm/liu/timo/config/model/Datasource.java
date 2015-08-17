@@ -15,6 +15,7 @@ package fm.liu.timo.config.model;
 
 /**
  * @author Liu Huanting 2015年5月9日
+ * 物理数据源配置信息
  */
 public class Datasource {
     private final int id;

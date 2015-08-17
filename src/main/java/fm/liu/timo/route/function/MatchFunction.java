@@ -21,6 +21,10 @@ import fm.liu.timo.config.model.Function;
 
 /**
  * @author Liu Huanting 2015年5月10日
+ * <pre>
+ * 匹配路由
+ * 未匹配到的值路由到默认节点
+ * </pre>
  */
 public class MatchFunction implements Function {
     private final Map<Object, Integer> mapping;

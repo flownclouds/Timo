@@ -17,6 +17,7 @@ import java.util.List;
 
 /**
  * @author Liu Huanting 2015年5月9日
+ * 数据节点配置信息
  */
 public class Datanode {
     private final int           id;

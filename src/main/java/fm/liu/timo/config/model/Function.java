@@ -18,6 +18,7 @@ import java.util.Set;
 
 /**
  * @author Liu Huanting 2015年5月9日
+ * 拆分函数接口
  */
 public interface Function {
     public Set<Integer> calcute(Collection<Object> values);

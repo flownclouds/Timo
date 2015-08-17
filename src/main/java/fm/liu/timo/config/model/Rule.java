@@ -15,6 +15,7 @@ package fm.liu.timo.config.model;
 
 /**
  * @author Liu Huanting 2015年5月9日
+ * 拆分规则信息
  */
 public class Rule {
     private final String   column;

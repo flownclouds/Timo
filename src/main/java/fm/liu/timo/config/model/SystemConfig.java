@@ -17,6 +17,7 @@ import fm.liu.timo.config.Isolations;
 
 /**
  * @author Liu Huanting 2015年5月9日
+ * 系统级参数配置信息
  */
 public class SystemConfig {
     private static final int    DEFAULT_PORT                       = 8066;

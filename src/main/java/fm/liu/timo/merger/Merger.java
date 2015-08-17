@@ -24,6 +24,8 @@ import fm.liu.timo.route.Outlets;
 
 /**
  * @author Liu Huanting 2015年6月4日
+ * <p>
+ * 多节点结果集合并器
  */
 public class Merger {
     private Grouper                   grouper;

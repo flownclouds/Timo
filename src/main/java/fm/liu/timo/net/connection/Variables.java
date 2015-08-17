@@ -18,6 +18,7 @@ import fm.liu.timo.mysql.CharsetUtil;
 import fm.liu.timo.util.TimeUtil;
 
 /**
+ * 连接变量
  * @author Liu Huanting 2015年5月9日
  */
 public class Variables implements Cloneable {

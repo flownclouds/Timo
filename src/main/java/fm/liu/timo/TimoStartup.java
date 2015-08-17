@@ -25,9 +25,7 @@ public final class TimoStartup {
 
     public static void main(String[] args) {
         try {
-            // init
             TimoServer server = TimoServer.getInstance();
-            // startup
             server.startup();
         } catch (Throwable e) {
             SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);

@@ -20,6 +20,10 @@ import fm.liu.timo.config.model.Function;
 
 /**
  * @author Liu Huanting 2015年5月10日
+ * <pre>
+ * 范围路由
+ * 范围外的值路由到默认节点
+ * </pre>
  */
 public class RangeFunction implements Function {
 

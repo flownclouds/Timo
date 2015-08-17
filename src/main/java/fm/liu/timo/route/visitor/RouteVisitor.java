@@ -42,6 +42,7 @@ import fm.liu.timo.route.Info;
 
 /**
  * @author Liu Huanting 2015年5月10日
+ * 语法树解析器
  */
 public class RouteVisitor extends Visitor {
     private final Database       database;
@@ -91,6 +92,9 @@ public class RouteVisitor extends Visitor {
         this.table = database.getTables().get(table);
     }
 
+    /**
+     * 记录路由字段的值
+     */
     private void recordValue(Identifier column, Object value, Expression node) {
         if (value != null && value != Expression.UNEVALUATABLE) {
             if (check(column.getIdTextUpUnescape())) {

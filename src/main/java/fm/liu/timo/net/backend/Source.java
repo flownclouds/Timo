@@ -33,6 +33,7 @@ import fm.liu.timo.server.session.handler.VirtualHandler;
 import fm.liu.timo.util.TimeUtil;
 
 /**
+ * 数据源
  * @author Liu Huanting 2015年5月9日
  */
 public class Source {

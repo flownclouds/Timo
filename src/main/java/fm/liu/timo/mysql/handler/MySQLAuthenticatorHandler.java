@@ -25,6 +25,7 @@ import fm.liu.timo.net.mysql.OkPacket;
 import fm.liu.timo.net.mysql.Reply323Packet;
 
 /**
+ * MySQL连接认证
  * @author Liu Huanting 2015年5月9日
  */
 public class MySQLAuthenticatorHandler implements NIOHandler {
