@@ -18,6 +18,8 @@ import fm.liu.timo.server.parser.ServerParse;
 import fm.liu.timo.server.parser.ServerParseShow;
 import fm.liu.timo.server.response.ShowDataSources;
 import fm.liu.timo.server.response.ShowDatabases;
+import fm.liu.timo.server.response.ShowFullTables;
+import fm.liu.timo.server.response.ShowTables;
 import fm.liu.timo.server.response.ShowTimoStatus;
 
 /**
@@ -35,6 +37,12 @@ public final class ShowHandler {
                 break;
             case ServerParseShow.TIMO_STATUS:
                 ShowTimoStatus.response(c);
+                break;
+            case ServerParseShow.TABLES:
+                ShowTables.response(c);
+                break;
+            case ServerParseShow.FULL_TABLES:
+                ShowFullTables.response(c);
                 break;
             default:
                 c.execute(stmt, ServerParse.SHOW);

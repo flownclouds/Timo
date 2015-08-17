@@ -25,6 +25,8 @@ public final class ServerParseShow {
     public static final int DATASOURCES  = 2;
     public static final int TIMO_STATUS  = 3;
     public static final int TIMO_CLUSTER = 4;
+    public static final int TABLES       = 5;
+    public static final int FULL_TABLES  = 6;
 
     public static int parse(String stmt, int offset) {
         int i = offset;
@@ -36,9 +38,12 @@ public final class ServerParseShow {
                 case '#':
                     i = ParseUtil.comment(stmt, i);
                     continue;
+                case 'F':
+                case 'f':
+                    return fullCheck(stmt, i);
                 case 'T':
                 case 't':
-                    return timoCheck(stmt, i);
+                    return tCheck(stmt, i);
                 case 'D':
                 case 'd':
                     return dataCheck(stmt, i);
@@ -49,15 +54,69 @@ public final class ServerParseShow {
         return OTHER;
     }
 
-    // SHOW TIMO_
-    static int timoCheck(String stmt, int offset) {
-        if (stmt.length() > offset + "imo_?".length()) {
+    // SHOW FULL TABLES
+    private static int fullCheck(String stmt, int offset) {
+        if (stmt.length() > offset + "ull tables".length()) {
             char c1 = stmt.charAt(++offset);
             char c2 = stmt.charAt(++offset);
             char c3 = stmt.charAt(++offset);
             char c4 = stmt.charAt(++offset);
-            if ((c1 == 'I' || c1 == 'i') && (c2 == 'M' || c2 == 'm') && (c3 == 'O' || c3 == 'o')
-                    && (c4 == '_')) {
+            char c5 = stmt.charAt(++offset);
+            char c6 = stmt.charAt(++offset);
+            char c7 = stmt.charAt(++offset);
+            char c8 = stmt.charAt(++offset);
+            char c9 = stmt.charAt(++offset);
+            char c10 = stmt.charAt(++offset);
+            if ((c1 == 'U' || c1 == 'u') && (c2 == 'L' || c2 == 'l') && (c3 == 'L' || c3 == 'l')
+                    && (c4 == ' ') && (c5 == 'T' || c5 == 't') && (c6 == 'A' || c6 == 'a')
+                    && (c7 == 'B' || c7 == 'b') && (c8 == 'L' || c8 == 'l')
+                    && (c9 == 'E' || c9 == 'e') && (c10 == 'S' || c10 == 's')
+                    && (stmt.length() == ++offset || ParseUtil.isEOF(stmt.charAt(offset)))) {
+                return FULL_TABLES;
+            }
+        }
+        return OTHER;
+    }
+
+    private static int tCheck(String stmt, int offset) {
+        if (stmt.length() > offset + 1) {
+            switch (stmt.charAt(++offset)) {
+                case 'A':
+                case 'a':
+                    return blesCheck(stmt, offset);
+                case 'I':
+                case 'i':
+                    return moCheck(stmt, offset);
+                default:
+                    return OTHER;
+            }
+        }
+        return OTHER;
+    }
+
+    // SHOW TABLES
+    private static int blesCheck(String stmt, int offset) {
+        if (stmt.length() > offset + "bles".length()) {
+            char c1 = stmt.charAt(++offset);
+            char c2 = stmt.charAt(++offset);
+            char c3 = stmt.charAt(++offset);
+            char c4 = stmt.charAt(++offset);
+            if ((c1 == 'B' || c1 == 'b') && (c2 == 'L' || c2 == 'l') && (c3 == 'E' || c3 == 'e')
+                    && (c4 == 'S' || c4 == 's')
+                    && (stmt.length() == ++offset || ParseUtil.isEOF(stmt.charAt(offset)))) {
+                return TABLES;
+            }
+        }
+        return OTHER;
+    }
+
+    // SHOW TIMO_
+    static int moCheck(String stmt, int offset) {
+        if (stmt.length() > offset + "mo_?".length()) {
+            char c1 = stmt.charAt(++offset);
+            char c2 = stmt.charAt(++offset);
+            char c3 = stmt.charAt(++offset);
+            if ((c1 == 'M' || c1 == 'm') && (c2 == 'O' || c2 == 'o') && (c3 == '_')) {
                 switch (stmt.charAt(++offset)) {
                     case 'S':
                     case 's':
