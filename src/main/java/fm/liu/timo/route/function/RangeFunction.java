@@ -51,4 +51,15 @@ public class RangeFunction implements Function {
         }
         return result;
     }
+
+    @Override
+    public int calcute(Object value) {
+        long val = Long.parseLong(String.valueOf(value));
+        for (Range range : ranges) {
+            if (range.getMin() <= val && val <= range.getMax()) {
+                return range.getNode();
+            }
+        }
+        return defaultNode;
+    }
 }

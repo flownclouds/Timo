@@ -28,4 +28,9 @@ public class DateFunction implements Function {
         return null;
     }
 
+    @Override
+    public int calcute(Object value) {
+        return 0;
+    }
+
 }

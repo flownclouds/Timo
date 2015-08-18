@@ -22,4 +22,6 @@ import java.util.Set;
  */
 public interface Function {
     public Set<Integer> calcute(Collection<Object> values);
+
+    public int calcute(Object value);
 }

@@ -14,12 +14,18 @@
 package fm.liu.timo.route;
 
 import java.sql.SQLSyntaxErrorException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import fm.liu.timo.config.model.Database;
 import fm.liu.timo.config.model.Function;
 import fm.liu.timo.config.model.Table;
 import fm.liu.timo.config.model.Table.TableType;
+import fm.liu.timo.parser.ast.expression.primary.RowExpression;
 import fm.liu.timo.parser.ast.stmt.SQLStatement;
+import fm.liu.timo.parser.ast.stmt.dml.DMLInsertReplaceStatement;
 import fm.liu.timo.parser.recognizer.SQLParserDelegate;
 import fm.liu.timo.parser.visitor.OutputVisitor;
 import fm.liu.timo.route.visitor.RouteVisitor;
@@ -42,7 +48,7 @@ public class Router {
             outlets.add(out);
             return outlets;
         }
-        Set<Object> values = visitor.getValues();
+        ArrayList<Object> values = visitor.getValues();
         int info = visitor.getInfo();
         outlets.setInfo(info);
         switch (type) {
@@ -61,8 +67,54 @@ public class Router {
                 if ((info & Info.HAS_LIMIT) == Info.HAS_LIMIT) {
                     outlets.setLimit(visitor.getLimitSize(), visitor.getLimitOffset());
                 }
+                break;
+            case ServerParse.INSERT:
+            case ServerParse.REPLACE:
+                if (TableType.SPLIT.equals(table.getType())) {
+                    return routeBatch(table, (DMLInsertReplaceStatement) stmt,
+                            visitor.getBatchIndex(), type, outlets, values);
+                }
+                break;
         }
         return route(stmt, outlets, table, values, sql);
+    }
+
+    /**
+     * <pre>
+     * turn
+     *     INSERT/REPLACE INTO TABLE_A(COL_1,COL2,...) VALUES (VAL_11,VAL12,...),(VAL_21,VAL22,...),(VAL_31,VAL32,...)...;
+     * into something like
+     *     INSERT/REPLACE INTO TABLE_A(COL_1,COL2,...) VALUES (VAL_11,VAL12,...),(VAL_31,VAL_32,...)...;
+     *     INSERT/REPLACE INTO TABLE_A(COL_1,COL2,...) VALUES (VAL_21,VAL22,...),(VAL_41,VAL_42,...)...;
+     * </pre>
+     */
+    private static Outlets routeBatch(Table table, DMLInsertReplaceStatement stmt, int index,
+            int type, Outlets outlets, ArrayList<Object> values) {
+        List<RowExpression> rows = stmt.getRowList();
+        HashMap<Integer, List<RowExpression>> results = new HashMap<>();
+        if (values.isEmpty()) {
+            throw new IllegalArgumentException("can't route without the value of split column");
+        } else {
+            Function function = table.getRule().getFunction();
+            int i = 0;
+            for (Object value : values) {
+                int node = function.calcute(value);
+                if (results.containsKey(node)) {
+                    results.get(node).add(rows.get(i++));
+                } else {
+                    List<RowExpression> exps = new ArrayList<>();
+                    exps.add(rows.get(i++));
+                    results.put(node, exps);
+                }
+            }
+            for (Entry<Integer, List<RowExpression>> entry : results.entrySet()) {
+                stmt.setReplaceRowList(entry.getValue());
+                Outlet out = new Outlet(entry.getKey(), updateSQL(stmt));
+                outlets.add(out);
+                stmt.clearReplaceRowList();
+            }
+        }
+        return outlets;
     }
 
     private static String updateSQL(SQLStatement stmt) {
@@ -72,7 +124,7 @@ public class Router {
     }
 
     private static Outlets route(SQLStatement stmt, Outlets outlets, Table table,
-            Set<Object> values, String sql) {
+            ArrayList<Object> values, String sql) {
         if (values.isEmpty()) {
             for (Integer id : table.getNodes()) {
                 Outlet out = new Outlet(id, sql);

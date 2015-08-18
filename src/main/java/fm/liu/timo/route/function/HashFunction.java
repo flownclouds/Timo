@@ -48,4 +48,15 @@ public class HashFunction implements Function {
         return result;
     }
 
+    @Override
+    public int calcute(Object value) {
+        long val = StringUtil.hash(String.valueOf(value)) % size;
+        for (Range range : ranges) {
+            if (range.getMin() <= val && val <= range.getMax()) {
+                return range.getNode();
+            }
+        }
+        return 0;
+    }
+
 }

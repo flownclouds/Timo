@@ -13,6 +13,7 @@
  */
 package fm.liu.timo.route.visitor;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,6 +27,7 @@ import fm.liu.timo.merger.MergeType;
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.comparison.ComparisionEqualsExpression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
+import fm.liu.timo.parser.ast.expression.primary.RowExpression;
 import fm.liu.timo.parser.ast.expression.primary.function.groupby.Count;
 import fm.liu.timo.parser.ast.expression.primary.function.groupby.Max;
 import fm.liu.timo.parser.ast.expression.primary.function.groupby.Min;
@@ -36,6 +38,9 @@ import fm.liu.timo.parser.ast.fragment.OrderBy;
 import fm.liu.timo.parser.ast.fragment.SortOrder;
 import fm.liu.timo.parser.ast.fragment.tableref.TableRefFactor;
 import fm.liu.timo.parser.ast.stmt.ddl.DDLCreateTableStatement;
+import fm.liu.timo.parser.ast.stmt.dml.DMLInsertReplaceStatement;
+import fm.liu.timo.parser.ast.stmt.dml.DMLInsertStatement;
+import fm.liu.timo.parser.ast.stmt.dml.DMLReplaceStatement;
 import fm.liu.timo.parser.util.Pair;
 import fm.liu.timo.parser.visitor.Visitor;
 import fm.liu.timo.route.Info;
@@ -46,24 +51,25 @@ import fm.liu.timo.route.Info;
  */
 public class RouteVisitor extends Visitor {
     private final Database       database;
-    private Set<Object>          values;
+    private ArrayList<Object>    values;
     private Table                table;
     private int                  info;
     private Set<String>          groupBy;
     private Map<String, Integer> orderBy;
     private int                  limitSize   = -1;
     private int                  limitOffset = 0;
+    private int                  batchIndex  = -1;
 
     public RouteVisitor(Database database) {
         this.database = database;
-        this.values = new HashSet<Object>();
+        this.values = new ArrayList<Object>();
     }
 
     public Table getTable() {
         return table;
     }
 
-    public Set<Object> getValues() {
+    public ArrayList<Object> getValues() {
         return values;
     }
 
@@ -87,6 +93,10 @@ public class RouteVisitor extends Visitor {
         return limitOffset;
     }
 
+    public int getBatchIndex() {
+        return batchIndex;
+    }
+
     private void recordTable(Identifier node) {
         String table = node.getIdTextUpUnescape();
         this.table = database.getTables().get(table);
@@ -95,7 +105,7 @@ public class RouteVisitor extends Visitor {
     /**
      * 记录路由字段的值
      */
-    private void recordValue(Identifier column, Object value, Expression node) {
+    private void recordValue(Identifier column, Object value) {
         if (value != null && value != Expression.UNEVALUATABLE) {
             if (check(column.getIdTextUpUnescape())) {
                 values.add(value);
@@ -122,15 +132,49 @@ public class RouteVisitor extends Visitor {
     }
 
     @Override
+    public void visit(DMLInsertStatement node) {
+        insertReplace(node);
+    }
+
+    @Override
+    public void visit(DMLReplaceStatement node) {
+        insertReplace(node);
+    }
+
+    public void insertReplace(DMLInsertReplaceStatement node) {
+        Identifier table = node.getTable();
+        List<Identifier> columns = node.getColumnNameList();
+        List<RowExpression> rows = node.getRowList();
+        recordTable(table);
+        visitChild(columns);
+        int i = 0;
+        for (Identifier column : columns) {
+            if (check(column.getIdTextUpUnescape())) {
+                batchIndex = i;
+                break;
+            }
+            i++;
+        }
+        for (RowExpression row : rows) {
+            row.accept(this);
+            if (batchIndex != -1) {
+                recordValue(columns.get(batchIndex),
+                        row.getRowExprList().get(batchIndex).evaluation(Collections.emptyMap()));
+            }
+        }
+        visitChild(node.getSelect());
+    }
+
+    @Override
     public void visit(ComparisionEqualsExpression node) {
         Expression left = node.getLeftOprand();
         Expression right = node.getRightOprand();
         visitChild(left);
         visitChild(right);
         if (left instanceof Identifier) {
-            recordValue((Identifier) left, right.evaluation(Collections.emptyMap()), node);
+            recordValue((Identifier) left, right.evaluation(Collections.emptyMap()));
         } else if (right instanceof Identifier) {
-            recordValue((Identifier) right, left.evaluation(Collections.emptyMap()), node);
+            recordValue((Identifier) right, left.evaluation(Collections.emptyMap()));
         }
     }
 

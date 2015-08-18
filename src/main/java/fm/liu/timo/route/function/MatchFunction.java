@@ -48,4 +48,13 @@ public class MatchFunction implements Function {
         return result;
     }
 
+    @Override
+    public int calcute(Object value) {
+        if (mapping.containsKey(value)) {
+            return mapping.get(value);
+        } else {
+            return defaultNode;
+        }
+    }
+
 }

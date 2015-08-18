@@ -47,11 +47,6 @@ limitations under the License.
             <version>5.1.27</version>
         </dependency>
         <dependency>
-            <artifactId>timo-parser</artifactId>
-            <groupId>com.github.liuhuanting</groupId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
             <artifactId>tinylog</artifactId>
             <groupId>com.github.liuhuanting</groupId>
             <version>2.0.0</version>
@@ -84,6 +79,26 @@ limitations under the License.
                     <target>1.8</target>
                     <encoding>${app.encoding}</encoding>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/java</source>
+                                <source>src/main/parser</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -42,4 +42,9 @@ public class AutoFunction implements Function {
         return result;
     }
 
+    @Override
+    public int calcute(Object value) {
+        return (int) (StringUtil.hash(String.valueOf(value)) % size + 1);
+    }
+
 }

@@ -36,6 +36,10 @@ public class Outlets {
         outlets.add(out);
     }
 
+    public void set(Set<Outlet> outlets) {
+        this.outlets = outlets;
+    }
+
     public Set<Outlet> getResult() {
         return outlets;
     }
