@@ -38,7 +38,7 @@ public class Datasource {
         MASTER, BACKUP, SLAVE
     }
     public enum Status {
-        NORMAL, ERROR
+        NORMAL, BANNED
     }
 
     public Datasource(int id, int datanodeID, String host, int port, String username,
@@ -66,7 +66,7 @@ public class Datasource {
                 this.status = Status.NORMAL;
                 break;
             default:
-                this.status = Status.ERROR;
+                this.status = Status.BANNED;
         }
         this.charset = charset;
         this.initCon = initCon;
@@ -137,7 +137,7 @@ public class Datasource {
     }
 
     public void ban() {
-        this.status = Status.ERROR;
+        this.status = Status.BANNED;
     }
 
     @Override

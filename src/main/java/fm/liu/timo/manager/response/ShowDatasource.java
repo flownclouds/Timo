@@ -22,6 +22,7 @@ public class ShowDatasource extends ShowHandler {
         heads.add(new Head("type"));
         heads.add(new Head("idle_size", "active connection size of this source"));
         heads.add(new Head("total_size", "total connection size of this source"));
+        heads.add(new Head("status"));
     }
 
     @Override
@@ -49,6 +50,7 @@ public class ShowDatasource extends ShowHandler {
                 row[i++] = config.getType();
                 row[i++] = source.getIdleSize();
                 row[i++] = source.getSize();
+                row[i++] = source.getConfig().getStatus();
                 rows.add(row);
             }
         }
