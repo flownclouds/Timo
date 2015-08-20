@@ -14,10 +14,11 @@
 package fm.liu.timo.net.backend;
 
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 import org.pmw.tinylog.Logger;
-import fm.liu.timo.config.model.Datasource.Type;
+import fm.liu.timo.config.model.Datanode.Strategy;
+import fm.liu.timo.server.session.handler.ResultHandler;
 import fm.liu.timo.util.TimeUtil;
 
 /**
@@ -25,43 +26,37 @@ import fm.liu.timo.util.TimeUtil;
  * @author Liu Huanting 2015年5月9日
  */
 public class Node {
-    private final int                  id;
-    private final Map<Integer, Source> sources;
-    private final ReentrantLock        lock = new ReentrantLock();
-    private volatile Source            source;
-    private volatile long              heartbeatRecoveryTime;
+    private final int           id;
+    private final Strategy      strategy;
+    private final List<Source>  sources;
+    private final ReentrantLock lock = new ReentrantLock();
+    private volatile Source     source;
+    private volatile long       heartbeatRecoveryTime;
 
-    public Node(int id, Map<Integer, Source> sources) {
+    public Node(int id, Strategy strategy, List<Source> sources) {
         this.id = id;
+        this.strategy = strategy;
         this.sources = sources;
     }
 
     public boolean init() {
         boolean chosen = false;
-        for (Source source : sources.values()) {
+        for (Source source : sources) {
             if (!source.isAvailable()) {
                 continue;
             }
             if (!source.init()) {
                 return false;
             }
-            Type type = source.getConfig().getType();
-            if (!chosen && Type.MASTER.equals(type)) {
-                this.source = source;
-                chosen = true;
-            } else if (!chosen && Type.BACKUP.equals(type)) {
-                this.source = source;
-                chosen = true;
-            } else if (!chosen && Type.SLAVE.equals(type)) {
-                this.source = source;
-                chosen = true;
-            }
+            this.source = source;
+            chosen = true;
+            break;
         }
         return chosen;
     }
 
     public void idleCheck() {
-        for (Source source : sources.values()) {
+        for (Source source : sources) {
             if (source != null && source.isAvailable()) {
                 source.idleCheck();
             }
@@ -70,14 +65,14 @@ public class Node {
 
     public void heartbeat() {
         if (TimeUtil.currentTimeMillis() < heartbeatRecoveryTime) {
-            for (Source source : sources.values()) {
+            for (Source source : sources) {
                 if (source != null && source.isAvailable()) {
                     source.getHeartbeat().pause();
                 }
             }
             return;
         }
-        for (Source source : sources.values()) {
+        for (Source source : sources) {
             if (source != null && source.isAvailable()) {
                 source.heartbeat(this);
             }
@@ -92,7 +87,7 @@ public class Node {
         return source;
     }
 
-    public Map<Integer, Source> getSources() {
+    public List<Source> getSources() {
         return sources;
     }
 
@@ -129,9 +124,13 @@ public class Node {
     }
 
     public void clear() {
-        for (Source source : sources.values()) {
+        for (Source source : sources) {
             source.clear();
         }
+    }
+
+    public void query(String sql, ResultHandler handler, int type) {
+        this.source.query(sql, handler);
     }
 
 }

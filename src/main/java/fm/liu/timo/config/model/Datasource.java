@@ -35,7 +35,7 @@ public class Datasource {
     private long      idleCheckPeriod;
 
     public enum Type {
-        MASTER, BACKUP, SLAVE
+        RW, R
     }
     public enum Status {
         NORMAL, BANNED
@@ -52,14 +52,11 @@ public class Datasource {
         this.password = password;
         this.db = db;
         switch (type) {
-            case 1:
-                this.type = Type.MASTER;
-                break;
             case 2:
-                this.type = Type.BACKUP;
+                this.type = Type.R;
                 break;
             default:
-                this.type = Type.SLAVE;
+                this.type = Type.RW;
         }
         switch (status) {
             case 1:

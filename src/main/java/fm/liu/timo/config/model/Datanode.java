@@ -21,10 +21,33 @@ import java.util.List;
  */
 public class Datanode {
     private final int           id;
+    private final Strategy      strategy;
     private final List<Integer> datasources;
 
-    public Datanode(int id, List<Integer> datasources) {
+    /**
+     * <pre>
+     * MRW--------仅主节点参与读写(默认)
+     * MRW_SR-----主节点参与读写，从节点只读
+     * MW_SR------主节点只写，从节点只读
+     * </pre>
+     * @author liuhuanting
+     */
+    public enum Strategy {
+        MRW, MRW_SR, MW_SR
+    }
+
+    public Datanode(int id, int strategy, List<Integer> datasources) {
         this.id = id;
+        switch (strategy) {
+            case 1:
+                this.strategy = Strategy.MRW_SR;
+                break;
+            case 2:
+                this.strategy = Strategy.MW_SR;
+                break;
+            default:
+                this.strategy = Strategy.MRW;
+        }
         this.datasources = datasources;
     }
 
@@ -34,5 +57,9 @@ public class Datanode {
 
     public List<Integer> getDatasources() {
         return datasources;
+    }
+
+    public Strategy getStrategy() {
+        return strategy;
     }
 }

@@ -44,7 +44,7 @@ public class ShowHeartbeat extends ShowHandler {
         ArrayList<Object[]> rows = new ArrayList<>();
         Map<Integer, Node> nodes = TimoServer.getInstance().getConfig().getNodes();
         for (Node node : nodes.values()) {
-            for (Source source : node.getSources().values()) {
+            for (Source source : node.getSources()) {
                 Datasource config = source.getConfig();
                 Heartbeat heartbeat = source.getHeartbeat();
                 Object[] row = new Object[heads.size()];

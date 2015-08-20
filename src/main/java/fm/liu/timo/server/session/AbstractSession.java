@@ -65,7 +65,7 @@ public class AbstractSession implements Session {
         TimoConfig config = TimoServer.getInstance().getConfig();
         for (Outlet out : outs.getResult()) {
             Node node = config.getNodes().get(out.getID());
-            node.getSource().query(out.getSql(), handler);
+            node.query(out.getSql(), handler, type);
         }
     }
 

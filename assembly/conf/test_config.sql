@@ -1,8 +1,9 @@
-CREATE DATABASE IF NOT EXISTS `test_config` CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';
+CREATE DATABASE IF NOT EXISTS `timo_config` CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';
 USE `timo_config`;
 
 CREATE TABLE IF NOT EXISTS `datanodes`(
  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+ `strategy` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '读写分离策略，0-仅主节点读写；1-主节点读写，从节点读；2-主节点只写，从节点读',
  PRIMARY KEY(`id`) )ENGINE=INNODB CHARSET=utf8 COMMENT '数据节点';
 
 CREATE TABLE IF NOT EXISTS `datasources`(
@@ -13,14 +14,15 @@ CREATE TABLE IF NOT EXISTS `datasources`(
  `username` VARCHAR(16) NOT NULL DEFAULT 'root',
  `password` VARCHAR(128) NOT NULL DEFAULT '123456',
  `db` VARCHAR(64) NOT NULL DEFAULT '',
- `datasource_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '1:主库、2:双主备库、3从库',
- `datasource_status` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '1可用，0不可用',
+ `datasource_type` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '1-可读可写，2-只读',
+ `datasource_status` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '1-可用，0-不可用',
  `character_type` VARCHAR(16) NOT NULL DEFAULT 'utf8',
  `init_con` INT UNSIGNED NOT NULL DEFAULT 5 COMMENT '初始化连接数',
  `max_con` INT UNSIGNED NOT NULL DEFAULT 128 COMMENT '允许的最大连接数',
  `min_idle` INT UNSIGNED NOT NULL DEFAULT 5 COMMENT '最小的空闲连接数',
  `max_idle` INT UNSIGNED NOT NULL DEFAULT 6 COMMENT '允许最大的空闲连接数',
  `idle_check_period` INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '连接空闲检查间隔(秒)',
+ `priority` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '初始化优先级,越小越优先',
  primary key(`id`) )ENGINE=INNODB CHARSET=utf8 COMMENT '数据源';
 
 CREATE TABLE IF NOT EXISTS `users`(
@@ -68,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `function_args`(
 CREATE TABLE IF NOT EXISTS `handovers`(
  `datasource_id` INT UNSIGNED NOT NULL DEFAULT 0,
  `handover_id` INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '切换的datasource_id',
- `priority` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '故障切换优先级',
+ `priority` TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '故障切换优先级,越小越优先',
  PRIMARY KEY(`datasource_id`,
  	`handover_id`) )ENGINE=INNODB CHARSET=utf8 COMMENT '数据节点切换';
 
@@ -87,13 +89,13 @@ CREATE TABLE IF NOT EXISTS `timonodes`(
 -- CREATE DATABASE `timo2`;
 -- CREATE DATABASE `timo3`;
 
--- USE `test_config`;
+-- USE `timo_config`;
 
--- INSERT INTO datanodes SET id=1;
--- INSERT INTO datanodes SET id=2;
--- INSERT INTO datasources SET id=1,datanode_id=1,host='localhost',port=3306,username='root',password='123456',db='timo1',datasource_type=1,datasource_status=1,character_type='utf8',init_con=5,max_con=512,min_idle=5,max_idle=10,idle_check_period=600;
--- INSERT INTO datasources SET id=2,datanode_id=2,host='localhost',port=3306,username='root',password='123456',db='timo2',datasource_type=1,datasource_status=1,character_type='utf8',init_con=5,max_con=512,min_idle=5,max_idle=10,idle_check_period=600;
--- INSERT INTO datasources SET id=3,datanode_id=1,host='localhost',port=3306,username='root',password='123456',db='timo3',datasource_type=3,datasource_status=1,character_type='utf8',init_con=5,max_con=512,min_idle=5,max_idle=10,idle_check_period=600;
+-- INSERT INTO datanodes SET id=1,strategy=1;
+-- INSERT INTO datanodes SET id=2,strategy=1;
+-- INSERT INTO datasources SET id=1,datanode_id=1,host='localhost',port=3306,username='root',password='123456',db='timo1',datasource_type=1,datasource_status=1,character_type='utf8',init_con=5,max_con=512,min_idle=5,max_idle=10,idle_check_period=600,priority=1;
+-- INSERT INTO datasources SET id=3,datanode_id=1,host='localhost',port=3306,username='root',password='123456',db='timo3',datasource_type=2,datasource_status=1,character_type='utf8',init_con=5,max_con=512,min_idle=5,max_idle=10,idle_check_period=600,priority=2;
+-- INSERT INTO datasources SET id=2,datanode_id=2,host='localhost',port=3306,username='root',password='123456',db='timo2',datasource_type=1,datasource_status=1,character_type='utf8',init_con=5,max_con=512,min_idle=5,max_idle=10,idle_check_period=600,priority=1;
 -- INSERT INTO users SET username='root',password='123456',dbs='timo',hosts='127.0.0.1',privilege=1;
 -- INSERT INTO users SET username='test',password='test',dbs='timo',hosts='',privilege=0;
 -- INSERT INTO dbs SET id=1,name='timo';

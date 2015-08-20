@@ -200,18 +200,19 @@ public class ServerConfigLoader {
      * 加载数据节点
      */
     private void loadDatanodes(Connection con) throws SQLException {
-        String sql = "SELECT `id` FROM `datanodes`";
+        String sql = "SELECT `id`,`strategy` FROM `datanodes`";
         ResultSet result = con.createStatement().executeQuery(sql);
         while (result.next()) {
             int id = result.getInt("id");
+            int strategy = result.getInt("strategy");
             List<Integer> ds = new ArrayList<Integer>();
-            for (Datasource datasource : datasources.values()) {
-                int nodeID = datasource.getDatanodeID();
-                if (id == nodeID) {
-                    ds.add(datasource.getID());
-                }
+            sql = "SELECT `id` FROM `datasources` WHERE `datanode_id`=" + id
+                    + " ORDER BY `priority` ASC";
+            ResultSet rs = con.createStatement().executeQuery(sql);
+            while (rs.next()) {
+                ds.add(rs.getInt("id"));
             }
-            Datanode datanode = new Datanode(id, ds);
+            Datanode datanode = new Datanode(id, strategy, ds);
             datanodes.put(id, datanode);
         }
     }

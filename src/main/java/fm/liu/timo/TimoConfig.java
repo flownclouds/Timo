@@ -75,11 +75,11 @@ public class TimoConfig {
 
         Map<Integer, Node> nodes = new HashMap<Integer, Node>();
         for (Datanode datanode : datanodes.values()) {
-            Map<Integer, Source> sourceMap = new HashMap<Integer, Source>();
+            ArrayList<Source> sourceList = new ArrayList<Source>();
             for (Integer i : datanode.getDatasources()) {
-                sourceMap.put(i, sources.get(i));
+                sourceList.add(sources.get(i));
             }
-            Node node = new Node(datanode.getID(), sourceMap);
+            Node node = new Node(datanode.getID(), datanode.getStrategy(), sourceList);
             nodes.put(datanode.getID(), node);
         }
         return nodes;

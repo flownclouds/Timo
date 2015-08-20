@@ -40,7 +40,7 @@ public class ShowDatasource extends ShowHandler {
         ArrayList<Object[]> rows = new ArrayList<>();
         Collection<Node> nodes = TimoServer.getInstance().getConfig().getNodes().values();
         for (Node node : nodes) {
-            for (Source source : node.getSources().values()) {
+            for (Source source : node.getSources()) {
                 Object[] row = new Object[heads.size()];
                 int i = 0;
                 row[i++] = node.getID();
