@@ -35,7 +35,7 @@ public final class HandoverDatasource {
             Node dn = nodes.get(Integer.parseInt(key));
             if (dn != null) {
                 try {
-                    if (dn.handover(dn.getSource().getConfig().getID())) {
+                    if (dn.handover(true)) {
                         OkPacket packet = new OkPacket();
                         packet.packetId = 1;
                         packet.affectedRows = 1;

@@ -217,7 +217,7 @@ public class MySQLConnection extends BackendConnection {
                 }
                 break;
             default:
-                throw new RuntimeException("unknown status when process Mysql Packet!");
+                throw new RuntimeException("unknown status when process MySQL Packet!");
         }
     }
 

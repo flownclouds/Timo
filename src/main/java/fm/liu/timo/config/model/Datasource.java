@@ -135,4 +135,14 @@ public class Datasource {
     public long getIdleCheckPeriod() {
         return idleCheckPeriod;
     }
+
+    public void ban() {
+        this.status = Status.ERROR;
+    }
+
+    @Override
+    public String toString() {
+        return host + ":" + port + "/" + db;
+    }
+
 }

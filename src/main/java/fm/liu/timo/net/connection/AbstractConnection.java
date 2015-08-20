@@ -157,7 +157,7 @@ public abstract class AbstractConnection implements NIOConnection {
     private ByteBuffer checkReadBuffer(ByteBuffer buffer, int offset, int position) {
         if (offset == 0) {
             if (buffer.capacity() >= MySQLPacket.MAX_PACKET_SIZE) {
-                throw new IllegalArgumentException("Packet size over the limit.");
+                throw new IllegalArgumentException("packet size over the limit.");
             }
             int size = buffer.capacity() << 1;
             size = (size > MySQLPacket.MAX_PACKET_SIZE) ? MySQLPacket.MAX_PACKET_SIZE : size;

@@ -37,7 +37,7 @@ import fm.liu.timo.util.TimeUtil;
  * @author Liu Huanting 2015年5月9日
  */
 public class Source {
-    private Datasource                                       config;
+    private volatile Datasource                              config;
     private final int                                        datanodeID;
     private final BackendConnectionFactory                   factory;
     private final Heartbeat                                  heartbeat;
@@ -45,10 +45,11 @@ public class Source {
             new ConcurrentHashMap<Long, BackendConnection>();
     private final ConcurrentLinkedQueue<BackendConnection>   idle        =
             new ConcurrentLinkedQueue<BackendConnection>();
+    private ArrayList<Source>                                backups;
 
-    public Source(Datasource config, int datanodeID, Variables variables, int heartbeatPeriod) {
+    public Source(Datasource config, Variables variables, int heartbeatPeriod) {
         this.config = config;
-        this.datanodeID = datanodeID;
+        this.datanodeID = config.getDatanodeID();
         this.factory = new BackendConnectionFactory(variables) {};
         this.heartbeat = new Heartbeat(this, heartbeatPeriod);
     }
@@ -199,6 +200,15 @@ public class Source {
         for (BackendConnection connection : connections.values()) {
             connection.close();
         }
+        connections.clear();
         heartbeat.stop();
+    }
+
+    public void setBackups(ArrayList<Source> backups) {
+        this.backups = backups;
+    }
+
+    public ArrayList<Source> getBackups() {
+        return backups;
     }
 }

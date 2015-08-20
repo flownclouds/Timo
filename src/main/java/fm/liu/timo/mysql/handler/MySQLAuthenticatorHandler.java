@@ -70,7 +70,7 @@ public class MySQLAuthenticatorHandler implements NIOHandler {
                     con.auth();
                     break;
                 } else {
-                    throw new RuntimeException("Unknown Packet!");
+                    throw new RuntimeException("unknown Packet!");
                 }
         }
     }

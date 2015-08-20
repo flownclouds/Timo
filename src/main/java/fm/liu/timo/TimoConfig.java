@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.locks.ReentrantLock;
 import org.pmw.tinylog.Logger;
 import fm.liu.timo.config.loader.ServerConfigLoader;
@@ -55,18 +56,30 @@ public class TimoConfig {
 
     private Map<Integer, Node> initDatanodes(Map<Integer, Datanode> datanodes,
             Map<Integer, Datasource> datasources, Map<Integer, ArrayList<Integer>> handovers) {
-        Map<Integer, Node> nodes = new HashMap<Integer, Node>();
         Variables variables = new Variables();
         variables.setCharset(system.getCharset());
         variables.setIsolationLevel(system.getTxIsolation());
-        for (Datanode datanode : datanodes.values()) {
-            Map<Integer, Source> sources = new HashMap<Integer, Source>();
-            for (Integer i : datanode.getDatasources()) {
-                Datasource datasource = datasources.get(i);
-                Source source = new Source(datasource, i, variables, system.getHeartbeatPeriod());
-                sources.put(i, source);
+        Map<Integer, Source> sources = new HashMap<>();
+        for (Entry<Integer, Datasource> datasource : datasources.entrySet()) {
+            sources.put(datasource.getKey(),
+                    new Source(datasource.getValue(), variables, system.getHeartbeatPeriod()));
+        }
+
+        for (Integer id : handovers.keySet()) {
+            ArrayList<Source> backups = new ArrayList<>();
+            for (Integer handover : handovers.get(id)) {
+                backups.add(sources.get(handover));
             }
-            Node node = new Node(datanode.getID(), sources, handovers);
+            sources.get(id).setBackups(backups);
+        }
+
+        Map<Integer, Node> nodes = new HashMap<Integer, Node>();
+        for (Datanode datanode : datanodes.values()) {
+            Map<Integer, Source> sourceMap = new HashMap<Integer, Source>();
+            for (Integer i : datanode.getDatasources()) {
+                sourceMap.put(i, sources.get(i));
+            }
+            Node node = new Node(datanode.getID(), sourceMap);
             nodes.put(datanode.getID(), node);
         }
         return nodes;

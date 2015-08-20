@@ -2,7 +2,6 @@ package fm.liu.timo.heartbeat;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import org.pmw.tinylog.Logger;
-import fm.liu.timo.config.model.Datasource;
 import fm.liu.timo.net.backend.Node;
 import fm.liu.timo.net.backend.Source;
 import fm.liu.timo.net.connection.BackendConnection;
@@ -69,14 +68,17 @@ public class Heartbeat {
 
     private void handover() {
         this.stop();
-        Datasource config = source.getConfig();
         if (this.connection != null) {
             this.connection.close();
             this.connection = null;
         }
-        int id = config.getID();
         try {
-            node.handover(id);
+            if (node.handover(false)) {
+                Logger.info("datanode {} handover datasource to '{}' due to heartbeat error!",
+                        node.getID(), node.getSource().getConfig());
+            } else {
+                Logger.warn("datanode{} handover datasource failed!", node.getID());
+            }
         } catch (Exception e) {
             Logger.warn(e);
         }

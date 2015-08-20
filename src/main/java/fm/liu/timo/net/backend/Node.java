@@ -16,6 +16,7 @@ package fm.liu.timo.net.backend;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
+import org.pmw.tinylog.Logger;
 import fm.liu.timo.config.model.Datasource.Type;
 import fm.liu.timo.util.TimeUtil;
 
@@ -24,17 +25,15 @@ import fm.liu.timo.util.TimeUtil;
  * @author Liu Huanting 2015年5月9日
  */
 public class Node {
-    private final int                              id;
-    private final Map<Integer, Source>             sources;
-    private final Map<Integer, ArrayList<Integer>> handovers;
-    private final ReentrantLock                    lock = new ReentrantLock();
-    private volatile Source                        source;
-    private volatile long                          heartbeatRecoveryTime;
+    private final int                  id;
+    private final Map<Integer, Source> sources;
+    private final ReentrantLock        lock = new ReentrantLock();
+    private volatile Source            source;
+    private volatile long              heartbeatRecoveryTime;
 
-    public Node(int id, Map<Integer, Source> sources, Map<Integer, ArrayList<Integer>> handovers) {
+    public Node(int id, Map<Integer, Source> sources) {
         this.id = id;
         this.sources = sources;
-        this.handovers = handovers;
     }
 
     public boolean init() {
@@ -101,18 +100,24 @@ public class Node {
         this.heartbeatRecoveryTime = heartbeatRecoveryTime;
     }
 
-    public boolean handover(int id) throws Exception {
+    public boolean handover(boolean manual) throws Exception {
         boolean success = false;
-        ArrayList<Integer> handover = handovers.get(id);
-        if (handover == null) {
-            throw new Exception("cann't handover source " + id + " without infomation");
+        ArrayList<Source> backups = source.getBackups();
+        if (backups == null || backups.isEmpty()) {
+            throw new Exception("cann't handover source without backup infomation");
         }
         lock.lock();
         try {
-            for (Integer standby : handover) {
-                Source ds = sources.get(standby);
-                if (ds.isAvailable()) {
-                    source = ds;
+            for (Source source : backups) {
+                if (source.isAvailable()) {
+                    if (!manual) {
+                        this.source.getConfig().ban();
+                        this.source.clear();
+                    } else {
+                        Logger.info("handover datanode {} to datasource {} by manager.",
+                                this.getID(), source);
+                    }
+                    this.source = source;
                     success = true;
                     break;
                 }
