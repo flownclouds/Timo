@@ -18,10 +18,12 @@ package fm.liu.timo.config;
  */
 public interface Versions {
 
+    String version = "1.0.1";
+
     /** 协议版本 */
     byte PROTOCOL_VERSION = 10;
 
     /** 服务器版本 */
-    byte[] SERVER_VERSION = "5.1.27-Timo-1.0.0".getBytes();
+    byte[] SERVER_VERSION = ("5.1.27-Timo-" + version).getBytes();
 
 }

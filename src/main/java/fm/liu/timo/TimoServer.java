@@ -19,6 +19,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.pmw.tinylog.Logger;
+import fm.liu.timo.config.Versions;
 import fm.liu.timo.config.model.SystemConfig;
 import fm.liu.timo.manager.ManagerConnectionFactory;
 import fm.liu.timo.net.NIOAcceptor;
@@ -70,7 +71,7 @@ public class TimoServer {
 
     public void startup() throws IOException {
         Logger.info("===============================================");
-        Logger.info("{} is ready to startup ...", NAME);
+        Logger.info("{} v{} is ready to startup ...", NAME, Versions.version);
         // 初始化配置
         SystemConfig system = config.getSystem();
         // 启动线程池
