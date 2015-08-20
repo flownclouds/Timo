@@ -15,6 +15,7 @@ package fm.liu.timo.net.backend;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.ReentrantLock;
 import org.pmw.tinylog.Logger;
 import fm.liu.timo.config.model.Datanode.Strategy;
@@ -46,11 +47,13 @@ public class Node {
                 continue;
             }
             if (!source.init()) {
+                Logger.warn("source {} init failed.", source.getConfig());
                 return false;
             }
-            this.source = source;
-            chosen = true;
-            break;
+            if (!chosen) {
+                this.source = source;
+                chosen = true;
+            }
         }
         return chosen;
     }
@@ -129,8 +132,52 @@ public class Node {
         }
     }
 
-    public void query(String sql, ResultHandler handler, int type) {
-        this.source.query(sql, handler);
+    public void query(String sql, ResultHandler handler, boolean read) {
+        Source source = this.source;
+        switch (strategy) {
+            case MRW_SR:
+                if (read) {
+                    source = randomAll();
+                }
+                break;
+            case MW_SR:
+                if (read) {
+                    source = randomRead();
+                }
+                break;
+            default:
+                break;
+        }
+        if (!source.isAvailable()) {
+            source = this.source;
+        }
+        source.query(sql, handler);
+    }
+
+    private Source randomRead() {
+        ArrayList<Source> backups = source.getBackups();
+        if (backups == null || backups.isEmpty()) {
+            return this.source;
+        }
+        return backups.get(ThreadLocalRandom.current().nextInt(backups.size()));
+    }
+
+    private Source randomAll() {
+        ArrayList<Source> backups = source.getBackups();
+        if (backups == null || backups.isEmpty()) {
+            return this.source;
+        }
+        int seed = ThreadLocalRandom.current().nextInt(backups.size() + 1);
+        switch (seed) {
+            case 0:
+                return this.source;
+            default:
+                return source.getBackups().get(seed - 1);
+        }
+    }
+
+    public Strategy getStrategy() {
+        return strategy;
     }
 
 }

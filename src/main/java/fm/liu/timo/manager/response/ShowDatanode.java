@@ -22,6 +22,7 @@ public class ShowDatanode extends ShowHandler {
         heads.add(new Head("type"));
         heads.add(new Head("idle_size", "active connection size of current source"));
         heads.add(new Head("total_size", "total connection size of current source"));
+        heads.add(new Head("strategy"));
     }
 
     @Override
@@ -49,6 +50,7 @@ public class ShowDatanode extends ShowHandler {
             row[i++] = config.getType();
             row[i++] = source.getIdleSize();
             row[i++] = source.getSize();
+            row[i++] = node.getStrategy();
             rows.add(row);
         }
         return rows;

@@ -124,7 +124,7 @@ public class TimoConfig {
             this.databases = _databases;
             this.datasources = _datasources;
             this.nodes = _nodes;
-            Logger.warn("reload config failed due to {}", e);
+            Logger.warn("reload config failed due to {}", e.getMessage());
         } finally {
             lock.unlock();
         }

@@ -26,6 +26,7 @@ import fm.liu.timo.net.connection.Variables;
 import fm.liu.timo.route.Outlet;
 import fm.liu.timo.route.Outlets;
 import fm.liu.timo.server.ServerConnection;
+import fm.liu.timo.server.parser.ServerParse;
 import fm.liu.timo.server.session.handler.ResultHandler;
 
 /**
@@ -61,11 +62,12 @@ public class AbstractSession implements Session {
 
     @Override
     public void execute(Outlets outs, int type) {
+        boolean read = type == ServerParse.SELECT;
         ResultHandler handler = chooseHandler(outs, type);
         TimoConfig config = TimoServer.getInstance().getConfig();
         for (Outlet out : outs.getResult()) {
             Node node = config.getNodes().get(out.getID());
-            node.query(out.getSql(), handler, type);
+            node.query(out.getSql(), handler, read);
         }
     }
 

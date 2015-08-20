@@ -72,6 +72,11 @@ public class Heartbeat {
             this.connection.close();
             this.connection = null;
         }
+        if (source != node.getSource()) {
+            source.getConfig().ban();
+            source.clear();
+            return;
+        }
         try {
             if (node.handover(false)) {
                 Logger.info("datanode {} handover datasource to '{}' due to heartbeat error!",

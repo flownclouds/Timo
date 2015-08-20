@@ -15,6 +15,7 @@ package fm.liu.timo.net.backend;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import fm.liu.timo.config.model.Datasource;
@@ -160,6 +161,14 @@ public class Source {
                 connection.query("SELECT 1", new VirtualHandler());
             } else {
                 release(connection);
+            }
+        }
+        if (backups != null) {
+            Iterator<Source> itor = backups.iterator();
+            while (itor.hasNext()) {
+                if (!itor.next().isAvailable()) {
+                    itor.remove();
+                }
             }
         }
     }
