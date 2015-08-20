@@ -27,7 +27,7 @@ public class ShowIndex extends DALShowStatement {
         INDEX, INDEXES, KEYS
     }
 
-    private final Type type;
+    private final Type       type;
     private final Identifier table;
 
     public ShowIndex(Type type, Identifier table, Identifier database) {

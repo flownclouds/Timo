@@ -17,12 +17,10 @@
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
 import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
-
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.arithmeic.ArithmeticAddExpression;
 import fm.liu.timo.parser.ast.expression.arithmeic.ArithmeticDivideExpression;
@@ -156,9 +154,9 @@ public class MySQLExprParser extends MySQLParser {
         this.charset = charset == null ? DEFAULT_CHARSET : charset;
     }
 
-    private String charset;
+    private String                     charset;
     private final MySQLFunctionManager functionManager;
-    private MySQLDMLSelectParser selectParser;
+    private MySQLDMLSelectParser       selectParser;
 
     public void setSelectParser(MySQLDMLSelectParser selectParser) {
         this.selectParser = selectParser;
@@ -295,9 +293,8 @@ public class MySQLExprParser extends MySQLParser {
                         case KW_REGEXP:
                             lexer.nextToken();
                             temp = bitOrExpression(null, null);
-                            fst =
-                                    new RegexpExpression(true, fst, temp)
-                                            .setCacheEvalRst(cacheEvalRst);
+                            fst = new RegexpExpression(true, fst, temp)
+                                    .setCacheEvalRst(cacheEvalRst);
                             continue;
                         case KW_LIKE:
                             lexer.nextToken();
@@ -307,9 +304,8 @@ public class MySQLExprParser extends MySQLParser {
                                 lexer.nextToken();
                                 escape = bitOrExpression(null, null);
                             }
-                            fst =
-                                    new LikeExpression(true, fst, temp, escape)
-                                            .setCacheEvalRst(cacheEvalRst);
+                            fst = new LikeExpression(true, fst, temp, escape)
+                                    .setCacheEvalRst(cacheEvalRst);
                             continue;
                         case KW_IN:
                             if (lexer.nextToken() != PUNC_LEFT_PAREN) {
@@ -343,9 +339,8 @@ public class MySQLExprParser extends MySQLParser {
                         lexer.nextToken();
                         escape = bitOrExpression(null, null);
                     }
-                    fst =
-                            new LikeExpression(false, fst, temp, escape)
-                                    .setCacheEvalRst(cacheEvalRst);
+                    fst = new LikeExpression(false, fst, temp, escape)
+                            .setCacheEvalRst(cacheEvalRst);
                     continue;
                 case KW_IN:
                     if (lexer.nextToken() != PUNC_LEFT_PAREN) {
@@ -361,59 +356,48 @@ public class MySQLExprParser extends MySQLParser {
                             switch (lexer.nextToken()) {
                                 case LITERAL_NULL:
                                     lexer.nextToken();
-                                    fst =
-                                            new ComparisionIsExpression(fst,
-                                                    ComparisionIsExpression.IS_NOT_NULL)
+                                    fst = new ComparisionIsExpression(fst,
+                                            ComparisionIsExpression.IS_NOT_NULL)
                                                     .setCacheEvalRst(cacheEvalRst);
                                     continue;
                                 case LITERAL_BOOL_FALSE:
                                     lexer.nextToken();
-                                    fst =
-                                            new ComparisionIsExpression(fst,
-                                                    ComparisionIsExpression.IS_NOT_FALSE)
+                                    fst = new ComparisionIsExpression(fst,
+                                            ComparisionIsExpression.IS_NOT_FALSE)
                                                     .setCacheEvalRst(cacheEvalRst);
                                     continue;
                                 case LITERAL_BOOL_TRUE:
                                     lexer.nextToken();
-                                    fst =
-                                            new ComparisionIsExpression(fst,
-                                                    ComparisionIsExpression.IS_NOT_TRUE)
+                                    fst = new ComparisionIsExpression(fst,
+                                            ComparisionIsExpression.IS_NOT_TRUE)
                                                     .setCacheEvalRst(cacheEvalRst);
                                     continue;
                                 default:
                                     matchIdentifier("UNKNOWN");
-                                    fst =
-                                            new ComparisionIsExpression(fst,
-                                                    ComparisionIsExpression.IS_NOT_UNKNOWN)
+                                    fst = new ComparisionIsExpression(fst,
+                                            ComparisionIsExpression.IS_NOT_UNKNOWN)
                                                     .setCacheEvalRst(cacheEvalRst);
                                     continue;
                             }
                         case LITERAL_NULL:
                             lexer.nextToken();
-                            fst =
-                                    new ComparisionIsExpression(fst,
-                                            ComparisionIsExpression.IS_NULL)
-                                            .setCacheEvalRst(cacheEvalRst);
+                            fst = new ComparisionIsExpression(fst, ComparisionIsExpression.IS_NULL)
+                                    .setCacheEvalRst(cacheEvalRst);
                             continue;
                         case LITERAL_BOOL_FALSE:
                             lexer.nextToken();
-                            fst =
-                                    new ComparisionIsExpression(fst,
-                                            ComparisionIsExpression.IS_FALSE)
-                                            .setCacheEvalRst(cacheEvalRst);
+                            fst = new ComparisionIsExpression(fst, ComparisionIsExpression.IS_FALSE)
+                                    .setCacheEvalRst(cacheEvalRst);
                             continue;
                         case LITERAL_BOOL_TRUE:
                             lexer.nextToken();
-                            fst =
-                                    new ComparisionIsExpression(fst,
-                                            ComparisionIsExpression.IS_TRUE)
-                                            .setCacheEvalRst(cacheEvalRst);
+                            fst = new ComparisionIsExpression(fst, ComparisionIsExpression.IS_TRUE)
+                                    .setCacheEvalRst(cacheEvalRst);
                             continue;
                         default:
                             matchIdentifier("UNKNOWN");
-                            fst =
-                                    new ComparisionIsExpression(fst,
-                                            ComparisionIsExpression.IS_UNKNOWN)
+                            fst = new ComparisionIsExpression(fst,
+                                    ComparisionIsExpression.IS_UNKNOWN)
                                             .setCacheEvalRst(cacheEvalRst);
                             continue;
                     }
@@ -425,51 +409,44 @@ public class MySQLExprParser extends MySQLParser {
                 case OP_NULL_SAFE_EQUALS:
                     lexer.nextToken();
                     temp = bitOrExpression(null, null);
-                    fst =
-                            new ComparisionNullSafeEqualsExpression(fst, temp)
-                                    .setCacheEvalRst(cacheEvalRst);
+                    fst = new ComparisionNullSafeEqualsExpression(fst, temp)
+                            .setCacheEvalRst(cacheEvalRst);
                     continue;
                 case OP_GREATER_OR_EQUALS:
                     lexer.nextToken();
                     temp = anyAllExpression();
-                    fst =
-                            new ComparisionGreaterThanOrEqualsExpression(fst, temp)
-                                    .setCacheEvalRst(cacheEvalRst);
+                    fst = new ComparisionGreaterThanOrEqualsExpression(fst, temp)
+                            .setCacheEvalRst(cacheEvalRst);
                     continue;
                 case OP_GREATER_THAN:
                     lexer.nextToken();
                     temp = anyAllExpression();
-                    fst =
-                            new ComparisionGreaterThanExpression(fst, temp)
-                                    .setCacheEvalRst(cacheEvalRst);
+                    fst = new ComparisionGreaterThanExpression(fst, temp)
+                            .setCacheEvalRst(cacheEvalRst);
                     continue;
                 case OP_LESS_OR_EQUALS:
                     lexer.nextToken();
                     temp = anyAllExpression();
-                    fst =
-                            new ComparisionLessThanOrEqualsExpression(fst, temp)
-                                    .setCacheEvalRst(cacheEvalRst);
+                    fst = new ComparisionLessThanOrEqualsExpression(fst, temp)
+                            .setCacheEvalRst(cacheEvalRst);
                     continue;
                 case OP_LESS_THAN:
                     lexer.nextToken();
                     temp = anyAllExpression();
-                    fst =
-                            new ComparisionLessThanExpression(fst, temp)
-                                    .setCacheEvalRst(cacheEvalRst);
+                    fst = new ComparisionLessThanExpression(fst, temp)
+                            .setCacheEvalRst(cacheEvalRst);
                     continue;
                 case OP_LESS_OR_GREATER:
                     lexer.nextToken();
                     temp = anyAllExpression();
-                    fst =
-                            new ComparisionLessOrGreaterThanExpression(fst, temp)
-                                    .setCacheEvalRst(cacheEvalRst);
+                    fst = new ComparisionLessOrGreaterThanExpression(fst, temp)
+                            .setCacheEvalRst(cacheEvalRst);
                     continue;
                 case OP_NOT_EQUALS:
                     lexer.nextToken();
                     temp = anyAllExpression();
-                    fst =
-                            new ComparisionNotEqualsExpression(fst, temp)
-                                    .setCacheEvalRst(cacheEvalRst);
+                    fst = new ComparisionNotEqualsExpression(fst, temp)
+                            .setCacheEvalRst(cacheEvalRst);
                     continue;
                 default:
                     if (equalsIdentifier("SOUNDS") >= 0) {
@@ -597,9 +574,8 @@ public class MySQLExprParser extends MySQLParser {
                 case OP_MINUS:
                     lexer.nextToken();
                     temp = arithmeticFactorOperatorExpression(null, null);
-                    expr =
-                            new ArithmeticSubtractExpression(expr, temp)
-                                    .setCacheEvalRst(cacheEvalRst);
+                    expr = new ArithmeticSubtractExpression(expr, temp)
+                            .setCacheEvalRst(cacheEvalRst);
                     break;
                 default:
                     return expr;
@@ -618,9 +594,8 @@ public class MySQLExprParser extends MySQLParser {
                 case OP_ASTERISK:
                     lexer.nextToken();
                     temp = bitXORExpression(null, null);
-                    expr =
-                            new ArithmeticMultiplyExpression(expr, temp)
-                                    .setCacheEvalRst(cacheEvalRst);
+                    expr = new ArithmeticMultiplyExpression(expr, temp)
+                            .setCacheEvalRst(cacheEvalRst);
                     break;
                 case OP_SLASH:
                     lexer.nextToken();
@@ -630,9 +605,8 @@ public class MySQLExprParser extends MySQLParser {
                 case KW_DIV:
                     lexer.nextToken();
                     temp = bitXORExpression(null, null);
-                    expr =
-                            new ArithmeticIntegerDivideExpression(expr, temp)
-                                    .setCacheEvalRst(cacheEvalRst);
+                    expr = new ArithmeticIntegerDivideExpression(expr, temp)
+                            .setCacheEvalRst(cacheEvalRst);
                     break;
                 case OP_PERCENT:
                 case KW_MOD:
@@ -720,15 +694,13 @@ public class MySQLExprParser extends MySQLParser {
         if (lexer.token() == USR_VAR) {
             if (first instanceof LiteralString) {
                 StringBuilder str =
-                        new StringBuilder().append('\'')
-                                .append(((LiteralString) first).getString()).append('\'')
-                                .append(lexer.stringValue());
+                        new StringBuilder().append('\'').append(((LiteralString) first).getString())
+                                .append('\'').append(lexer.stringValue());
                 lexer.nextToken();
                 return new UserExpression(str.toString()).setCacheEvalRst(cacheEvalRst);
             } else if (first instanceof Identifier) {
-                StringBuilder str =
-                        new StringBuilder().append(((Identifier) first).getIdText()).append(
-                                lexer.stringValue());
+                StringBuilder str = new StringBuilder().append(((Identifier) first).getIdText())
+                        .append(lexer.stringValue());
                 lexer.nextToken();
                 return new UserExpression(str.toString()).setCacheEvalRst(cacheEvalRst);
             }
@@ -759,9 +731,8 @@ public class MySQLExprParser extends MySQLParser {
                 lexer.nextToken();
                 return new LiteralBitField(null, tempStr).setCacheEvalRst(cacheEvalRst);
             case LITERAL_HEX:
-                LiteralHexadecimal hex =
-                        new LiteralHexadecimal(null, lexer.getSQL(), lexer.getOffsetCache(),
-                                lexer.getSizeCache(), charset);
+                LiteralHexadecimal hex = new LiteralHexadecimal(null, lexer.getSQL(),
+                        lexer.getOffsetCache(), lexer.getSizeCache(), charset);
                 lexer.nextToken();
                 return hex.setCacheEvalRst(cacheEvalRst);
             case LITERAL_BOOL_FALSE:
@@ -1067,15 +1038,12 @@ public class MySQLExprParser extends MySQLParser {
         boolean tempGroupDistinct;
         switch (lexer.token()) {
             case PUNC_DOT:
-                for (tempExpr =
-                        new Identifier(null, consumed, consumedUp).setCacheEvalRst(cacheEvalRst); lexer
-                        .token() == PUNC_DOT;) {
+                for (tempExpr = new Identifier(null, consumed, consumedUp)
+                        .setCacheEvalRst(cacheEvalRst); lexer.token() == PUNC_DOT;) {
                     switch (lexer.nextToken()) {
                         case IDENTIFIER:
-                            tempExpr =
-                                    new Identifier((Identifier) tempExpr, lexer.stringValue(),
-                                            lexer.stringValueUppercase())
-                                            .setCacheEvalRst(cacheEvalRst);
+                            tempExpr = new Identifier((Identifier) tempExpr, lexer.stringValue(),
+                                    lexer.stringValueUppercase()).setCacheEvalRst(cacheEvalRst);
                             lexer.nextToken();
                             break;
                         case OP_ASTERISK:
@@ -1083,7 +1051,8 @@ public class MySQLExprParser extends MySQLParser {
                             return new Wildcard((Identifier) tempExpr)
                                     .setCacheEvalRst(cacheEvalRst);
                         default:
-                            throw err("expect IDENTIFIER or '*' after '.', but is " + lexer.token());
+                            throw err(
+                                    "expect IDENTIFIER or '*' after '.', but is " + lexer.token());
                     }
                 }
                 return tempExpr;
@@ -1098,9 +1067,8 @@ public class MySQLExprParser extends MySQLParser {
                 if (consumed.charAt(0) != '_') {
                     return new Identifier(null, consumed, consumedUp).setCacheEvalRst(cacheEvalRst);
                 }
-                LiteralHexadecimal hex =
-                        new LiteralHexadecimal(consumed, lexer.getSQL(), lexer.getOffsetCache(),
-                                lexer.getSizeCache(), charset);
+                LiteralHexadecimal hex = new LiteralHexadecimal(consumed, lexer.getSQL(),
+                        lexer.getOffsetCache(), lexer.getSizeCache(), charset);
                 lexer.nextToken();
                 return hex.setCacheEvalRst(cacheEvalRst);
             case LITERAL_CHARS:
@@ -1489,11 +1457,11 @@ public class MySQLExprParser extends MySQLParser {
                         lexer.nextToken();
                         return new DefaultFunction(consumedUp, tempExprList)
                                 .setCacheEvalRst(cacheEvalRst);
-                        // return new Identifier(null, consumed, consumedUp)
-                        // .setCacheEvalRst(cacheEvalRst);
-                        // default:
-                        // throw err("unexpected function parsing strategy for id of "
-                        // + consumed);
+                    // return new Identifier(null, consumed, consumedUp)
+                    // .setCacheEvalRst(cacheEvalRst);
+                    // default:
+                    // throw err("unexpected function parsing strategy for id of "
+                    // + consumed);
                 }
             default:
                 return new Identifier(null, consumed, consumedUp).setCacheEvalRst(cacheEvalRst);

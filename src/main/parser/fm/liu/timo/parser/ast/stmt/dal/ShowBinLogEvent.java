@@ -24,9 +24,9 @@ import fm.liu.timo.parser.visitor.Visitor;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class ShowBinLogEvent extends DALShowStatement {
-    private final String logName;
+    private final String     logName;
     private final Expression pos;
-    private final Limit limit;
+    private final Limit      limit;
 
     public ShowBinLogEvent(String logName, Expression pos, Limit limit) {
         this.logName = logName;

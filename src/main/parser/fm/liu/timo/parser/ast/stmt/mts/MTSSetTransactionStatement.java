@@ -28,7 +28,7 @@ public class MTSSetTransactionStatement implements SQLStatement {
         READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE
     }
 
-    private final VariableScope scope;
+    private final VariableScope  scope;
     private final IsolationLevel level;
 
     public MTSSetTransactionStatement(VariableScope scope, IsolationLevel level) {

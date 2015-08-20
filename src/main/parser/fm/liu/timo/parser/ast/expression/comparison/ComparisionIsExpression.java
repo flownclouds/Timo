@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.ast.expression.comparison;
 
 import java.util.Map;
-
 import fm.liu.timo.parser.ast.expression.AbstractExpression;
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.ReplacableExpression;
@@ -27,16 +26,16 @@ import fm.liu.timo.parser.visitor.Visitor;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class ComparisionIsExpression extends AbstractExpression implements ReplacableExpression {
-    public static final int IS_NULL = 1;
-    public static final int IS_TRUE = 2;
-    public static final int IS_FALSE = 3;
-    public static final int IS_UNKNOWN = 4;
-    public static final int IS_NOT_NULL = 5;
-    public static final int IS_NOT_TRUE = 6;
-    public static final int IS_NOT_FALSE = 7;
+    public static final int IS_NULL        = 1;
+    public static final int IS_TRUE        = 2;
+    public static final int IS_FALSE       = 3;
+    public static final int IS_UNKNOWN     = 4;
+    public static final int IS_NOT_NULL    = 5;
+    public static final int IS_NOT_TRUE    = 6;
+    public static final int IS_NOT_FALSE   = 7;
     public static final int IS_NOT_UNKNOWN = 8;
 
-    private final int mode;
+    private final int        mode;
     private final Expression operand;
 
     /**

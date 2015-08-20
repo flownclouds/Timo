@@ -18,7 +18,6 @@ package fm.liu.timo.parser.ast.stmt.ddl;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
 import fm.liu.timo.parser.ast.fragment.ddl.ColumnDefinition;
@@ -38,18 +37,18 @@ public class DDLCreateTableStatement implements DDLStatement {
         IGNORED, REPLACE
     }
 
-    private final boolean temporary;
-    private final boolean ifNotExists;
-    private final Identifier table;
+    private final boolean                                  temporary;
+    private final boolean                                  ifNotExists;
+    private final Identifier                               table;
     private final List<Pair<Identifier, ColumnDefinition>> colDefs;
-    private IndexDefinition primaryKey;
-    private final List<Pair<Identifier, IndexDefinition>> uniqueKeys;
-    private final List<Pair<Identifier, IndexDefinition>> keys;
-    private final List<Pair<Identifier, IndexDefinition>> fullTextKeys;
-    private final List<Pair<Identifier, IndexDefinition>> spatialKeys;
-    private final List<Expression> checks;
-    private TableOptions tableOptions;
-    private Pair<SelectOption, DMLSelectStatement> select;
+    private IndexDefinition                                primaryKey;
+    private final List<Pair<Identifier, IndexDefinition>>  uniqueKeys;
+    private final List<Pair<Identifier, IndexDefinition>>  keys;
+    private final List<Pair<Identifier, IndexDefinition>>  fullTextKeys;
+    private final List<Pair<Identifier, IndexDefinition>>  spatialKeys;
+    private final List<Expression>                         checks;
+    private TableOptions                                   tableOptions;
+    private Pair<SelectOption, DMLSelectStatement>         select;
 
     public DDLCreateTableStatement(boolean temporary, boolean ifNotExists, Identifier table) {
         this.table = table;

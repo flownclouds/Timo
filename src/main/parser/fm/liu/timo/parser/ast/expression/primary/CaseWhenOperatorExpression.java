@@ -18,7 +18,6 @@ package fm.liu.timo.parser.ast.expression.primary;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.util.Pair;
 import fm.liu.timo.parser.visitor.Visitor;
@@ -29,9 +28,9 @@ import fm.liu.timo.parser.visitor.Visitor;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class CaseWhenOperatorExpression extends PrimaryExpression {
-    private final Expression comparee;
+    private final Expression                         comparee;
     private final List<Pair<Expression, Expression>> whenList;
-    private final Expression elseResult;
+    private final Expression                         elseResult;
 
     /**
      * @param whenList never null or empry; no pair contains null key or value

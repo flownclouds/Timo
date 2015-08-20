@@ -19,7 +19,6 @@ package fm.liu.timo.parser.ast.expression.primary;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.visitor.Visitor;
 

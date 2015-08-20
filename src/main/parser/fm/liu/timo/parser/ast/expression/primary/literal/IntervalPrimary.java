@@ -18,7 +18,6 @@ package fm.liu.timo.parser.ast.expression.primary.literal;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.visitor.Visitor;
 
@@ -48,7 +47,7 @@ public class IntervalPrimary extends Literal {
         return unitMap.get(unitString);
     }
 
-    private final Unit unit;
+    private final Unit       unit;
     private final Expression quantity;
 
     public IntervalPrimary(Expression quantity, Unit unit) {

@@ -19,7 +19,6 @@ package fm.liu.timo.parser.ast.expression.primary.function.groupby;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.function.FunctionExpression;
 import fm.liu.timo.parser.visitor.Visitor;
@@ -28,11 +27,11 @@ import fm.liu.timo.parser.visitor.Visitor;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class GroupConcat extends FunctionExpression {
-    private final boolean distinct;
-    private final Expression orderBy;
-    private final boolean isDesc;
+    private final boolean          distinct;
+    private final Expression       orderBy;
+    private final boolean          isDesc;
     private final List<Expression> appendedColumnNames;
-    private final String separator;
+    private final String           separator;
 
     public GroupConcat(boolean distinct, List<Expression> exprList, Expression orderBy,
             boolean isDesc, List<Expression> appendedColumnNames, String separator) {

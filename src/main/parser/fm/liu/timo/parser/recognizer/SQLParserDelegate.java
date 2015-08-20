@@ -19,7 +19,6 @@ package fm.liu.timo.parser.recognizer;
 import java.sql.SQLSyntaxErrorException;
 import java.util.HashMap;
 import java.util.Map;
-
 import fm.liu.timo.parser.ast.stmt.SQLStatement;
 import fm.liu.timo.parser.ast.stmt.ddl.DDLCreateIndexStatement;
 import fm.liu.timo.parser.ast.stmt.ddl.DDLStatement;
@@ -47,6 +46,7 @@ public final class SQLParserDelegate {
 
     private static final Map<String, SpecialIdentifier> specialIdentifiers =
             new HashMap<String, SpecialIdentifier>();
+
     static {
         specialIdentifiers.put("TRUNCATE", SpecialIdentifier.TRUNCATE);
         specialIdentifiers.put("SAVEPOINT", SpecialIdentifier.SAVEPOINT);
@@ -62,9 +62,8 @@ public final class SQLParserDelegate {
     }
 
     private static String buildErrorMsg(Exception e, MySQLLexer lexer, String sql) {
-        StringBuilder sb =
-                new StringBuilder(
-                        "You have an error in your SQL syntax; Error occurs around this fragment: ");
+        StringBuilder sb = new StringBuilder(
+                "You have an error in your SQL syntax; Error occurs around this fragment: ");
         final int ch = lexer.getCurrentIndex();
         int from = ch - 16;
         if (from < 0)

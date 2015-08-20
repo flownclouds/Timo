@@ -1,11 +1,8 @@
 package fm.liu.timo.parser;
 
 import java.sql.SQLSyntaxErrorException;
-
 import junit.framework.Assert;
-
 import org.junit.Test;
-
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
 import fm.liu.timo.parser.ast.expression.primary.RowExpression;
 import fm.liu.timo.parser.ast.expression.primary.literal.LiteralNumber;
@@ -29,8 +26,7 @@ public class TestInsertSQLAnalyser {
         Assert.assertEquals("table1".toUpperCase(), parsInf.getTable().getIdTextUpUnescape());
         Assert.assertEquals(null, parsInf.getColumnNameList());
 
-        sql =
-                "insert into table1(column1,column2,column3,colum4,column5,column6,column7)values('aaa',5,'1999-2-2',true,\"test\",111,55.66) ";
+        sql = "insert into table1(column1,column2,column3,colum4,column5,column6,column7)values('aaa',5,'1999-2-2',true,\"test\",111,55.66) ";
         ast = SQLParserDelegate.parse(sql);
         parsInf = (DMLInsertStatement) (ast);
         Assert.assertEquals("table1".toUpperCase(), parsInf.getTable().getIdTextUpUnescape());
@@ -48,9 +44,8 @@ public class TestInsertSQLAnalyser {
         Assert.assertEquals("table1".toUpperCase(), parsInf.getTable().getIdTextUpUnescape());
         Assert.assertEquals(2, parsInf.getColumnNameList().size());
 
-        sql =
-                "insert  into table1(USER_ID,USER_NAME,PASSWORD,CREATE_TIME,STATUS,NICK_NAME,USER_ICON_URL,USER_ICON_URL2,USER_ICON_URL3,ACCOUNT_TYPE) "
-                        + "values (2488899998,'u163149830250134','af8f9dffa5d420fbc249141645b962ee','2013-12-01 00:00:00',0,NULL,NULL,NULL,NULL,1)";
+        sql = "insert  into table1(USER_ID,USER_NAME,PASSWORD,CREATE_TIME,STATUS,NICK_NAME,USER_ICON_URL,USER_ICON_URL2,USER_ICON_URL3,ACCOUNT_TYPE) "
+                + "values (2488899998,'u163149830250134','af8f9dffa5d420fbc249141645b962ee','2013-12-01 00:00:00',0,NULL,NULL,NULL,NULL,1)";
         ast = SQLParserDelegate.parse(sql);
         parsInf = (DMLInsertStatement) (ast);
         Assert.assertEquals("table1".toUpperCase(), parsInf.getTable().getIdTextUpUnescape());

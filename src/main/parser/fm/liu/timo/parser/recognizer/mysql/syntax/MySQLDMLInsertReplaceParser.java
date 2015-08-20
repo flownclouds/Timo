@@ -17,13 +17,11 @@
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
 import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
-
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.RowExpression;
 import fm.liu.timo.parser.recognizer.mysql.lexer.MySQLLexer;

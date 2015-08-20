@@ -28,7 +28,7 @@ public class ShowCreate extends DALShowStatement {
         DATABASE, EVENT, FUNCTION, PROCEDURE, TABLE, TRIGGER, VIEW
     }
 
-    private final Type type;
+    private final Type       type;
     private final Identifier id;
 
     public ShowCreate(Type type, Identifier id) {

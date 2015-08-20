@@ -24,8 +24,8 @@ import fm.liu.timo.parser.visitor.Visitor;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class ShowEvents extends DALShowStatement {
-    private Identifier schema;
-    private final String pattern;
+    private Identifier       schema;
+    private final String     pattern;
     private final Expression where;
 
     public ShowEvents(Identifier schema, String pattern) {

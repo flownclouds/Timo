@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
 import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
-
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +24,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
 import fm.liu.timo.parser.ast.expression.primary.SysVarPrimary;
@@ -95,6 +93,7 @@ public class MySQLDALParser extends MySQLParser {
 
     private static final Map<String, SpecialIdentifier> specialIdentifiers =
             new HashMap<String, SpecialIdentifier>();
+
     static {
         specialIdentifiers.put("AUTHORS", SpecialIdentifier.AUTHORS);
         specialIdentifiers.put("BINLOG", SpecialIdentifier.BINLOG);
@@ -499,7 +498,8 @@ public class MySQLDALParser extends MySQLParser {
                                             return new ShowVariables(VariableScope.GLOBAL, tempStr);
                                         case KW_WHERE:
                                             tempExpr = where();
-                                            return new ShowVariables(VariableScope.GLOBAL, tempExpr);
+                                            return new ShowVariables(VariableScope.GLOBAL,
+                                                    tempExpr);
                                         default:
                                             return new ShowVariables(VariableScope.GLOBAL);
                                     }
@@ -576,7 +576,8 @@ public class MySQLDALParser extends MySQLParser {
                                     switch (lexer.nextToken()) {
                                         case KW_LIKE:
                                             tempStr = like();
-                                            return new ShowVariables(VariableScope.SESSION, tempStr);
+                                            return new ShowVariables(VariableScope.SESSION,
+                                                    tempStr);
                                         case KW_WHERE:
                                             tempExpr = where();
                                             return new ShowVariables(VariableScope.SESSION,
@@ -847,8 +848,8 @@ public class MySQLDALParser extends MySQLParser {
         if (lexer.token() == KW_OPTION) {
             lexer.nextToken();
         }
-        if (lexer.token() == IDENTIFIER
-                && SpecialIdentifier.NAMES == specialIdentifiers.get(lexer.stringValueUppercase())) {
+        if (lexer.token() == IDENTIFIER && SpecialIdentifier.NAMES == specialIdentifiers
+                .get(lexer.stringValueUppercase())) {
             if (lexer.nextToken() == KW_DEFAULT) {
                 lexer.nextToken();
                 return new DALSetNamesStatement();
@@ -966,8 +967,8 @@ public class MySQLDALParser extends MySQLParser {
                             break;
                     }
                 }
-                if (explictScope
-                        && specialIdentifiers.get(lexer.stringValueUppercase()) == SpecialIdentifier.TRANSACTION) {
+                if (explictScope && specialIdentifiers
+                        .get(lexer.stringValueUppercase()) == SpecialIdentifier.TRANSACTION) {
                     return setMTSSetTransactionStatement(scope);
                 }
                 var = new SysVarPrimary(scope, lexer.stringValue(), lexer.stringValueUppercase());

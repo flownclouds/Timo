@@ -14,11 +14,9 @@
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
 import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
-
 import java.sql.SQLSyntaxErrorException;
 import java.util.HashMap;
 import java.util.Map;
-
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
 import fm.liu.timo.parser.ast.expression.primary.ParamMarker;
 import fm.liu.timo.parser.ast.expression.primary.PlaceHolder;
@@ -51,6 +49,7 @@ public abstract class MySQLParser {
 
     private static final Map<String, SpecialIdentifier> specialIdentifiers =
             new HashMap<String, SpecialIdentifier>();
+
     static {
         specialIdentifiers.put("GLOBAL", SpecialIdentifier.GLOBAL);
         specialIdentifiers.put("SESSION", SpecialIdentifier.SESSION);
@@ -84,7 +83,7 @@ public abstract class MySQLParser {
                 id.setCacheEvalRst(cacheEvalRst);
                 lexer.nextToken();
                 break;
-        // throw err("expect id or * after '.'");
+            // throw err("expect id or * after '.'");
         }
         for (; lexer.token() == PUNC_DOT;) {
             switch (lexer.nextToken()) {
@@ -103,7 +102,7 @@ public abstract class MySQLParser {
                     id.setCacheEvalRst(cacheEvalRst);
                     lexer.nextToken();
                     break;
-            // throw err("expect id or * after '.'");
+                // throw err("expect id or * after '.'");
             }
         }
         return id;
@@ -211,7 +210,8 @@ public abstract class MySQLParser {
                             case QUESTION_MARK:
                                 paramIndex2 = lexer.paramIndex();
                                 lexer.nextToken();
-                                return new Limit(createParam(paramIndex1), createParam(paramIndex2));
+                                return new Limit(createParam(paramIndex1),
+                                        createParam(paramIndex2));
                             default:
                                 throw err("expect digit or ? after , for limit");
                         }

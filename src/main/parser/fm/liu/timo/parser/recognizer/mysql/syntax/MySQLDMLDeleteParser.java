@@ -17,13 +17,11 @@
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
 import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
-
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
 import fm.liu.timo.parser.ast.fragment.Limit;
@@ -47,6 +45,7 @@ public class MySQLDMLDeleteParser extends MySQLDMLParser {
 
     private static final Map<String, SpecialIdentifier> specialIdentifiers =
             new HashMap<String, SpecialIdentifier>();
+
     static {
         specialIdentifiers.put("QUICK", SpecialIdentifier.QUICK);
     }
@@ -123,7 +122,8 @@ public class MySQLDMLDeleteParser extends MySQLDMLParser {
             if (lexer.token() == KW_LIMIT) {
                 limit = limit();
             }
-            return new DMLDeleteStatement(lowPriority, quick, ignore, id, tempWhere, orderBy, limit);
+            return new DMLDeleteStatement(lowPriority, quick, ignore, id, tempWhere, orderBy,
+                    limit);
         }
 
         tempList = idList();
@@ -132,7 +132,8 @@ public class MySQLDMLDeleteParser extends MySQLDMLParser {
         if (lexer.token() == KW_WHERE) {
             lexer.nextToken();
             tempWhere = exprParser.expression();
-            return new DMLDeleteStatement(lowPriority, quick, ignore, tempList, tempRefs, tempWhere);
+            return new DMLDeleteStatement(lowPriority, quick, ignore, tempList, tempRefs,
+                    tempWhere);
         }
         return new DMLDeleteStatement(lowPriority, quick, ignore, tempList, tempRefs);
     }

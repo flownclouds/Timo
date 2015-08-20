@@ -24,8 +24,8 @@ import fm.liu.timo.parser.visitor.Visitor;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class ShowTableStatus extends DALShowStatement {
-    private Identifier database;
-    private final String pattern;
+    private Identifier       database;
+    private final String     pattern;
     private final Expression where;
 
     public ShowTableStatus(Identifier database, Expression where) {

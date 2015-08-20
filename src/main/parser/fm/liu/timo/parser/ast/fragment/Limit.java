@@ -25,8 +25,8 @@ import fm.liu.timo.parser.visitor.Visitor;
  */
 public class Limit implements ASTNode {
     /** when it is null, to sql generated must ignore this number */
-    private final Number offset;
-    private final Number size;
+    private final Number      offset;
+    private final Number      size;
     private final ParamMarker offsetP;
     private final ParamMarker sizeP;
 

@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.ast.expression.primary.function.info;
 
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.function.FunctionExpression;
 

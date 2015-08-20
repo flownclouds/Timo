@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.ast.expression.primary.function.cast;
 
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.function.FunctionExpression;
 import fm.liu.timo.parser.visitor.Visitor;
@@ -26,7 +25,7 @@ import fm.liu.timo.parser.visitor.Visitor;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class Cast extends FunctionExpression {
-    private final String typeName;
+    private final String     typeName;
     private final Expression typeInfo1;
     private final Expression typeInfo2;
 

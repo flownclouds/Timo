@@ -18,7 +18,6 @@ package fm.liu.timo.parser.ast.expression.arithmeic;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.visitor.Visitor;
 

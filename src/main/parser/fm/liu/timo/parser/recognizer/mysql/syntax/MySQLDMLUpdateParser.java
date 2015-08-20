@@ -17,12 +17,10 @@
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
 import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
-
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
 import fm.liu.timo.parser.ast.fragment.Limit;
@@ -91,6 +89,7 @@ public class MySQLDMLUpdateParser extends MySQLDMLParser {
             orderBy = orderBy();
             limit = limit();
         }
-        return new DMLUpdateStatement(lowPriority, ignore, tableRefs, values, where, orderBy, limit);
+        return new DMLUpdateStatement(lowPriority, ignore, tableRefs, values, where, orderBy,
+                limit);
     }
 }

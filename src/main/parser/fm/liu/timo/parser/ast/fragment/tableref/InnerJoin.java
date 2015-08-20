@@ -19,7 +19,6 @@ package fm.liu.timo.parser.ast.fragment.tableref;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.visitor.Visitor;
 
@@ -39,8 +38,8 @@ public class InnerJoin implements TableReference {
 
     private final TableReference leftTableRef;
     private final TableReference rightTableRef;
-    private Expression onCond;
-    private List<String> using;
+    private Expression           onCond;
+    private List<String>         using;
 
     private InnerJoin(TableReference leftTableRef, TableReference rightTableRef, Expression onCond,
             List<String> using) {
@@ -59,7 +58,8 @@ public class InnerJoin implements TableReference {
         this(leftTableRef, rightTableRef, onCond, null);
     }
 
-    public InnerJoin(TableReference leftTableRef, TableReference rightTableRef, List<String> using) {
+    public InnerJoin(TableReference leftTableRef, TableReference rightTableRef,
+            List<String> using) {
         this(leftTableRef, rightTableRef, null, using);
     }
 

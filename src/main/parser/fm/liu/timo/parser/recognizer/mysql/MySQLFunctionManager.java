@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.function.FunctionExpression;
 import fm.liu.timo.parser.ast.expression.primary.function.arithmetic.Abs;
@@ -206,23 +205,22 @@ import fm.liu.timo.parser.ast.expression.primary.function.xml.Updatexml;
 public class MySQLFunctionManager {
     public static enum FunctionParsingStrategy {
         /** not a function */
-        _DEFAULT,
-        /** ordinary function */
+        _DEFAULT, /** ordinary function */
 
         AREA, ASBINARY, ASWKB, ASTEXT, ASWKT, BUFFER, CENTROID, CONTAINS, CROSSES, DIMENSION, DISJOINT, ENDPOINT, ENVELOPE, EQUALS, EXTERIORRING, GEOMCOLLFROMTEXT, GEOMETRYCOLLECTIONFROMTEXT, GEOMCOLLFROMWKB, GEOMETRYCOLLECTIONFROMWKB, GEOMETRYCOLLECTION, GEOMETRYN, GEOMETRYTYPE, GEOMFROMTEXT, GEOMETRYFROMTEXT, GEOMFROMWKB, GLENGTH, INTERIORRINGN, INTERSECTS, ISCLOSED, ISEMPTY, ISSIMPLE, LINEFROMTEXT, LINEFROMWKB, LINESTRINGFROMWKB, LINESTRING, MBRCONTAINS, MBRDISJOINT, MBREQUAL, MBRINTERSECTS, MBROVERLAPS, MBRTOUCHES, MBRWITHIN, MLINEFROMTEXT, MULTILINESTRINGFROMTEXT, MLINEFROMWKB, MULTILINESTRINGFROMWKB, MPOINTFROMTEXT, MULTIPOINTFROMTEXT, MPOINTFROMWKB, MULTIPOINTFROMWKB, MPOLYFROMTEXT, MULTIPOLYGONFROMTEXT, MPOLYFROMWKB, MULTIPOLYGONFROMWKB, MULTILINESTRING, MULTIPOINT, MULTIPOLYGON, NUMGEOMETRIES, NUMINTERIORRINGS, NUMPOINTS, OVERLAPS, POINT, POINTFROMTEXT, POINTFROMWKB, POINTN, POLYFROMTEXT, POLYGONFROMTEXT, POLYFROMWKB, POLYGONFROMWKB, POLYGON, SRID, ST_AREA, ST_CENTROID, ST_CONTAINS, ST_CROSSES, ST_DIFFERENCE, ST_DISJOINT, ST_DISTANCE, ST_ENVELOPE, ST_EQUALS, ST_INTERSECTION, ST_INTERSECTS, ST_OVERLAPS, ST_SYMDIFFERENCE, ST_TOUCHES, ST_UNION, ST_WITHIN, STARTPOINT, TOUCHES, WITHIN, X, Y,
 
         _ORDINARY, CAST, POSITION, SUBSTRING, TRIM, AVG, COUNT, GROUP_CONCAT, MAX, MIN, SUM, ROW, CHAR, CONVERT, EXTRACT, TIMESTAMPADD, TIMESTAMPDIFF, GET_FORMAT
     }
 
-    public static final MySQLFunctionManager INSTANCE_MYSQL_DEFAULT = new MySQLFunctionManager(
-            false);
-    private final boolean allowFuncDefChange;
+    public static final MySQLFunctionManager INSTANCE_MYSQL_DEFAULT =
+            new MySQLFunctionManager(false);
+    private final boolean                    allowFuncDefChange;
 
     /** non-reserved word named special syntax function */
-    private final HashMap<String, FunctionParsingStrategy> parsingStrateg =
+    private final HashMap<String, FunctionParsingStrategy> parsingStrateg    =
             new HashMap<String, FunctionParsingStrategy>();
     /** non-reserved word named ordinary syntax function */
-    private Map<String, FunctionExpression> functionPrototype =
+    private Map<String, FunctionExpression>                functionPrototype =
             new HashMap<String, FunctionExpression>();
 
     public MySQLFunctionManager(boolean allowFuncDefChange) {
@@ -276,8 +274,8 @@ public class MySQLFunctionManager {
         parsingStrateg.put("MULTILINESTRINGFROMTEXT",
                 FunctionParsingStrategy.MULTILINESTRINGFROMTEXT);
         parsingStrateg.put("MLINEFROMWKB", FunctionParsingStrategy.MLINEFROMWKB);
-        parsingStrateg
-                .put("MULTILINESTRINGFROMWKB", FunctionParsingStrategy.MULTILINESTRINGFROMWKB);
+        parsingStrateg.put("MULTILINESTRINGFROMWKB",
+                FunctionParsingStrategy.MULTILINESTRINGFROMWKB);
         parsingStrateg.put("MPOINTFROMTEXT", FunctionParsingStrategy.MPOINTFROMTEXT);
         parsingStrateg.put("MULTIPOINTFROMTEXT", FunctionParsingStrategy.MULTIPOINTFROMTEXT);
         parsingStrateg.put("MPOINTFROMWKB", FunctionParsingStrategy.MPOINTFROMWKB);
@@ -548,7 +546,8 @@ public class MySQLFunctionManager {
      *        as predefined function of MySQL 5.5
      * @throws IllegalArgumentException
      */
-    public synchronized void addExtendFunction(Map<String, FunctionExpression> extFuncPrototypeMap) {
+    public synchronized void addExtendFunction(
+            Map<String, FunctionExpression> extFuncPrototypeMap) {
         if (extFuncPrototypeMap == null || extFuncPrototypeMap.isEmpty()) {
             return;
         }
@@ -564,8 +563,8 @@ public class MySQLFunctionManager {
                 continue;
             String funcNameUp = funcName.toUpperCase();
             if (functionPrototype.containsKey(funcNameUp)) {
-                throw new IllegalArgumentException("ext-function '" + funcName
-                        + "' is MySQL's predefined function!");
+                throw new IllegalArgumentException(
+                        "ext-function '" + funcName + "' is MySQL's predefined function!");
             }
             FunctionExpression func = en.getValue();
             if (func == null) {

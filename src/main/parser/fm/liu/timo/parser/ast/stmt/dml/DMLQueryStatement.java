@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.ast.stmt.dml;
 
 import java.util.Map;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.misc.QueryExpression;
 

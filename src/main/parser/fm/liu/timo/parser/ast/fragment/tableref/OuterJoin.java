@@ -19,7 +19,6 @@ package fm.liu.timo.parser.ast.fragment.tableref;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.visitor.Visitor;
 
@@ -42,14 +41,14 @@ public class OuterJoin implements TableReference {
     /**
      * for MySQL, only <code>LEFT</code> and <code>RIGHT</code> outer join are supported
      */
-    private final boolean isLeftJoin;
+    private final boolean        isLeftJoin;
     private final TableReference leftTableRef;
     private final TableReference rightTableRef;
-    private final Expression onCond;
-    private final List<String> using;
+    private final Expression     onCond;
+    private final List<String>   using;
 
-    private OuterJoin(boolean isLeftJoin, TableReference leftTableRef,
-            TableReference rightTableRef, Expression onCond, List<String> using) {
+    private OuterJoin(boolean isLeftJoin, TableReference leftTableRef, TableReference rightTableRef,
+            Expression onCond, List<String> using) {
         super();
         this.isLeftJoin = isLeftJoin;
         this.leftTableRef = leftTableRef;

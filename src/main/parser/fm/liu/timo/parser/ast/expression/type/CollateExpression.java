@@ -18,7 +18,6 @@
 package fm.liu.timo.parser.ast.expression.type;
 
 import java.util.Map;
-
 import fm.liu.timo.parser.ast.expression.AbstractExpression;
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.visitor.Visitor;
@@ -29,7 +28,7 @@ import fm.liu.timo.parser.visitor.Visitor;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class CollateExpression extends AbstractExpression {
-    private final String collateName;
+    private final String     collateName;
     private final Expression string;
 
     public CollateExpression(Expression string, String collateName) {

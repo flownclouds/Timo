@@ -24,9 +24,9 @@ import fm.liu.timo.parser.visitor.Visitor;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class ShowTables extends DALShowStatement {
-    private final boolean full;
-    private Identifier schema;
-    private final String pattern;
+    private final boolean    full;
+    private Identifier       schema;
+    private final String     pattern;
     private final Expression where;
 
     public ShowTables(boolean full, Identifier schema, String pattern) {

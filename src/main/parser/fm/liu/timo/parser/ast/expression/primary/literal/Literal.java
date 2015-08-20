@@ -21,5 +21,4 @@ import fm.liu.timo.parser.ast.expression.primary.PrimaryExpression;
 /**
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
-public abstract class Literal extends PrimaryExpression {
-}
+public abstract class Literal extends PrimaryExpression {}

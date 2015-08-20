@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public abstract class PolyadicOperatorExpression extends AbstractExpression {
     protected List<Expression> operands;
-    protected final int precedence;
+    protected final int        precedence;
 
     public PolyadicOperatorExpression(int precedence) {
         this(precedence, true);
@@ -64,8 +64,8 @@ public abstract class PolyadicOperatorExpression extends AbstractExpression {
      */
     public Expression getOperand(int index) {
         if (index >= operands.size()) {
-            throw new IllegalArgumentException("only contains " + operands.size() + " operands,"
-                    + index + " is out of bound");
+            throw new IllegalArgumentException(
+                    "only contains " + operands.size() + " operands," + index + " is out of bound");
         }
         return operands.get(index);
     }

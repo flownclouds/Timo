@@ -21,5 +21,4 @@ import fm.liu.timo.parser.ast.stmt.SQLStatement;
 /**
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
-public abstract class DALShowStatement implements SQLStatement {
-}
+public abstract class DALShowStatement implements SQLStatement {}

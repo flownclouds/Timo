@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.ast.expression.primary.function.datetime;
 
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.function.FunctionExpression;
 import fm.liu.timo.parser.ast.expression.primary.literal.IntervalPrimary;

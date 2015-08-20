@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.ast.stmt.dml;
 
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.misc.QueryExpression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
 import fm.liu.timo.parser.ast.expression.primary.RowExpression;
@@ -26,10 +25,10 @@ import fm.liu.timo.parser.ast.expression.primary.RowExpression;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public abstract class DMLInsertReplaceStatement extends DMLStatement {
-    protected final Identifier table;
+    protected final Identifier       table;
     protected final List<Identifier> columnNameList;
-    protected List<RowExpression> rowList;
-    protected final QueryExpression select;
+    protected List<RowExpression>    rowList;
+    protected final QueryExpression  select;
 
     @SuppressWarnings("unchecked")
     public DMLInsertReplaceStatement(Identifier table, List<Identifier> columnNameList,

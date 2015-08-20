@@ -28,8 +28,7 @@ public final class ParseUtil {
             String id = stmt.substring(offset).trim();
             try {
                 return Long.parseLong(id);
-            } catch (NumberFormatException e) {
-            }
+            } catch (NumberFormatException e) {}
         }
         return 0L;
     }
@@ -165,7 +164,9 @@ public final class ParseUtil {
                 return parseIdentifierEscape(stmt, aliasIndex);
             default:
                 int offset = aliasIndex;
-                for (; offset < stmt.length() && CharTypes.isIdentifierChar(stmt.charAt(offset)); ++offset);
+                for (; offset < stmt.length()
+                        && CharTypes.isIdentifierChar(stmt.charAt(offset)); ++offset)
+                    ;
                 return stmt.substring(aliasIndex, offset);
         }
     }
@@ -260,7 +261,7 @@ public final class ParseUtil {
     }
 
     private static final String JSON = "json";
-    private static final String EQ = "=";
+    private static final String EQ   = "=";
 
     // private static final String WHERE = "where";
     // private static final String SET = "set";

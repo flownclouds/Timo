@@ -27,6 +27,7 @@ public class Outlets {
     private Map<String, Integer> orderBy;
     private int                  limitSize   = -1;
     private int                  limitOffset = 0;
+    private boolean              usingMaster = false;
 
     public Outlets() {
         this.outlets = new HashSet<Outlet>();
@@ -83,5 +84,13 @@ public class Outlets {
 
     public int getLimitOffset() {
         return limitOffset;
+    }
+
+    public void setUsingMaster(boolean usingMaster) {
+        this.usingMaster = usingMaster;
+    }
+
+    public boolean usingMaster() {
+        return usingMaster;
     }
 }

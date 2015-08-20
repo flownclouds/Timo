@@ -17,13 +17,11 @@
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
 import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
-
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.misc.QueryExpression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
@@ -219,7 +217,8 @@ public abstract class MySQLDMLParser extends MySQLParser {
         return buildTableReferences(ref);
     }
 
-    private TableReferences buildTableReferences(TableReference ref) throws SQLSyntaxErrorException {
+    private TableReferences buildTableReferences(TableReference ref)
+            throws SQLSyntaxErrorException {
         List<TableReference> list;
         if (lexer.token() == PUNC_COMMA) {
             list = new LinkedList<TableReference>();
@@ -461,7 +460,8 @@ public abstract class MySQLDMLParser extends MySQLParser {
         list = new LinkedList<IndexHint>();
         list.add(hint);
         list.add(hint2);
-        for (; (hint2 = hint()) != null; list.add(hint2));
+        for (; (hint2 = hint()) != null; list.add(hint2))
+            ;
         return list;
     }
 
@@ -512,7 +512,8 @@ public abstract class MySQLDMLParser extends MySQLParser {
                     scope = IndexHint.IndexScope.GROUP_BY;
                     break;
                 default:
-                    throw err("must be JOIN or ORDER or GROUP for hint scope, not " + lexer.token());
+                    throw err(
+                            "must be JOIN or ORDER or GROUP for hint scope, not " + lexer.token());
             }
         }
 

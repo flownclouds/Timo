@@ -18,7 +18,6 @@ package fm.liu.timo.parser.ast.fragment.ddl.index;
 
 import java.util.Collections;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.ASTNode;
 import fm.liu.timo.parser.visitor.Visitor;
 
@@ -30,9 +29,9 @@ public class IndexDefinition implements ASTNode {
         BTREE, HASH
     }
 
-    private final IndexType indexType;
+    private final IndexType             indexType;
     private final List<IndexColumnName> columns;
-    private final List<IndexOption> options;
+    private final List<IndexOption>     options;
 
     @SuppressWarnings("unchecked")
     public IndexDefinition(IndexType indexType, List<IndexColumnName> columns,
@@ -41,9 +40,8 @@ public class IndexDefinition implements ASTNode {
         if (columns == null || columns.isEmpty())
             throw new IllegalArgumentException("columns is null or empty");
         this.columns = columns;
-        this.options =
-                (List<IndexOption>) (options == null || options.isEmpty() ? Collections.emptyList()
-                        : options);
+        this.options = (List<IndexOption>) (options == null || options.isEmpty()
+                ? Collections.emptyList() : options);
     }
 
     public IndexType getIndexType() {

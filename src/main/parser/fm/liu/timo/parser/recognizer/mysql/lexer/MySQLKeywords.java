@@ -26,7 +26,6 @@ package fm.liu.timo.parser.recognizer.mysql.lexer;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import fm.liu.timo.parser.recognizer.mysql.MySQLToken;
 
 /**

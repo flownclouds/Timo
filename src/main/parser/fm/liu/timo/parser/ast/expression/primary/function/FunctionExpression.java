@@ -19,7 +19,6 @@ package fm.liu.timo.parser.ast.expression.primary.function;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.PrimaryExpression;
 import fm.liu.timo.parser.visitor.Visitor;
@@ -39,7 +38,7 @@ public abstract class FunctionExpression extends PrimaryExpression {
      */
     public abstract FunctionExpression constructFunction(List<Expression> arguments);
 
-    protected final String functionName;
+    protected final String           functionName;
     protected final List<Expression> arguments;
 
     public FunctionExpression(String functionName, List<Expression> arguments) {

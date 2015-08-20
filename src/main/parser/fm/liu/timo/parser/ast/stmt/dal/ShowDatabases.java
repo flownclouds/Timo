@@ -23,7 +23,7 @@ import fm.liu.timo.parser.visitor.Visitor;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class ShowDatabases extends DALShowStatement {
-    private final String pattern;
+    private final String     pattern;
     private final Expression where;
 
     public ShowDatabases(String pattern) {

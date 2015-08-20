@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.ast.fragment.ddl.datatype;
 
 import java.util.List;
-
 import fm.liu.timo.parser.ast.ASTNode;
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
@@ -69,15 +68,15 @@ public class DataType implements ASTNode {
     // collation_name]
     // | spatial_type 不支持
 
-    private final DataTypeName typeName;
-    private final boolean unsigned;
-    private final boolean zerofill;
+    private final DataTypeName     typeName;
+    private final boolean          unsigned;
+    private final boolean          zerofill;
     /** for text only */
-    private final boolean binary;
-    private final Expression length;
-    private final Expression decimals;
-    private final Identifier charSet;
-    private final Identifier collation;
+    private final boolean          binary;
+    private final Expression       length;
+    private final Expression       decimals;
+    private final Identifier       charSet;
+    private final Identifier       collation;
     private final List<Expression> collectionVals;
 
     public DataType(DataTypeName typeName, boolean unsigned, boolean zerofill, boolean binary,

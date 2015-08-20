@@ -19,7 +19,6 @@ package fm.liu.timo.parser.ast.fragment;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.ASTNode;
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.util.Pair;

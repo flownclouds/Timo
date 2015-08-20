@@ -24,7 +24,8 @@ import fm.liu.timo.parser.visitor.Visitor;
 /**
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
-public class BetweenAndExpression extends TernaryOperatorExpression implements ReplacableExpression {
+public class BetweenAndExpression extends TernaryOperatorExpression
+        implements ReplacableExpression {
     private final boolean not;
 
     public BetweenAndExpression(boolean not, Expression comparee, Expression notLessThan,

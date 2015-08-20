@@ -24,7 +24,7 @@ import fm.liu.timo.parser.ast.expression.primary.literal.LiteralString;
  */
 public abstract class AliasableTableReference implements TableReference {
     protected final String alias;
-    protected String aliasUpEscape;
+    protected String       aliasUpEscape;
 
     public AliasableTableReference(String alias) {
         this.alias = alias;
@@ -43,9 +43,8 @@ public abstract class AliasableTableReference implements TableReference {
             case '`':
                 return aliasUpEscape = Identifier.unescapeName(alias, true);
             case '\'':
-                return aliasUpEscape =
-                        LiteralString.getUnescapedString(alias.substring(1, alias.length() - 1),
-                                true);
+                return aliasUpEscape = LiteralString
+                        .getUnescapedString(alias.substring(1, alias.length() - 1), true);
             case '_':
                 int ind = -1;
                 for (int i = 1; i < alias.length(); ++i) {
@@ -55,9 +54,8 @@ public abstract class AliasableTableReference implements TableReference {
                     }
                 }
                 if (ind >= 0) {
-                    LiteralString st =
-                            new LiteralString(alias.substring(0, ind), alias.substring(ind + 1,
-                                    alias.length() - 1), false);
+                    LiteralString st = new LiteralString(alias.substring(0, ind),
+                            alias.substring(ind + 1, alias.length() - 1), false);
                     return aliasUpEscape = st.getUnescapedString(true);
                 }
             default:

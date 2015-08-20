@@ -63,11 +63,16 @@ public class AbstractSession implements Session {
     @Override
     public void execute(Outlets outs, int type) {
         boolean read = type == ServerParse.SELECT;
+        boolean usingMaster = outs.usingMaster();
         ResultHandler handler = chooseHandler(outs, type);
         TimoConfig config = TimoServer.getInstance().getConfig();
         for (Outlet out : outs.getResult()) {
             Node node = config.getNodes().get(out.getID());
-            node.query(out.getSql(), handler, read);
+            if (usingMaster) {
+                node.getSource().query(out.getSql(), handler);
+            } else {
+                node.query(out.getSql(), handler, read);
+            }
         }
     }
 

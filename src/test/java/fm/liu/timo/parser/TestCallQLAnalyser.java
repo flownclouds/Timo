@@ -1,11 +1,8 @@
 package fm.liu.timo.parser;
 
 import java.sql.SQLSyntaxErrorException;
-
 import junit.framework.Assert;
-
 import org.junit.Test;
-
 import fm.liu.timo.parser.ast.stmt.SQLStatement;
 import fm.liu.timo.parser.ast.stmt.dml.DMLCallStatement;
 import fm.liu.timo.parser.recognizer.SQLParserDelegate;

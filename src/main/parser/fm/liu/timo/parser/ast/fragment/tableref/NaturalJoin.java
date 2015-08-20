@@ -22,11 +22,11 @@ import fm.liu.timo.parser.visitor.Visitor;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class NaturalJoin implements TableReference {
-    private final boolean isOuter;
+    private final boolean        isOuter;
     /**
      * make sense only if {@link #isOuter} is true. Eigher <code>LEFT</code> or <code>RIGHT</code>
      */
-    private final boolean isLeft;
+    private final boolean        isLeft;
     private final TableReference leftTableRef;
     private final TableReference rightTableRef;
 

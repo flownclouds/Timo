@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.ast.expression.primary.literal;
 
 import java.util.Map;
-
 import fm.liu.timo.parser.visitor.Visitor;
 
 /**
@@ -26,8 +25,8 @@ import fm.liu.timo.parser.visitor.Visitor;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class LiteralString extends Literal {
-    private final String introducer;
-    private final String string;
+    private final String  introducer;
+    private final String  string;
     private final boolean nchars;
 
     /**

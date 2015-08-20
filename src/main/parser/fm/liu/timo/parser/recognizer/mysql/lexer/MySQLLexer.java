@@ -19,7 +19,6 @@ package fm.liu.timo.parser.recognizer.mysql.lexer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.SQLSyntaxErrorException;
-
 import fm.liu.timo.parser.recognizer.mysql.MySQLToken;
 import fm.liu.timo.parser.util.CharTypes;
 
@@ -48,10 +47,10 @@ public class MySQLLexer {
 
     protected final char[] sql;
     /** always be {@link #sql}.length - 1 */
-    protected final int eofIndex;
+    protected final int    eofIndex;
 
     /** current index of {@link #sql} */
-    protected int curIndex = -1;
+    protected int  curIndex = -1;
     /** always be {@link #sql}[{@link #curIndex}] */
     protected char ch;
 
@@ -62,11 +61,11 @@ public class MySQLLexer {
     private MySQLToken tokenCache;
     private MySQLToken tokenCache2;
     /** 1 represents first parameter */
-    private int paramIndex = 0;
+    private int        paramIndex = 0;
 
     /** A character buffer for literals. */
     protected final static ThreadLocal<char[]> sbufRef = new ThreadLocal<char[]>();
-    protected char[] sbuf;
+    protected char[]                           sbuf;
 
     private String stringValue;
     /** make sense only for {@link MySQLToken#IDENTIFIER} */
@@ -567,8 +566,7 @@ public class MySQLLexer {
 
     protected void scanString() throws SQLSyntaxErrorException {
         boolean dq = false;
-        if (ch == '\'') {
-        } else if (ch == '"') {
+        if (ch == '\'') {} else if (ch == '"') {
             dq = true;
         } else {
             throw err("first char must be \" or '");
@@ -654,7 +652,8 @@ public class MySQLLexer {
      */
     protected void scanHexaDecimal(boolean quoteMode) throws SQLSyntaxErrorException {
         offsetCache = curIndex;
-        for (; CharTypes.isHex(ch); scanChar());
+        for (; CharTypes.isHex(ch); scanChar())
+            ;
 
         sizeCache = curIndex - offsetCache;
         // if (sizeCache <= 0) {
@@ -679,7 +678,8 @@ public class MySQLLexer {
      */
     protected void scanBitField(boolean quoteMode) throws SQLSyntaxErrorException {
         offsetCache = curIndex;
-        for (; ch == '0' || ch == '1'; scanChar());
+        for (; ch == '0' || ch == '1'; scanChar())
+            ;
         sizeCache = curIndex - offsetCache;
         // if (sizeCache <= 0) {
         // throw err("expect at least one bit");
@@ -713,8 +713,7 @@ public class MySQLLexer {
         for (; scanChar() != MySQLLexer.EOI; ++sizeCache) {
             switch (state) {
                 case 0:
-                    if (CharTypes.isDigit(ch)) {
-                    } else if (ch == '.') {
+                    if (CharTypes.isDigit(ch)) {} else if (ch == '.') {
                         dot = true;
                         state = 1;
                     } else if (ch == 'e' || ch == 'E') {
@@ -743,8 +742,7 @@ public class MySQLLexer {
                     }
                     break;
                 case 2:
-                    if (CharTypes.isDigit(ch)) {
-                    } else if (ch == 'e' || ch == 'E') {
+                    if (CharTypes.isDigit(ch)) {} else if (ch == 'e' || ch == 'E') {
                         state = 3;
                     } else if (CharTypes.isIdentifierChar(ch) && fstDot) {
                         sizeCache = 1;
@@ -937,7 +935,8 @@ public class MySQLLexer {
      */
     protected void skipSeparator() {
         for (; !eof();) {
-            for (; CharTypes.isWhitespace(ch); scanChar());
+            for (; CharTypes.isWhitespace(ch); scanChar())
+                ;
 
             switch (ch) {
                 case '#': // MySQL specified
@@ -1045,10 +1044,8 @@ public class MySQLLexer {
     public Number integerValue() {
         // 2147483647
         // 9223372036854775807
-        if (sizeCache < 10
-                || sizeCache == 10
-                && (sql[offsetCache] < '2' || sql[offsetCache] == '2'
-                        && sql[offsetCache + 1] == '0')) {
+        if (sizeCache < 10 || sizeCache == 10 && (sql[offsetCache] < '2'
+                || sql[offsetCache] == '2' && sql[offsetCache + 1] == '0')) {
             int rst = 0;
             int end = offsetCache + sizeCache;
             for (int i = offsetCache; i < end; ++i) {

@@ -18,7 +18,6 @@ package fm.liu.timo.parser.ast.stmt.ddl;
 
 import java.util.Collections;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
 import fm.liu.timo.parser.visitor.Visitor;
 
@@ -31,9 +30,9 @@ public class DDLDropTableStatement implements DDLStatement {
     }
 
     private final List<Identifier> tableNames;
-    private final boolean temp;
-    private final boolean ifExists;
-    private final Mode mode;
+    private final boolean          temp;
+    private final boolean          ifExists;
+    private final Mode             mode;
 
     public DDLDropTableStatement(List<Identifier> tableNames, boolean temp, boolean ifExists) {
         this(tableNames, temp, ifExists, Mode.UNDEF);

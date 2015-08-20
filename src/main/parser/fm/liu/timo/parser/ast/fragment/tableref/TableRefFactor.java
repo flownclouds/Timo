@@ -19,7 +19,6 @@ package fm.liu.timo.parser.ast.fragment.tableref;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
 import fm.liu.timo.parser.visitor.Visitor;
 
@@ -28,7 +27,7 @@ import fm.liu.timo.parser.visitor.Visitor;
  */
 public class TableRefFactor extends AliasableTableReference {
     /** e.g. <code>"`db2`.`tb1`"</code> is possible */
-    private final Identifier table;
+    private final Identifier      table;
     private final List<IndexHint> hintList;
 
     public TableRefFactor(Identifier table, String alias, List<IndexHint> hintList) {

@@ -21,7 +21,6 @@ import java.math.BigInteger;
 import java.sql.SQLSyntaxErrorException;
 import java.util.HashMap;
 import java.util.Map;
-
 import fm.liu.timo.parser.ast.expression.primary.literal.LiteralBoolean;
 import fm.liu.timo.parser.recognizer.mysql.lexer.MySQLLexer;
 
@@ -31,13 +30,14 @@ import fm.liu.timo.parser.recognizer.mysql.lexer.MySQLLexer;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class ExprEvalUtils {
-    private static final int CLASS_MAP_DOUBLE = 1;
-    private static final int CLASS_MAP_FLOAT = 2;
-    private static final int CLASS_MAP_BIG_ING = 3;
-    private static final int CLASS_MAP_BIG_DECIMAL = 4;
-    private static final int CLASS_MAP_LONG = 5;
-    private static final Map<Class<? extends Number>, Integer> classMap =
+    private static final int                                   CLASS_MAP_DOUBLE      = 1;
+    private static final int                                   CLASS_MAP_FLOAT       = 2;
+    private static final int                                   CLASS_MAP_BIG_ING     = 3;
+    private static final int                                   CLASS_MAP_BIG_DECIMAL = 4;
+    private static final int                                   CLASS_MAP_LONG        = 5;
+    private static final Map<Class<? extends Number>, Integer> classMap              =
             new HashMap<Class<? extends Number>, Integer>(5);
+
     static {
         classMap.put(Double.class, CLASS_MAP_DOUBLE);
         classMap.put(Float.class, CLASS_MAP_FLOAT);
@@ -81,8 +81,8 @@ public class ExprEvalUtils {
         }
     }
 
-    private static final int NUM_INT = 1;
-    private static final int NUM_LONG = 2;
+    private static final int NUM_INT         = 1;
+    private static final int NUM_LONG        = 2;
     private static final int NUM_BIG_INTEGER = 3;
     private static final int NUM_BIG_DECIMAL = 4;
 
@@ -186,12 +186,10 @@ public class ExprEvalUtils {
             return null;
         try {
             return new Integer(str);
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
         try {
             return new Long(str);
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
         try {
             MySQLLexer lexer = new MySQLLexer(str);
             switch (lexer.token()) {

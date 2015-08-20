@@ -24,7 +24,7 @@ import fm.liu.timo.parser.visitor.Visitor;
  */
 public class ShowErrors extends DALShowStatement {
     private final boolean count;
-    private final Limit limit;
+    private final Limit   limit;
 
     public ShowErrors(boolean count, Limit limit) {
         this.count = count;

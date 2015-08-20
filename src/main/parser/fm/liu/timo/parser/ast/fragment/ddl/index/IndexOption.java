@@ -30,9 +30,9 @@ public class IndexOption implements ASTNode {
         BTREE, HASH
     }
 
-    private final Expression keyBlockSize;
-    private final IndexType indexType;
-    private final Identifier parserName;
+    private final Expression    keyBlockSize;
+    private final IndexType     indexType;
+    private final Identifier    parserName;
     private final LiteralString comment;
 
     public IndexOption(Expression keyBlockSize) {

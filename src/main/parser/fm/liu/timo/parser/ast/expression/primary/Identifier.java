@@ -34,8 +34,8 @@ public class Identifier extends PrimaryExpression implements Cloneable {
             return toUppercase ? name.toUpperCase() : name;
         }
         if (name.charAt(name.length() - 1) != '`') {
-            throw new IllegalArgumentException("id start with a '`' must end with a '`', id: "
-                    + name);
+            throw new IllegalArgumentException(
+                    "id start with a '`' must end with a '`', id: " + name);
         }
         StringBuilder sb = new StringBuilder(name.length() - 2);
         final int endIndex = name.length() - 1;
@@ -56,9 +56,9 @@ public class Identifier extends PrimaryExpression implements Cloneable {
     }
 
     /** null if no parent */
-    protected Identifier parent;
+    protected Identifier   parent;
     /** e.g. "id1", "`id1`" */
-    protected String idText;
+    protected String       idText;
     protected final String idTextUpUnescape;
 
     public Identifier(Identifier parent, String idText) {
@@ -83,9 +83,9 @@ public class Identifier extends PrimaryExpression implements Cloneable {
     }
 
     /** trim not happen because parent in given level is not exist */
-    public static final int PARENT_ABSENT = 0;
+    public static final int PARENT_ABSENT  = 0;
     /** trim happen */
-    public static final int PARENT_TRIMED = 1;
+    public static final int PARENT_TRIMED  = 1;
     /** trim not happen because parent in given not equals to given name */
     public static final int PARENT_IGNORED = 2;
 

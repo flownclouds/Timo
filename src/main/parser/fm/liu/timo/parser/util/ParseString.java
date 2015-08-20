@@ -93,8 +93,8 @@ public final class ParseString {
                     b = 0xf0;
                     break;
                 default:
-                    throw new IllegalArgumentException("illegal hex-string: "
-                            + new String(hexString, offset, length));
+                    throw new IllegalArgumentException(
+                            "illegal hex-string: " + new String(hexString, offset, length));
             }
             switch (low) {
                 case '0':
@@ -151,8 +151,8 @@ public final class ParseString {
                     b += 15;
                     break;
                 default:
-                    throw new IllegalArgumentException("illegal hex-string: "
-                            + new String(hexString, offset, length));
+                    throw new IllegalArgumentException(
+                            "illegal hex-string: " + new String(hexString, offset, length));
             }
             bs[(i - offset) >> 1] = (byte) b;
         }

@@ -19,7 +19,6 @@ package fm.liu.timo.parser.ast.stmt.dml;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
 import fm.liu.timo.parser.visitor.Visitor;
@@ -28,7 +27,7 @@ import fm.liu.timo.parser.visitor.Visitor;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class DMLCallStatement extends DMLStatement {
-    private final Identifier procedure;
+    private final Identifier       procedure;
     private final List<Expression> arguments;
 
     public DMLCallStatement(Identifier procedure, List<Expression> arguments) {

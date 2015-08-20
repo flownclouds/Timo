@@ -1,10 +1,8 @@
 package fm.liu.timo.parser.visitor;
 
 import static fm.liu.timo.parser.ast.expression.comparison.ComparisionIsExpression.*;
-
 import java.util.List;
 import java.util.Map;
-
 import fm.liu.timo.parser.ast.ASTNode;
 import fm.liu.timo.parser.ast.expression.BinaryOperatorExpression;
 import fm.liu.timo.parser.ast.expression.Expression;
@@ -142,13 +140,13 @@ import fm.liu.timo.parser.ast.stmt.mts.MTSSetTransactionStatement;
 import fm.liu.timo.parser.util.Pair;
 
 public class OutputVisitor extends Visitor {
-    private static final Object[] EMPTY_OBJ_ARRAY = new Object[0];
-    private static final int[] EMPTY_INT_ARRAY = new int[0];
-    protected final StringBuilder appendable;
-    private final Object[] args;
-    protected int[] argsIndex;
+    private static final Object[]    EMPTY_OBJ_ARRAY = new Object[0];
+    private static final int[]       EMPTY_INT_ARRAY = new int[0];
+    protected final StringBuilder    appendable;
+    private final Object[]           args;
+    protected int[]                  argsIndex;
     private Map<PlaceHolder, Object> placeHolderToString;
-    private boolean needMerge;
+    private boolean                  needMerge;
 
     public OutputVisitor(StringBuilder appendable, boolean needMerge) {
         this(appendable, null);
@@ -287,8 +285,8 @@ public class OutputVisitor extends Visitor {
                 appendable.append(" IS NOT UNKNOWN");
                 break;
             default:
-                throw new IllegalArgumentException("unknown mode for IS expression: "
-                        + node.getMode());
+                throw new IllegalArgumentException(
+                        "unknown mode for IS expression: " + node.getMode());
         }
     }
 
@@ -383,9 +381,8 @@ public class OutputVisitor extends Visitor {
             }
         }
         Expression left = node.getLeftOprand();
-        boolean paren =
-                node.isLeftCombine() ? left.getPrecedence() < node.getPrecedence() : left
-                        .getPrecedence() <= node.getPrecedence();
+        boolean paren = node.isLeftCombine() ? left.getPrecedence() < node.getPrecedence()
+                : left.getPrecedence() <= node.getPrecedence();
         if (paren)
             appendable.append('(');
         left.accept(this);
@@ -395,9 +392,8 @@ public class OutputVisitor extends Visitor {
         appendable.append(' ').append(node.getOperator()).append(' ');
 
         Expression right = node.getRightOprand();
-        paren =
-                node.isLeftCombine() ? right.getPrecedence() <= node.getPrecedence() : right
-                        .getPrecedence() < node.getPrecedence();
+        paren = node.isLeftCombine() ? right.getPrecedence() <= node.getPrecedence()
+                : right.getPrecedence() < node.getPrecedence();
         if (paren)
             appendable.append('(');
         right.accept(this);
@@ -506,7 +502,8 @@ public class OutputVisitor extends Visitor {
                 appendable.append(" FROM ");
                 break;
             default:
-                throw new IllegalArgumentException("unknown trim direction: " + node.getDirection());
+                throw new IllegalArgumentException(
+                        "unknown trim direction: " + node.getDirection());
         }
         Expression str = node.getString();
         str.accept(this);
@@ -828,8 +825,8 @@ public class OutputVisitor extends Visitor {
             case _DEFAULT:
                 break;
             default:
-                throw new IllegalArgumentException("unkown modifier for match expression: "
-                        + node.getModifier());
+                throw new IllegalArgumentException(
+                        "unkown modifier for match expression: " + node.getModifier());
         }
         appendable.append(')');
     }
@@ -1075,7 +1072,8 @@ public class OutputVisitor extends Visitor {
             }
             appendable.append(")");
         } else {
-            throw new IllegalArgumentException("either ON or USING must be included for OUTER JOIN");
+            throw new IllegalArgumentException(
+                    "either ON or USING must be included for OUTER JOIN");
         }
     }
 
@@ -1322,8 +1320,8 @@ public class OutputVisitor extends Visitor {
                 appendable.append("PERFORMANCE SCHEMA STATUS");
                 break;
             default:
-                throw new IllegalArgumentException("unrecognized type for SHOW ENGINE: "
-                        + node.getType());
+                throw new IllegalArgumentException(
+                        "unrecognized type for SHOW ENGINE: " + node.getType());
         }
     }
 
@@ -1394,8 +1392,8 @@ public class OutputVisitor extends Visitor {
                 appendable.append("KEYS ");
                 break;
             default:
-                throw new IllegalArgumentException("unrecognized type for SHOW INDEX: "
-                        + node.getType());
+                throw new IllegalArgumentException(
+                        "unrecognized type for SHOW INDEX: " + node.getType());
         }
         appendable.append("IN ");
         node.getTable().accept(this);
@@ -2097,8 +2095,8 @@ public class OutputVisitor extends Visitor {
             case UNDEF:
                 break;
             default:
-                throw new IllegalArgumentException("unsupported mode for DROP TABLE: "
-                        + node.getMode());
+                throw new IllegalArgumentException(
+                        "unsupported mode for DROP TABLE: " + node.getMode());
         }
     }
 

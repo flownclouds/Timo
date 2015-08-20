@@ -33,8 +33,7 @@ import fm.liu.timo.util.TimeUtil;
  */
 public class ServerConnection extends FrontendConnection {
     private static final long AUTH_TIMEOUT = 15 * 1000L;
-
-    private Session session;
+    private Session           session;
 
     public ServerConnection(SocketChannel channel, NIOProcessor processor) {
         super(channel, processor);

@@ -19,7 +19,6 @@ package fm.liu.timo.parser.ast.stmt.dal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.fragment.Limit;
 import fm.liu.timo.parser.visitor.Visitor;
@@ -35,7 +34,7 @@ public class ShowProfile extends DALShowStatement {
 
     private final List<Type> types;
     private final Expression forQuery;
-    private final Limit limit;
+    private final Limit      limit;
 
     public ShowProfile(List<Type> types, Expression forQuery, Limit limit) {
         if (types == null || types.isEmpty()) {

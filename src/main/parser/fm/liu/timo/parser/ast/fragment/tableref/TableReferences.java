@@ -19,7 +19,6 @@ package fm.liu.timo.parser.ast.fragment.tableref;
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.List;
-
 import fm.liu.timo.parser.visitor.Visitor;
 
 /**

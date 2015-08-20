@@ -22,8 +22,8 @@ import fm.liu.timo.parser.ast.ASTNode;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public interface TableReference extends ASTNode {
-    int PRECEDENCE_REFS = 0;
-    int PRECEDENCE_JOIN = 1;
+    int PRECEDENCE_REFS   = 0;
+    int PRECEDENCE_JOIN   = 1;
     int PRECEDENCE_FACTOR = 2;
 
     /**

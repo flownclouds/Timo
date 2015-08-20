@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.ast.expression;
 
 import java.util.Map;
-
 import fm.liu.timo.parser.visitor.Visitor;
 
 /**
@@ -25,7 +24,7 @@ import fm.liu.timo.parser.visitor.Visitor;
  */
 public abstract class UnaryOperatorExpression extends AbstractExpression {
     private final Expression operand;
-    protected final int precedence;
+    protected final int      precedence;
 
     public UnaryOperatorExpression(Expression operand, int precedence) {
         if (operand == null)

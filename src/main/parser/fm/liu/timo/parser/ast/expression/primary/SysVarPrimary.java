@@ -25,8 +25,8 @@ import fm.liu.timo.parser.visitor.Visitor;
 public class SysVarPrimary extends VariableExpression {
     private final VariableScope scope;
     /** excluding starting "@@", '`' might be included */
-    private final String varText;
-    private final String varTextUp;
+    private final String        varText;
+    private final String        varTextUp;
 
     public SysVarPrimary(VariableScope scope, String varText, String varTextUp) {
         this.scope = scope;

@@ -36,13 +36,13 @@ public class ColumnDefinition implements ASTNode {
         FIXED, DYNAMIC, DEFAULT,
     }
 
-    private final DataType dataType;
-    private final boolean notNull;
-    private final Expression defaultVal;
-    private final boolean autoIncrement;
-    private final SpecialIndex specialIndex;
+    private final DataType      dataType;
+    private final boolean       notNull;
+    private final Expression    defaultVal;
+    private final boolean       autoIncrement;
+    private final SpecialIndex  specialIndex;
     private final LiteralString comment;
-    private final ColumnFormat columnFormat;
+    private final ColumnFormat  columnFormat;
 
     /**
      * @param dataType

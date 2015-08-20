@@ -19,7 +19,6 @@ package fm.liu.timo.parser.ast.stmt.dml;
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
 import fm.liu.timo.parser.ast.fragment.Limit;
@@ -31,15 +30,15 @@ import fm.liu.timo.parser.visitor.Visitor;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class DMLDeleteStatement extends DMLStatement {
-    private final boolean lowPriority;
-    private final boolean quick;
-    private final boolean ignore;
+    private final boolean          lowPriority;
+    private final boolean          quick;
+    private final boolean          ignore;
     /** tableName[.*] */
     private final List<Identifier> tableNames;
-    private final TableReferences tableRefs;
-    private final Expression whereCondition;
-    private final OrderBy orderBy;
-    private final Limit limit;
+    private final TableReferences  tableRefs;
+    private final Expression       whereCondition;
+    private final OrderBy          orderBy;
+    private final Limit            limit;
 
     // ------- single-row delete------------
     public DMLDeleteStatement(boolean lowPriority, boolean quick, boolean ignore,
@@ -54,7 +53,7 @@ public class DMLDeleteStatement extends DMLStatement {
 
     public DMLDeleteStatement(boolean lowPriority, boolean quick, boolean ignore,
             Identifier tableName, Expression where, OrderBy orderBy, Limit limit)
-            throws SQLSyntaxErrorException {
+                    throws SQLSyntaxErrorException {
         this.lowPriority = lowPriority;
         this.quick = quick;
         this.ignore = ignore;
@@ -69,13 +68,13 @@ public class DMLDeleteStatement extends DMLStatement {
     // ------- multi-row delete------------
     public DMLDeleteStatement(boolean lowPriority, boolean quick, boolean ignore,
             List<Identifier> tableNameList, TableReferences tableRefs)
-            throws SQLSyntaxErrorException {
+                    throws SQLSyntaxErrorException {
         this(lowPriority, quick, ignore, tableNameList, tableRefs, null);
     }
 
     public DMLDeleteStatement(boolean lowPriority, boolean quick, boolean ignore,
             List<Identifier> tableNameList, TableReferences tableRefs, Expression whereCondition)
-            throws SQLSyntaxErrorException {
+                    throws SQLSyntaxErrorException {
         this.lowPriority = lowPriority;
         this.quick = quick;
         this.ignore = ignore;

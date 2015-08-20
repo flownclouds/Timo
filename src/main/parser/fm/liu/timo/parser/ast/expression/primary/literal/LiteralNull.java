@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.ast.expression.primary.literal;
 
 import java.util.Map;
-
 import fm.liu.timo.parser.visitor.Visitor;
 
 /**

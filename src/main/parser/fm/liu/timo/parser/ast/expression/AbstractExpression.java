@@ -24,7 +24,7 @@ import java.util.Map;
 public abstract class AbstractExpression implements Expression {
     private boolean cacheEvalRst = true;
     private boolean evaluated;
-    private Object evaluationCache;
+    private Object  evaluationCache;
 
     @Override
     public Expression setCacheEvalRst(boolean cacheEvalRst) {
@@ -45,6 +45,7 @@ public abstract class AbstractExpression implements Expression {
         return evaluationInternal(parameters);
     }
 
-    protected abstract Object evaluationInternal(Map<? extends Object, ? extends Object> parameters);
+    protected abstract Object evaluationInternal(
+            Map<? extends Object, ? extends Object> parameters);
 
 }

@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.ast.stmt.dml;
 
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.misc.QueryExpression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
@@ -34,8 +33,8 @@ public class DMLInsertStatement extends DMLInsertReplaceStatement {
         UNDEF, LOW, DELAY, HIGH
     }
 
-    private final InsertMode mode;
-    private final boolean ignore;
+    private final InsertMode                         mode;
+    private final boolean                            ignore;
     private final List<Pair<Identifier, Expression>> duplicateUpdate;
 
     /**

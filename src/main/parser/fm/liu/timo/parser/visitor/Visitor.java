@@ -1,7 +1,6 @@
 package fm.liu.timo.parser.visitor;
 
 import java.util.Collection;
-
 import fm.liu.timo.parser.ast.ASTNode;
 import fm.liu.timo.parser.ast.expression.BinaryOperatorExpression;
 import fm.liu.timo.parser.ast.expression.PolyadicOperatorExpression;

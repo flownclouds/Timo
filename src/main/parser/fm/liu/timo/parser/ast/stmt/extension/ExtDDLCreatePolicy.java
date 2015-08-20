@@ -18,7 +18,6 @@ package fm.liu.timo.parser.ast.stmt.extension;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
 import fm.liu.timo.parser.ast.stmt.ddl.DDLStatement;
@@ -29,7 +28,7 @@ import fm.liu.timo.parser.visitor.Visitor;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class ExtDDLCreatePolicy implements DDLStatement {
-    private final Identifier name;
+    private final Identifier                      name;
     private final List<Pair<Integer, Expression>> proportion;
 
     public ExtDDLCreatePolicy(Identifier name) {

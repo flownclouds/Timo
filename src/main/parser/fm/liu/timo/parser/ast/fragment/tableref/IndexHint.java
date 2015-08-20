@@ -19,7 +19,6 @@ package fm.liu.timo.parser.ast.fragment.tableref;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.ASTNode;
 import fm.liu.timo.parser.visitor.Visitor;
 
@@ -40,9 +39,9 @@ public class IndexHint implements ASTNode {
         ALL, JOIN, GROUP_BY, ORDER_BY
     }
 
-    private final IndexAction action;
-    private final IndexType type;
-    private final IndexScope scope;
+    private final IndexAction  action;
+    private final IndexType    type;
+    private final IndexScope   scope;
     private final List<String> indexList;
 
     public IndexHint(IndexAction action, IndexType type, IndexScope scope, List<String> indexList) {

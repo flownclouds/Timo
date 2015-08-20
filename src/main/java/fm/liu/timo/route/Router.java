@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.pmw.tinylog.Logger;
 import fm.liu.timo.config.model.Database;
 import fm.liu.timo.config.model.Function;
 import fm.liu.timo.config.model.Table;
@@ -36,9 +37,41 @@ import fm.liu.timo.server.parser.ServerParse;
  * @author Liu Huanting 2015年5月10日
  */
 public class Router {
+    // hint格式示例： 
+    // /*!timo:node1,3*/select * from table_a; 仅在节点1和节点3上执行该语句
+    // /*!timo:master*/select * from table_a; 读写分离时强制在主库上执行该语句
+    private static final String HINT   = "/*!timo:";
+    private static final String NODE   = "node";
+    private static final String MASTER = "master";
+
     public static Outlets route(Database database, String sql, String charset, int type)
             throws SQLSyntaxErrorException {
         Outlets outlets = new Outlets();
+        sql = sql.trim();
+        if (sql.startsWith(HINT)) {
+            int end = sql.indexOf("*/");
+            if (end > 0) {
+                String hint = sql.substring(HINT.length(), end).trim();
+                sql = sql.substring(end + "*/".length());
+                type = ServerParse.parse(sql) & 0xff;
+                if (hint.startsWith(NODE)) {
+                    String[] nodes = hint.substring(NODE.length()).split(",");
+                    for (String node : nodes) {
+                        int id = Integer.parseInt(node);
+                        if (!database.getNodes().contains(id)) {
+                            throw new IllegalArgumentException(
+                                    "unknown datanoe" + id + " in hint:" + hint);
+                        }
+                        outlets.add(new Outlet(id, sql));
+                    }
+                    return outlets;
+                } else if (hint.startsWith(MASTER)) {
+                    outlets.setUsingMaster(true);
+                } else {
+                    Logger.warn("unsupported hint: {}", sql);
+                }
+            }
+        }
         SQLStatement stmt = SQLParserDelegate.parse(sql, charset);
         RouteVisitor visitor = new RouteVisitor(database);
         stmt.accept(visitor);

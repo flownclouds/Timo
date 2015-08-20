@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.ast.fragment.ddl;
 
 import java.util.List;
-
 import fm.liu.timo.parser.ast.ASTNode;
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
@@ -40,24 +39,24 @@ public class TableOptions implements ASTNode {
         DEFAULT, DYNAMIC, FIXED, COMPRESSED, REDUNDANT, COMPACT
     }
 
-    private Identifier engine;
-    private Expression autoIncrement;
-    private Expression avgRowLength;
-    private Identifier charSet;
-    private Identifier collation;
-    private Boolean checkSum;
-    private LiteralString comment;
-    private LiteralString connection;
-    private LiteralString dataDir;
-    private LiteralString indexDir;
-    private Boolean delayKeyWrite;
-    private InsertMethod insertMethod;
-    private Expression keyBlockSize;
-    private Expression maxRows;
-    private Expression minRows;
-    private PackKeys packKeys;
-    private LiteralString password;
-    private RowFormat rowFormat;
+    private Identifier       engine;
+    private Expression       autoIncrement;
+    private Expression       avgRowLength;
+    private Identifier       charSet;
+    private Identifier       collation;
+    private Boolean          checkSum;
+    private LiteralString    comment;
+    private LiteralString    connection;
+    private LiteralString    dataDir;
+    private LiteralString    indexDir;
+    private Boolean          delayKeyWrite;
+    private InsertMethod     insertMethod;
+    private Expression       keyBlockSize;
+    private Expression       maxRows;
+    private Expression       minRows;
+    private PackKeys         packKeys;
+    private LiteralString    password;
+    private RowFormat        rowFormat;
     private List<Identifier> union;
 
     // table_option:

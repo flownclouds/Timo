@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.ast.expression.logical;
 
 import java.util.Map;
-
 import fm.liu.timo.parser.ast.expression.BinaryOperatorExpression;
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.literal.LiteralBoolean;

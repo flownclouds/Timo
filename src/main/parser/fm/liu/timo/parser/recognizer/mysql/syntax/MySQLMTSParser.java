@@ -17,11 +17,9 @@
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
 import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
-
 import java.sql.SQLSyntaxErrorException;
 import java.util.HashMap;
 import java.util.Map;
-
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
 import fm.liu.timo.parser.ast.stmt.mts.MTSReleaseStatement;
 import fm.liu.timo.parser.ast.stmt.mts.MTSRollbackStatement;
@@ -38,6 +36,7 @@ public class MySQLMTSParser extends MySQLParser {
 
     private static final Map<String, SpecialIdentifier> specialIdentifiers =
             new HashMap<String, SpecialIdentifier>();
+
     static {
         specialIdentifiers.put("SAVEPOINT", SpecialIdentifier.SAVEPOINT);
         specialIdentifiers.put("WORK", SpecialIdentifier.WORK);

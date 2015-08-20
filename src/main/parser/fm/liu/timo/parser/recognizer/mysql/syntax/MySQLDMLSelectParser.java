@@ -17,14 +17,12 @@
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
 import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
-
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.fragment.GroupBy;
 import fm.liu.timo.parser.ast.fragment.Limit;
@@ -54,6 +52,7 @@ public class MySQLDMLSelectParser extends MySQLDMLParser {
 
     private static final Map<String, SpecialIdentifier> specialIdentifiers =
             new HashMap<String, SpecialIdentifier>();
+
     static {
         specialIdentifiers.put("SQL_BUFFER_RESULT", SpecialIdentifier.SQL_BUFFER_RESULT);
         specialIdentifiers.put("SQL_CACHE", SpecialIdentifier.SQL_CACHE);

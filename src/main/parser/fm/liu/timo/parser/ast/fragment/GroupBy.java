@@ -19,7 +19,6 @@ package fm.liu.timo.parser.ast.fragment;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.ASTNode;
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.util.Pair;
@@ -31,7 +30,7 @@ import fm.liu.timo.parser.visitor.Visitor;
 public class GroupBy implements ASTNode {
     /** might be {@link LinkedList} */
     private final List<Pair<Expression, SortOrder>> orderByList;
-    private boolean withRollup = false;
+    private boolean                                 withRollup = false;
 
     public boolean isWithRollup() {
         return withRollup;

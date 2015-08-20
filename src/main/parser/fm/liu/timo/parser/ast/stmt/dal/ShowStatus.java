@@ -25,8 +25,8 @@ import fm.liu.timo.parser.visitor.Visitor;
  */
 public class ShowStatus extends DALShowStatement {
     private final VariableScope scope;
-    private final String pattern;
-    private final Expression where;
+    private final String        pattern;
+    private final Expression    where;
 
     public ShowStatus(VariableScope scope, String pattern) {
         this.scope = scope;

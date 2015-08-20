@@ -20,7 +20,6 @@ import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.fragment.GroupBy;
 import fm.liu.timo.parser.ast.fragment.Limit;
@@ -51,14 +50,14 @@ public class DMLSelectStatement extends DMLQueryStatement {
     }
 
     public static final class SelectOption {
-        public SelectDuplicationStrategy resultDup = SelectDuplicationStrategy.ALL;
-        public boolean highPriority = false;
-        public boolean straightJoin = false;
-        public SmallOrBigResult resultSize = SmallOrBigResult.UNDEF;
-        public boolean sqlBufferResult = false;
-        public QueryCacheStrategy queryCache = QueryCacheStrategy.UNDEF;
-        public boolean sqlCalcFoundRows = false;
-        public LockMode lockMode = LockMode.UNDEF;
+        public SelectDuplicationStrategy resultDup        = SelectDuplicationStrategy.ALL;
+        public boolean                   highPriority     = false;
+        public boolean                   straightJoin     = false;
+        public SmallOrBigResult          resultSize       = SmallOrBigResult.UNDEF;
+        public boolean                   sqlBufferResult  = false;
+        public QueryCacheStrategy        queryCache       = QueryCacheStrategy.UNDEF;
+        public boolean                   sqlCalcFoundRows = false;
+        public LockMode                  lockMode         = LockMode.UNDEF;
 
         @Override
         public String toString() {
@@ -77,15 +76,15 @@ public class DMLSelectStatement extends DMLQueryStatement {
         }
     }
 
-    private final SelectOption option;
+    private final SelectOption             option;
     /** string: id | `id` | 'id' */
     private List<Pair<Expression, String>> selectExprList;
-    private final TableReferences tables;
-    private final Expression where;
-    private final GroupBy group;
-    private final Expression having;
-    private final OrderBy order;
-    private final Limit limit;
+    private final TableReferences          tables;
+    private final Expression               where;
+    private final GroupBy                  group;
+    private final Expression               having;
+    private final OrderBy                  order;
+    private final Limit                    limit;
 
     /**
      * @throws SQLSyntaxErrorException

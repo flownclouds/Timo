@@ -18,7 +18,6 @@ package fm.liu.timo.parser.ast.stmt.dml;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.fragment.Limit;
 import fm.liu.timo.parser.ast.fragment.OrderBy;
 import fm.liu.timo.parser.visitor.Visitor;
@@ -35,9 +34,9 @@ public class DMLSelectUnionStatement extends DMLQueryStatement {
      * 0 means all relations of selects are union all<br/>
      * last index of {@link #selectStmtList} means all relations of selects are union distinct<br/>
      */
-    private int firstDistinctIndex = 0;
-    private OrderBy orderBy;
-    private Limit limit;
+    private int                            firstDistinctIndex = 0;
+    private OrderBy                        orderBy;
+    private Limit                          limit;
 
     public DMLSelectUnionStatement(DMLSelectStatement select) {
         super();

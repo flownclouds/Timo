@@ -18,7 +18,6 @@ package fm.liu.timo.parser.ast.stmt.ddl;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.ASTNode;
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
@@ -34,15 +33,14 @@ import fm.liu.timo.parser.visitor.Visitor;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class DDLAlterTableStatement implements DDLStatement {
-    public static interface AlterSpecification extends ASTNode {
-    }
+    public static interface AlterSpecification extends ASTNode {}
 
     // | ADD [COLUMN] col_name column_definition [FIRST | AFTER col_name ]
     public static class AddColumn implements AlterSpecification {
-        private final Identifier columnName;
+        private final Identifier       columnName;
         private final ColumnDefinition columnDefine;
-        private final boolean first;
-        private final Identifier afterColumn;
+        private final boolean          first;
+        private final Identifier       afterColumn;
 
         /**
          * @param columnName
@@ -117,7 +115,7 @@ public class DDLAlterTableStatement implements DDLStatement {
     // | ADD {INDEX|KEY} [index_name] [index_type] (index_col_name,...)
     // [index_option] ...
     public static class AddIndex implements AlterSpecification {
-        private final Identifier indexName;
+        private final Identifier      indexName;
         private final IndexDefinition indexDef;
 
         /**
@@ -165,7 +163,7 @@ public class DDLAlterTableStatement implements DDLStatement {
     // | ADD [CONSTRAINT [symbol]] UNIQUE [INDEX|KEY] [index_name] [index_type]
     // (index_col_name,...) [index_option] ...
     public static class AddUniqueKey implements AlterSpecification {
-        private final Identifier indexName;
+        private final Identifier      indexName;
         private final IndexDefinition indexDef;
 
         public AddUniqueKey(Identifier indexName, IndexDefinition indexDef) {
@@ -191,7 +189,7 @@ public class DDLAlterTableStatement implements DDLStatement {
     // | ADD FULLTEXT [INDEX|KEY] [index_name] (index_col_name,...)
     // [index_option] ...
     public static class AddFullTextIndex implements AlterSpecification {
-        private final Identifier indexName;
+        private final Identifier      indexName;
         private final IndexDefinition indexDef;
 
         public AddFullTextIndex(Identifier indexName, IndexDefinition indexDef) {
@@ -216,7 +214,7 @@ public class DDLAlterTableStatement implements DDLStatement {
     // | ADD SPATIAL [INDEX|KEY] [index_name] (index_col_name,...)
     // [index_option] ...
     public static class AddSpatialIndex implements AlterSpecification {
-        private final Identifier indexName;
+        private final Identifier      indexName;
         private final IndexDefinition indexDef;
 
         public AddSpatialIndex(Identifier indexName, IndexDefinition indexDef) {
@@ -242,7 +240,7 @@ public class DDLAlterTableStatement implements DDLStatement {
     public static class AlterColumnDefaultVal implements AlterSpecification {
         private final Identifier columnName;
         private final Expression defaultValue;
-        private final boolean dropDefault;
+        private final boolean    dropDefault;
 
         /**
          * @param columnName
@@ -286,11 +284,11 @@ public class DDLAlterTableStatement implements DDLStatement {
     // | CHANGE [COLUMN] old_col_name new_col_name column_definition
     // [FIRST|AFTER col_name]
     public static class ChangeColumn implements AlterSpecification {
-        private final Identifier oldName;
-        private final Identifier newName;
+        private final Identifier       oldName;
+        private final Identifier       newName;
         private final ColumnDefinition colDef;
-        private final boolean first;
-        private final Identifier afterColumn;
+        private final boolean          first;
+        private final Identifier       afterColumn;
 
         public ChangeColumn(Identifier oldName, Identifier newName, ColumnDefinition colDef,
                 Identifier afterColumn) {
@@ -340,10 +338,10 @@ public class DDLAlterTableStatement implements DDLStatement {
 
     // | MODIFY [COLUMN] col_name column_definition [FIRST | AFTER col_name]
     public static class ModifyColumn implements AlterSpecification {
-        private final Identifier colName;
+        private final Identifier       colName;
         private final ColumnDefinition colDef;
-        private final boolean first;
-        private final Identifier afterColumn;
+        private final boolean          first;
+        private final Identifier       afterColumn;
 
         public ModifyColumn(Identifier colName, ColumnDefinition colDef, Identifier afterColumn) {
             this.colName = colName;
@@ -452,17 +450,17 @@ public class DDLAlterTableStatement implements DDLStatement {
 
     // ADD, ALTER, DROP, and CHANGE can be multiple
 
-    private final boolean ignore;
-    private final Identifier table;
-    private TableOptions tableOptions;
+    private final boolean                  ignore;
+    private final Identifier               table;
+    private TableOptions                   tableOptions;
     private final List<AlterSpecification> alters;
-    private boolean disableKeys;
-    private boolean enableKeys;
-    private boolean discardTableSpace;
-    private boolean importTableSpace;
-    private Identifier renameTo;
+    private boolean                        disableKeys;
+    private boolean                        enableKeys;
+    private boolean                        discardTableSpace;
+    private boolean                        importTableSpace;
+    private Identifier                     renameTo;
     /** charsetName -> collate */
-    private Pair<Identifier, Identifier> convertCharset;
+    private Pair<Identifier, Identifier>   convertCharset;
 
     public DDLAlterTableStatement(boolean ignore, Identifier table) {
         this.ignore = ignore;

@@ -19,7 +19,6 @@ package fm.liu.timo.parser.ast.expression.arithmeic;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.UnaryOperatorExpression;
 import fm.liu.timo.parser.util.ExprEvalUtils;

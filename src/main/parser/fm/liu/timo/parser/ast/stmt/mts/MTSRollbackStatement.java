@@ -26,13 +26,12 @@ import fm.liu.timo.parser.visitor.Visitor;
 public class MTSRollbackStatement implements SQLStatement {
     public static enum CompleteType {
         /** not specified, then use default */
-        UN_DEF, CHAIN,
-        /** MySQL's default */
+        UN_DEF, CHAIN, /** MySQL's default */
         NO_CHAIN, RELEASE, NO_RELEASE
     }
 
     private final CompleteType completeType;
-    private final Identifier savepoint;
+    private final Identifier   savepoint;
 
     public MTSRollbackStatement(CompleteType completeType) {
         if (completeType == null)

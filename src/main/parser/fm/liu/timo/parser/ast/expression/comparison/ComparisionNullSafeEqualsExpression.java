@@ -17,7 +17,6 @@
 package fm.liu.timo.parser.ast.expression.comparison;
 
 import java.util.Map;
-
 import fm.liu.timo.parser.ast.expression.BinaryOperatorExpression;
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.ReplacableExpression;
@@ -31,8 +30,8 @@ import fm.liu.timo.parser.visitor.Visitor;
  * 
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
-public class ComparisionNullSafeEqualsExpression extends BinaryOperatorExpression implements
-        ReplacableExpression {
+public class ComparisionNullSafeEqualsExpression extends BinaryOperatorExpression
+        implements ReplacableExpression {
     public ComparisionNullSafeEqualsExpression(Expression leftOprand, Expression rightOprand) {
         super(leftOprand, rightOprand, PRECEDENCE_COMPARISION);
     }

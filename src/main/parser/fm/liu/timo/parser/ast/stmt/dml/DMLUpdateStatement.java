@@ -19,7 +19,6 @@ package fm.liu.timo.parser.ast.stmt.dml;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import fm.liu.timo.parser.ast.expression.Expression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
 import fm.liu.timo.parser.ast.fragment.Limit;
@@ -32,13 +31,13 @@ import fm.liu.timo.parser.visitor.Visitor;
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
  */
 public class DMLUpdateStatement extends DMLStatement {
-    private final boolean lowPriority;
-    private final boolean ignore;
-    private final TableReferences tableRefs;
+    private final boolean                            lowPriority;
+    private final boolean                            ignore;
+    private final TableReferences                    tableRefs;
     private final List<Pair<Identifier, Expression>> values;
-    private final Expression where;
-    private final OrderBy orderBy;
-    private final Limit limit;
+    private final Expression                         where;
+    private final OrderBy                            orderBy;
+    private final Limit                              limit;
 
     public DMLUpdateStatement(boolean lowPriority, boolean ignore, TableReferences tableRefs,
             List<Pair<Identifier, Expression>> values, Expression where, OrderBy orderBy,
