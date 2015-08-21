@@ -22,4 +22,5 @@ public interface Info {
     public int HAS_ORDERBY  = 4;
     public int HAS_DISTINCT = 8;
     public int HAS_LIMIT    = 16;
+    public int TO_ALL_NODE  = 32;
 }

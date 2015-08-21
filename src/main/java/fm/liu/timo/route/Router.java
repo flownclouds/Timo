@@ -77,8 +77,7 @@ public class Router {
         stmt.accept(visitor);
         Table table = visitor.getTable();
         if (table == null) {
-            Outlet out = new Outlet(database.getRandomNode(), sql);
-            outlets.add(out);
+            outlets.add(new Outlet(database.getRandomNode(), sql));
             return outlets;
         }
         ArrayList<Object> values = visitor.getValues();
@@ -87,8 +86,7 @@ public class Router {
         switch (type) {
             case ServerParse.SELECT:
                 if (TableType.GLOBAL.equals(table.getType())) {
-                    Outlet out = new Outlet(table.getRandomNode(), sql);
-                    outlets.add(out);
+                    outlets.add(new Outlet(table.getRandomNode(), sql));
                     return outlets;
                 }
                 if ((info & Info.HAS_GROUPBY) == Info.HAS_GROUPBY) {
@@ -109,7 +107,17 @@ public class Router {
                 }
                 break;
         }
+        if ((info & Info.TO_ALL_NODE) == Info.TO_ALL_NODE) {
+            return toAllNode(outlets, table, sql);
+        }
         return route(stmt, outlets, table, values, sql);
+    }
+
+    private static Outlets toAllNode(Outlets outlets, Table table, String sql) {
+        for (int i : table.getNodes()) {
+            outlets.add(new Outlet(i, sql));
+        }
+        return outlets;
     }
 
     /**
@@ -142,8 +150,7 @@ public class Router {
             }
             for (Entry<Integer, List<RowExpression>> entry : results.entrySet()) {
                 stmt.setReplaceRowList(entry.getValue());
-                Outlet out = new Outlet(entry.getKey(), updateSQL(stmt));
-                outlets.add(out);
+                outlets.add(new Outlet(entry.getKey(), updateSQL(stmt)));
                 stmt.clearReplaceRowList();
             }
         }

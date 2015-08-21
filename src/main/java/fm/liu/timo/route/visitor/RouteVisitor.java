@@ -25,7 +25,9 @@ import fm.liu.timo.config.model.Table;
 import fm.liu.timo.config.model.Table.TableType;
 import fm.liu.timo.merger.MergeType;
 import fm.liu.timo.parser.ast.expression.Expression;
+import fm.liu.timo.parser.ast.expression.PolyadicOperatorExpression;
 import fm.liu.timo.parser.ast.expression.comparison.ComparisionEqualsExpression;
+import fm.liu.timo.parser.ast.expression.logical.LogicalOrExpression;
 import fm.liu.timo.parser.ast.expression.primary.Identifier;
 import fm.liu.timo.parser.ast.expression.primary.RowExpression;
 import fm.liu.timo.parser.ast.expression.primary.function.groupby.Count;
@@ -176,6 +178,12 @@ public class RouteVisitor extends Visitor {
         } else if (right instanceof Identifier) {
             recordValue((Identifier) right, left.evaluation(Collections.emptyMap()));
         }
+    }
+
+    @Override
+    public void visit(LogicalOrExpression node) {
+        info |= Info.TO_ALL_NODE;
+        visit((PolyadicOperatorExpression) node);
     }
 
     @Override
