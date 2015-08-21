@@ -88,8 +88,7 @@ public final class NIOConnector extends Thread {
                 channel.register(selector, SelectionKey.OP_CONNECT, c);
                 channel.connect(new InetSocketAddress(c.getHost(), c.getPort()));
             } catch (Throwable e) {
-                e.printStackTrace();
-                c.close();
+                c.close(e.getMessage());
             }
         }
     }
@@ -110,7 +109,7 @@ public final class NIOConnector extends Thread {
         } catch (Throwable e) {
             clearSelectionKey(key);
             c.onConnectFailed(e);
-            c.close();
+            c.close(e.getMessage());
         }
     }
 

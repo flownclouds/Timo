@@ -33,6 +33,10 @@ public class Sorter {
         this.mergeInfo = mergeInfo;
     }
 
+    public MergeInfo[] getMergeInfo() {
+        return mergeInfo;
+    }
+
     public void offer(ArrayDeque<RowDataPacket> rows) {
         this.rows = rows;
     }

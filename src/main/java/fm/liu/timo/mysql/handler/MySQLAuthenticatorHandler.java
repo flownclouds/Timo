@@ -57,7 +57,7 @@ public class MySQLAuthenticatorHandler implements NIOHandler {
                 ErrorPacket err = new ErrorPacket();
                 err.read(data);
                 String msg = new String(err.message);
-                con.close();
+                con.close(msg);
                 throw new RuntimeException(msg);
             case EOFPacket.FIELD_COUNT:
                 auth323(data[3]);

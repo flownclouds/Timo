@@ -39,7 +39,7 @@ public class ManagerConnection extends FrontendConnection {
     }
 
     @Override
-    public void close() {
+    public void close(String reason) {
         if (super.closed.compareAndSet(false, true)) {
             processor.remove(this);
             super.cleanup();

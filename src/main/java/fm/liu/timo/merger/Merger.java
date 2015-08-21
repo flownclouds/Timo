@@ -66,7 +66,11 @@ public class Merger {
             groupBy = new MergeInfo[columns.size()];
             int i = 0;
             for (String column : columns) {
-                groupBy[i++] = new MergeInfo(MergeType.ASC, columnInfos.get(column));
+                ColumnInfo columnInfo = columnInfos.get(column);
+                if (columnInfo == null) {
+                    throw new IllegalArgumentException("can't find group by column in select list");
+                }
+                groupBy[i++] = new MergeInfo(MergeType.ASC, columnInfo);
             }
         }
         if ((info & Info.NEED_MERGE) == Info.NEED_MERGE) {

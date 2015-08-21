@@ -110,7 +110,7 @@ public class Node {
                 if (source.isAvailable()) {
                     if (!manual) {
                         this.source.getConfig().ban();
-                        this.source.clear();
+                        this.source.clear("datanode handover by manager");
                     } else {
                         Logger.info("handover datanode {} to datasource {} by manager.",
                                 this.getID(), source);
@@ -126,9 +126,9 @@ public class Node {
         return success;
     }
 
-    public void clear() {
+    public void clear(String reason) {
         for (Source source : sources) {
-            source.clear();
+            source.clear(reason);
         }
     }
 

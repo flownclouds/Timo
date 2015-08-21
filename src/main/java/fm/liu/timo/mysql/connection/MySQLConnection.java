@@ -18,6 +18,7 @@ import java.nio.channels.SocketChannel;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import org.pmw.tinylog.Logger;
 import fm.liu.timo.config.Capabilities;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.mysql.ByteUtil;
@@ -92,7 +93,7 @@ public class MySQLConnection extends BackendConnection {
             if (!isAuthenticated) {
                 super.onRead(got);
             } else {
-                this.close();
+                this.close("no handler to deal with the data");
             }
         }
     }
@@ -269,7 +270,7 @@ public class MySQLConnection extends BackendConnection {
     }
 
     @Override
-    public void close() {
+    public void close(String reason) {
         if (resultHandler != null) {
             // 由线程池去执行关闭后的操作
             final ResultHandler handler = resultHandler;
@@ -293,6 +294,9 @@ public class MySQLConnection extends BackendConnection {
         datasource.remove(this);
         processor.remove(this);
         super.cleanup();// 立即关闭物理socket
+        if (Logger.isDebugEnabled()) {
+            Logger.debug("connection {} closed due to {}", this, reason);
+        }
     }
 
     @Override

@@ -44,7 +44,7 @@ public interface NIOConnection {
     /**
      * 关闭连接
      */
-    void close();
+    void close(String reason);
 
     long getID();
 

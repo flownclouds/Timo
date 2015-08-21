@@ -48,11 +48,11 @@ public class NIOActor {
         }
         int got = channel.read(buffer);
         if (got < 0) {
-            con.close();
+            con.close("stream closed");
             return;
         } else if (got == 0) {
             if (!channel.isOpen()) {
-                con.close();
+                con.close("socket closed");
             }
             return;
         }
@@ -76,7 +76,7 @@ public class NIOActor {
                 }
             }
         } catch (IOException e) {
-            con.close();
+            con.close(e.getMessage());
         }
     }
 
@@ -100,7 +100,7 @@ public class NIOActor {
         while ((buffer = con.getWriteQueue().poll()) != null) {
             if (buffer.limit() == 0) {
                 con.recycle(buffer);
-                con.close();
+                con.close("quit");
                 return true;
             }
             buffer.flip();

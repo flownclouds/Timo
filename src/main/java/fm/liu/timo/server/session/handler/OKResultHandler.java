@@ -68,7 +68,7 @@ public abstract class OKResultHandler implements ResultHandler {
         if (con instanceof MySQLConnection) {
             ((MySQLConnection) con).setResultHandler(null);
         }
-        con.close();
+        con.close(error);
     }
 
 }

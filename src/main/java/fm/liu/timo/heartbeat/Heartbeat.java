@@ -44,7 +44,7 @@ public class Heartbeat {
                 handover();
             } else {
                 this.updateStatus(HeartbeatStatus.OK);
-                this.connection.close();
+                this.connection.close("heartbeat timeout");
                 this.connection = null;
                 connect();
             }
@@ -69,12 +69,12 @@ public class Heartbeat {
     private void handover() {
         this.stop();
         if (this.connection != null) {
-            this.connection.close();
+            this.connection.close("heartbeat error");
             this.connection = null;
         }
         if (source != node.getSource()) {
             source.getConfig().ban();
-            source.clear();
+            source.clear("clear datasource due to heartbeat error");
             return;
         }
         try {

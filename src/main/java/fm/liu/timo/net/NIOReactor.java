@@ -21,7 +21,6 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import org.pmw.tinylog.Logger;
-import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.net.connection.AbstractConnection;
 
 /**
@@ -108,7 +107,7 @@ public final class NIOReactor {
                     c.getActor().register(selector);
                     c.register();
                 } catch (Throwable e) {
-                    c.error(ErrorCode.ERR_REGISTER, e);
+                    c.close(e.getMessage());
                 }
             }
         }
@@ -117,7 +116,7 @@ public final class NIOReactor {
             try {
                 c.read();
             } catch (Throwable e) {
-                c.error(ErrorCode.ERR_READ, e);
+                c.close(e.getMessage());
             }
         }
     }

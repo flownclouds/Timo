@@ -125,6 +125,11 @@ public class MySQLMultiNodeHandler extends SessionResultHandler {
             merger.init(columnInfos, fieldCount);
             eof[3] = ++packetId;
             buffer = front.writeToBuffer(eof, buffer);
+        } catch (Exception e) {
+            errMsg = e.getMessage();
+            onError();
+            setFail(ErrorCode.ER_YES, errMsg);
+            con.release();
         } finally {
             lock.unlock();
         }

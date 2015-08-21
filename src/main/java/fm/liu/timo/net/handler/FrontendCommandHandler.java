@@ -51,7 +51,7 @@ public class FrontendCommandHandler implements NIOHandler {
                 break;
             case CommandPacket.COM_QUIT:
                 commands.doQuit();
-                source.close();
+                source.close("quit");
                 break;
             case CommandPacket.COM_PROCESS_KILL:
                 commands.doKill();

@@ -56,7 +56,7 @@ public class KillHandler {
                 }
             }
             if (fc != null) {
-                fc.close();
+                fc.close("killed");
                 getOkPacket().write(c);
             } else {
                 c.writeErrMessage(ErrorCode.ER_NO_SUCH_THREAD, "Unknown connection id:" + id);

@@ -170,7 +170,7 @@ public final class NIOProcessor {
                 // 空闲超时检查
                 if (TimeUtil.currentTimeMillis() - c.getVariables().getLastActiveTime() > c
                         .getIdleTimeout()) {
-                    c.close();
+                    c.close("idle timeout");
                 }
             }
         }
@@ -189,7 +189,7 @@ public final class NIOProcessor {
             // 查询超时检查。
             if (c.isRunning() && TimeUtil.currentTimeMillis()
                     - c.getVariables().getLastActiveTime() > queryTimeout) {
-                c.close();
+                c.close("query timeout");
             }
             // 清理已关闭连接
             if (c.isClosed()) {

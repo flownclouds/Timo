@@ -43,7 +43,7 @@ public class FrontendAuthenticator implements NIOHandler {
     public void handle(byte[] data) {
         // check quit packet
         if (data.length == QuitPacket.QUIT.length && data[4] == CommandPacket.COM_QUIT) {
-            source.close();
+            source.close("quit");
             return;
         }
 

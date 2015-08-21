@@ -130,7 +130,7 @@ public class TimoConfig {
         }
         if (success) {
             for (Node node : _nodes.values()) {
-                node.clear();
+                node.clear("clear old node due to reload config");
             }
             lastReloadTime = TimeUtil.currentTimeMillis();
         }
@@ -162,14 +162,14 @@ public class TimoConfig {
             success = true;
         } catch (Exception e) {
             for (Node node : _nodes.values()) {
-                node.clear();
+                node.clear("clear back nodes due to rollback config failure");
             }
         } finally {
             lock.unlock();
         }
         if (success) {
             for (Node node : backNodes) {
-                node.clear();
+                node.clear("clear backnodes due to rollback config");
             }
         }
         return success;

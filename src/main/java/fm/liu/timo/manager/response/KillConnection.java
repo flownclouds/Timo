@@ -35,7 +35,7 @@ public final class KillConnection {
         if (list != null)
             for (NIOConnection c : list) {
                 Logger.info("{} is killed by manager", c);
-                c.close();
+                c.close("killed by manager");
                 count++;
             }
         OkPacket packet = new OkPacket();

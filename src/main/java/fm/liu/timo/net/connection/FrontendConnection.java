@@ -404,7 +404,6 @@ public abstract class FrontendConnection extends AbstractConnection {
 
     @Override
     public void error(int errCode, Throwable t) {
-        t.printStackTrace();
         if (this.isClosed()) {
             return;
         }

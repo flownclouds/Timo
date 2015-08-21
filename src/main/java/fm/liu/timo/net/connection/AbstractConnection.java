@@ -208,7 +208,7 @@ public abstract class AbstractConnection implements NIOConnection {
         try {
             check();
         } catch (Exception e) {
-            this.close();
+            this.close(e.getMessage());
         }
     }
 

@@ -70,7 +70,7 @@ public class Source {
                 e.printStackTrace();
             }
         }
-        if (idle.size() != size) {
+        if (idle.size() < size) {
             return false;
         } else {
             return true;
@@ -151,7 +151,7 @@ public class Source {
         if (decrease > 0) {
             ArrayList<BackendConnection> connections = get(decrease);
             for (BackendConnection connection : connections) {
-                connection.close();
+                connection.close("clear spare idle connection");
             }
         }
         long lastActiveTime = TimeUtil.currentTimeMillis() - config.getIdleCheckPeriod();
@@ -205,9 +205,9 @@ public class Source {
         return heartbeat;
     }
 
-    public void clear() {
+    public void clear(String reason) {
         for (BackendConnection connection : connections.values()) {
-            connection.close();
+            connection.close(reason);
         }
         connections.clear();
         heartbeat.stop();

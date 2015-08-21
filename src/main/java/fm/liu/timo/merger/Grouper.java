@@ -66,9 +66,10 @@ public class Grouper {
         if (sorter == null) {
             return true;
         }
-        int length = mergeInfo.length;
+        MergeInfo[] info = sorter.getMergeInfo();
+        int length = info.length;
         for (int i = 0; i < length; i++) {
-            int index = mergeInfo[i].columnInfo.index;
+            int index = info[i].columnInfo.index;
             if (!Arrays.equals(nextRow.fieldValues.get(index), row.fieldValues.get(index))) {
                 return false;
             }
