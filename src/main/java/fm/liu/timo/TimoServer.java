@@ -20,7 +20,6 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.pmw.tinylog.Logger;
 import fm.liu.messenger.Mail;
-import fm.liu.messenger.PostOffice;
 import fm.liu.messenger.User;
 import fm.liu.timo.config.Versions;
 import fm.liu.timo.config.model.SystemConfig;
@@ -43,6 +42,11 @@ import fm.liu.timo.util.TimeUtil;
 public class TimoServer {
     public static final String      NAME               = "Timo";
     private static final long       TIME_UPDATE_PERIOD = 20L;
+    private static final User       RECORDER           = new SQLRecorder();
+    private static final User       SENDER             = new User() {
+        @Override
+        public void receive(Mail<?> mail) {}
+    };
     private static final TimoServer INSTANCE           = new TimoServer();
 
     public static final TimoServer getInstance() {
@@ -54,8 +58,6 @@ public class TimoServer {
     private final NameableExecutor timerExecutor;
     private final AtomicBoolean    isOnline;
     private final long             startupTime;
-    private final User             sender;
-    private final User             recorder;
     private NIOProcessor[]         processors;
     private NIOConnector           connector;
     private NIOAcceptor            manager;
@@ -69,22 +71,15 @@ public class TimoServer {
         this.timerExecutor = ExecutorUtil.create("TimerExecutor", system.getTimerExecutor());
         this.isOnline = new AtomicBoolean(true);
         this.startupTime = TimeUtil.currentTimeMillis();
-        PostOffice.getInstance();
-        this.sender = new User() {
-            @Override
-            public void receive(Mail<?> mail) {}
-        };
-        this.recorder = new SQLRecorder();
-        sender.register();
-        recorder.register();
+        RECORDER.register();
     }
 
-    public User getSender() {
-        return sender;
+    public static User getSender() {
+        return SENDER;
     }
 
-    public User getRecorder() {
-        return recorder;
+    public static User getRecorder() {
+        return RECORDER;
     }
 
     public TimoConfig getConfig() {

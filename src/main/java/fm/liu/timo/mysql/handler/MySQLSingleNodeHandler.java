@@ -90,8 +90,8 @@ public class MySQLSingleNodeHandler extends SessionResultHandler {
     private void record(BackendConnection con) {
         long lastActiveTime = con.getVariables().getLastActiveTime();
         Datasource source = ((MySQLConnection) con).getDatasource().getConfig();
-        TimoServer.getInstance().getSender()
-                .send(new Mail<SQLRecord>(TimoServer.getInstance().getRecorder(),
+        TimoServer.getSender()
+                .send(new Mail<SQLRecord>(TimoServer.getRecorder(),
                         new SQLRecord(source.getHost(), source.getDB(), sql, lastActiveTime,
                                 TimeUtil.currentTimeMillis() - lastActiveTime,
                                 source.getDatanodeID())));

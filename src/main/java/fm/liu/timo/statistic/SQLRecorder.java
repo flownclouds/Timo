@@ -68,7 +68,7 @@ public final class SQLRecorder extends User {
         try {
             if (records.containsKey(sql)) {
                 SQLRecord _records = records.get(sql);
-                if (_records.compareTo(record) > 0) {
+                if (_records.compareTo(record) < 0) {
                     record.count.set(_records.count.incrementAndGet());
                     records.put(sql, record);
                 } else {
