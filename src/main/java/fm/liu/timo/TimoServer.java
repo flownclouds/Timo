@@ -40,14 +40,14 @@ import fm.liu.timo.util.TimeUtil;
  * @author xianmao.hexm 2011-4-19 下午02:58:59
  */
 public class TimoServer {
-    public static final String      NAME               = "Timo";
-    private static final long       TIME_UPDATE_PERIOD = 20L;
-    private static final User       RECORDER           = new SQLRecorder();
-    private static final User       SENDER             = new User() {
+    public static final String       NAME               = "Timo";
+    private static final long        TIME_UPDATE_PERIOD = 20L;
+    private static final SQLRecorder RECORDER           = new SQLRecorder();
+    private static final User        SENDER             = new User() {
         @Override
         public void receive(Mail<?> mail) {}
     };
-    private static final TimoServer INSTANCE           = new TimoServer();
+    private static final TimoServer  INSTANCE           = new TimoServer();
 
     public static final TimoServer getInstance() {
         return INSTANCE;
@@ -78,7 +78,7 @@ public class TimoServer {
         return SENDER;
     }
 
-    public static User getRecorder() {
+    public static SQLRecorder getRecorder() {
         return RECORDER;
     }
 

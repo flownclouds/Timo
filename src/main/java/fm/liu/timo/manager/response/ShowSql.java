@@ -39,7 +39,7 @@ public class ShowSql extends ShowHandler {
     @Override
     public ArrayList<Object[]> getRows() {
         ArrayList<Object[]> rows = new ArrayList<>();
-        SQLRecorder recorder = (SQLRecorder) TimoServer.getInstance().getRecorder();
+        SQLRecorder recorder = TimoServer.getRecorder();
         List<SQLRecord> recordes = recorder.getRecords();
         for (SQLRecord record : recordes) {
             if (record != null) {
