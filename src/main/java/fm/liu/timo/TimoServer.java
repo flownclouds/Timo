@@ -19,6 +19,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.pmw.tinylog.Logger;
+import fm.liu.messenger.Mail;
+import fm.liu.messenger.PostOffice;
+import fm.liu.messenger.User;
 import fm.liu.timo.config.Versions;
 import fm.liu.timo.config.model.SystemConfig;
 import fm.liu.timo.manager.ManagerConnectionFactory;
@@ -29,6 +32,7 @@ import fm.liu.timo.net.backend.Node;
 import fm.liu.timo.net.connection.Variables;
 import fm.liu.timo.parser.recognizer.mysql.lexer.MySQLLexer;
 import fm.liu.timo.server.ServerConnectionFactory;
+import fm.liu.timo.statistic.SQLRecorder;
 import fm.liu.timo.util.ExecutorUtil;
 import fm.liu.timo.util.NameableExecutor;
 import fm.liu.timo.util.TimeUtil;
@@ -50,6 +54,8 @@ public class TimoServer {
     private final NameableExecutor timerExecutor;
     private final AtomicBoolean    isOnline;
     private final long             startupTime;
+    private final User             sender;
+    private final User             recorder;
     private NIOProcessor[]         processors;
     private NIOConnector           connector;
     private NIOAcceptor            manager;
@@ -63,6 +69,22 @@ public class TimoServer {
         this.timerExecutor = ExecutorUtil.create("TimerExecutor", system.getTimerExecutor());
         this.isOnline = new AtomicBoolean(true);
         this.startupTime = TimeUtil.currentTimeMillis();
+        PostOffice.getInstance();
+        this.sender = new User() {
+            @Override
+            public void receive(Mail<?> mail) {}
+        };
+        this.recorder = new SQLRecorder();
+        sender.register();
+        recorder.register();
+    }
+
+    public User getSender() {
+        return sender;
+    }
+
+    public User getRecorder() {
+        return recorder;
     }
 
     public TimoConfig getConfig() {

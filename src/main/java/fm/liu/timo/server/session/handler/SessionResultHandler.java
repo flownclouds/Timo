@@ -65,4 +65,6 @@ public abstract class SessionResultHandler implements ResultHandler {
     protected boolean failed() {
         return failed.get();
     }
+
+    abstract public void setSQL(String sql);
 }

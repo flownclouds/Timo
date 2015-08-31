@@ -33,8 +33,7 @@ public class ManagerConnection extends FrontendConnection {
         if (isAuthenticated) {
             return super.isIdleTimeout();
         } else {
-            return TimeUtil.currentTimeMillis() > Math.max(lastWriteTime, lastReadTime)
-                    + AUTH_TIMEOUT;
+            return TimeUtil.currentTimeMillis() > variables.getLastActiveTime() + AUTH_TIMEOUT;
         }
     }
 

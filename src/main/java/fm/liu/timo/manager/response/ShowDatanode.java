@@ -27,7 +27,7 @@ public class ShowDatanode extends ShowHandler {
 
     @Override
     public String getInfo() {
-        return "show status of datanodes on timo-server";
+        return "show status of datanodes in timo-server";
     }
 
     @Override

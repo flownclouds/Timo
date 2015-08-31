@@ -27,7 +27,7 @@ import fm.liu.timo.route.Outlet;
 import fm.liu.timo.route.Outlets;
 import fm.liu.timo.server.ServerConnection;
 import fm.liu.timo.server.parser.ServerParse;
-import fm.liu.timo.server.session.handler.ResultHandler;
+import fm.liu.timo.server.session.handler.SessionResultHandler;
 
 /**
  * @author Liu Huanting 2015年5月9日
@@ -64,10 +64,12 @@ public class AbstractSession implements Session {
     public void execute(Outlets outs, int type) {
         boolean read = type == ServerParse.SELECT;
         boolean usingMaster = outs.usingMaster();
-        ResultHandler handler = chooseHandler(outs, type);
+        SessionResultHandler handler = chooseHandler(outs, type);
         TimoConfig config = TimoServer.getInstance().getConfig();
         for (Outlet out : outs.getResult()) {
+            String sql = out.getSql();
             Node node = config.getNodes().get(out.getID());
+            handler.setSQL(sql);
             if (usingMaster) {
                 node.getSource().query(out.getSql(), handler);
             } else {
@@ -76,7 +78,7 @@ public class AbstractSession implements Session {
         }
     }
 
-    private ResultHandler chooseHandler(Outlets outs, int type) {
+    private SessionResultHandler chooseHandler(Outlets outs, int type) {
         int size = outs.size();
         if (1 == size) {
             return new MySQLSingleNodeHandler(this);

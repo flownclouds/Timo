@@ -13,18 +13,31 @@
  */
 package fm.liu.timo.statistic;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * @author xianmao.hexm
  */
 public final class SQLRecord implements Comparable<SQLRecord> {
 
-    public String host;
-    public String schema;
-    public String statement;
-    public long   startTime;
-    public long   executeTime;
-    public String dataNode;
-    public int    dataNodeIndex;
+    public final String     host;
+    public final String     schema;
+    public final String     statement;
+    public final long       startTime;
+    public final long       executeTime;
+    public final int        datanode;
+    public final AtomicLong count = new AtomicLong();
+
+    public SQLRecord(String host, String schema, String statement, long startTime, long executeTime,
+            int datanode) {
+
+        this.host = host;
+        this.schema = schema;
+        this.statement = statement;
+        this.startTime = startTime;
+        this.executeTime = executeTime;
+        this.datanode = datanode;
+    }
 
     @Override
     public int compareTo(SQLRecord o) {

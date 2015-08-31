@@ -15,6 +15,7 @@ import fm.liu.timo.manager.response.ShowHelp;
 import fm.liu.timo.manager.response.ShowProcessor;
 import fm.liu.timo.manager.response.ShowServer;
 import fm.liu.timo.manager.response.ShowSession;
+import fm.liu.timo.manager.response.ShowSql;
 import fm.liu.timo.manager.response.ShowThread;
 import fm.liu.timo.manager.response.ShowVersion;
 
@@ -40,6 +41,7 @@ public class DescHandler {
         map.put("command", null);
         map.put("operation", null);
         map.put("table", null);
+        map.put("sql", new ShowSql());
         map.put("help", new ShowHelp());
     }
 

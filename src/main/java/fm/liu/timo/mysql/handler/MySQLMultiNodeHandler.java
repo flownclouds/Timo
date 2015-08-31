@@ -18,9 +18,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import fm.liu.messenger.Mail;
+import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.ErrorCode;
+import fm.liu.timo.config.model.Datasource;
 import fm.liu.timo.merger.ColumnInfo;
 import fm.liu.timo.merger.Merger;
+import fm.liu.timo.mysql.connection.MySQLConnection;
 import fm.liu.timo.net.connection.BackendConnection;
 import fm.liu.timo.net.mysql.ErrorPacket;
 import fm.liu.timo.net.mysql.FieldPacket;
@@ -29,7 +33,9 @@ import fm.liu.timo.net.mysql.RowDataPacket;
 import fm.liu.timo.server.ServerConnection;
 import fm.liu.timo.server.session.Session;
 import fm.liu.timo.server.session.handler.SessionResultHandler;
+import fm.liu.timo.statistic.SQLRecord;
 import fm.liu.timo.util.StringUtil;
+import fm.liu.timo.util.TimeUtil;
 
 /**
  * @author Liu Huanting 2015年5月9日
@@ -39,6 +45,7 @@ public class MySQLMultiNodeHandler extends SessionResultHandler {
     protected long    insertId     = 0;
     protected boolean returned     = false;
     protected Merger  merger;
+    protected String  sql;
 
     public MySQLMultiNodeHandler(Session session, Merger merger, int size) {
         super.session = session;
@@ -150,6 +157,7 @@ public class MySQLMultiNodeHandler extends SessionResultHandler {
 
     @Override
     public void eof(byte[] eof, BackendConnection con) {
+        record(con);
         con.release();
         if (decrement()) {
             if (failed()) {
@@ -189,6 +197,16 @@ public class MySQLMultiNodeHandler extends SessionResultHandler {
         }
     }
 
+    private void record(BackendConnection con) {
+        long lastActiveTime = con.getVariables().getLastActiveTime();
+        Datasource source = ((MySQLConnection) con).getDatasource().getConfig();
+        TimoServer.getInstance().getSender()
+                .send(new Mail<SQLRecord>(TimoServer.getInstance().getRecorder(),
+                        new SQLRecord(source.getHost(), source.getDB(), sql, lastActiveTime,
+                                TimeUtil.currentTimeMillis() - lastActiveTime,
+                                source.getDatanodeID())));
+    }
+
     @Override
     public void close(String reason) {
         if (decrement()) {
@@ -198,6 +216,11 @@ public class MySQLMultiNodeHandler extends SessionResultHandler {
             err.message = StringUtil.encode(reason, session.getFront().getCharset());
             err.write(session.getFront());
         }
+    }
+
+    @Override
+    public void setSQL(String sql) {
+        this.sql = sql;
     }
 
 }

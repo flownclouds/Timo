@@ -13,115 +13,73 @@
  */
 package fm.liu.timo.statistic;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
+import fm.liu.messenger.Mail;
+import fm.liu.messenger.User;
 
 /**
  * SQL统计排序记录器
  * 
  * @author xianmao.hexm 2010-9-30 上午10:48:28
  */
-public final class SQLRecorder {
+public final class SQLRecorder extends User {
+    private volatile ConcurrentHashMap<String, SQLRecord> records;
+    private final ReentrantLock                           lock;
 
-    private int                 index;
-    private long                minValue;
-    private final int           count;
-    private final int           lastIndex;
-    private final SQLRecord[]   records;
-    private final ReentrantLock lock;
-
-    public SQLRecorder(int count) {
-        this.count = count;
-        this.lastIndex = count - 1;
-        this.records = new SQLRecord[count];
+    public SQLRecorder() {
+        this.records = new ConcurrentHashMap<>();
         this.lock = new ReentrantLock();
     }
 
-    public SQLRecord[] getRecords() {
-        return records;
+    public List<SQLRecord> getRecords() {
+        List<SQLRecord> results = new ArrayList<>();
+        if (!records.isEmpty()) {
+            List<Map.Entry<String, SQLRecord>> entryList =
+                    new ArrayList<Map.Entry<String, SQLRecord>>(records.entrySet());
+            Collections.sort(entryList, new Comparator<Map.Entry<String, SQLRecord>>() {
+                public int compare(Entry<String, SQLRecord> entry1,
+                        Entry<String, SQLRecord> entry2) {
+                    // 倒序
+                    return entry2.getValue().compareTo(entry1.getValue());
+                }
+            });
+            Iterator<Map.Entry<String, SQLRecord>> iter = entryList.iterator();
+            while (iter.hasNext()) {
+                results.add(iter.next().getValue());
+            }
+        }
+        return results;
     }
 
-    /**
-     * 检查当前的值能否进入排名
-     */
-    public boolean check(long value) {
-        return (index < count) || (value > minValue);
-    }
-
-    public void add(SQLRecord record) {
+    @Override
+    public void receive(Mail<?> mail) {
+        SQLRecord record = (SQLRecord) mail.msg;
+        String sql = record.statement;
         final ReentrantLock lock = this.lock;
         lock.lock();
         try {
-            if (index < count) {
-                records[index++] = record;
-                if (index == count) {
-                    Arrays.sort(records);
-                    minValue = records[0].executeTime;
+            if (records.containsKey(sql)) {
+                SQLRecord _records = records.get(sql);
+                if (_records.compareTo(record) > 0) {
+                    record.count.set(_records.count.incrementAndGet());
+                    records.put(sql, record);
+                } else {
+                    _records.count.incrementAndGet();
                 }
             } else {
-                swap(record);
+                record.count.incrementAndGet();
+                records.put(sql, record);
             }
         } finally {
             lock.unlock();
-        }
-    }
-
-    public void clear() {
-        final ReentrantLock lock = this.lock;
-        lock.lock();
-        try {
-            for (int i = 0; i < count; i++) {
-                records[i] = null;
-            }
-            index = 0;
-            minValue = 0;
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    /**
-     * 交换元素位置并重新定义最小值
-     */
-    private void swap(SQLRecord record) {
-        int x = find(record.executeTime, 0, lastIndex);
-        switch (x) {
-            case 0:
-                break;
-            case 1:
-                minValue = record.executeTime;
-                records[0] = record;
-                break;
-            default:
-                --x;// 向左移动一格
-                final SQLRecord[] records = this.records;
-                for (int i = 0; i < x; i++) {
-                    records[i] = records[i + 1];
-                }
-                records[x] = record;
-                minValue = records[0].executeTime;
-        }
-    }
-
-    /**
-     * 定位v在当前范围内的排名
-     */
-    private int find(long v, int from, int to) {
-        int x = from + ((to - from + 1) >> 1);
-        if (v <= records[x].executeTime) {
-            --x;// 向左移动一格
-            if (from >= x) {
-                return v <= records[from].executeTime ? from : from + 1;
-            } else {
-                return find(v, from, x);
-            }
-        } else {
-            ++x;// 向右移动一格
-            if (x >= to) {
-                return v <= records[to].executeTime ? to : to + 1;
-            } else {
-                return find(v, x, to);
-            }
         }
     }
 

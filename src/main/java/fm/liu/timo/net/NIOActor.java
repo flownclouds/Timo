@@ -88,6 +88,8 @@ public class NIOActor {
                 written = channel.write(buffer);
                 if (written <= 0) {
                     break;
+                } else {
+                    con.getVariables().update();
                 }
             }
             if (buffer.hasRemaining()) {
@@ -108,6 +110,8 @@ public class NIOActor {
                 written = channel.write(buffer);
                 if (written <= 0) {
                     break;
+                } else {
+                    con.getVariables().update();
                 }
             }
             if (buffer.hasRemaining()) {

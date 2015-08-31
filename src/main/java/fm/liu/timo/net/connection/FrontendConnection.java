@@ -111,7 +111,7 @@ public abstract class FrontendConnection extends AbstractConnection {
     }
 
     public boolean isIdleTimeout() {
-        return TimeUtil.currentTimeMillis() > Math.max(lastWriteTime, lastReadTime) + idleTimeout;
+        return TimeUtil.currentTimeMillis() > variables.getLastActiveTime() + idleTimeout;
     }
 
     public void setAccepted(boolean isAccepted) {

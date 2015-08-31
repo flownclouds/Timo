@@ -14,19 +14,27 @@
 package fm.liu.timo.mysql.handler;
 
 import java.util.List;
+import fm.liu.messenger.Mail;
+import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.ErrorCode;
+import fm.liu.timo.config.model.Datasource;
+import fm.liu.timo.mysql.connection.MySQLConnection;
 import fm.liu.timo.net.connection.BackendConnection;
 import fm.liu.timo.net.mysql.ErrorPacket;
 import fm.liu.timo.net.mysql.OkPacket;
 import fm.liu.timo.server.ServerConnection;
 import fm.liu.timo.server.session.Session;
 import fm.liu.timo.server.session.handler.SessionResultHandler;
+import fm.liu.timo.statistic.SQLRecord;
 import fm.liu.timo.util.StringUtil;
+import fm.liu.timo.util.TimeUtil;
 
 /**
  * @author Liu Huanting 2015年5月9日
  */
 public class MySQLSingleNodeHandler extends SessionResultHandler {
+    private String sql;
+
     public MySQLSingleNodeHandler(Session session) {
         super.session = session;
     }
@@ -71,11 +79,22 @@ public class MySQLSingleNodeHandler extends SessionResultHandler {
 
     @Override
     public void eof(byte[] eof, BackendConnection con) {
+        record(con);
         con.release();
         ServerConnection front = session.getFront();
         eof[3] = ++packetId;
         buffer = front.writeToBuffer(eof, allocBuffer());
         front.write(buffer);
+    }
+
+    private void record(BackendConnection con) {
+        long lastActiveTime = con.getVariables().getLastActiveTime();
+        Datasource source = ((MySQLConnection) con).getDatasource().getConfig();
+        TimoServer.getInstance().getSender()
+                .send(new Mail<SQLRecord>(TimoServer.getInstance().getRecorder(),
+                        new SQLRecord(source.getHost(), source.getDB(), sql, lastActiveTime,
+                                TimeUtil.currentTimeMillis() - lastActiveTime,
+                                source.getDatanodeID())));
     }
 
     @Override
@@ -85,6 +104,11 @@ public class MySQLSingleNodeHandler extends SessionResultHandler {
         err.errno = ErrorCode.ER_YES;
         err.message = StringUtil.encode(reason, session.getFront().getCharset());
         err.write(session.getFront());
+    }
+
+    @Override
+    public void setSQL(String sql) {
+        this.sql = sql;
     }
 
 }

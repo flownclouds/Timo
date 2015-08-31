@@ -36,8 +36,8 @@ public abstract class AbstractConnection implements NIOConnection {
     protected volatile int                            readBufferOffset;
     protected volatile ByteBuffer                     readBuffer;
     protected volatile ByteBuffer                     writeBuffer;
-    protected volatile long                           lastReadTime;
-    protected volatile long                           lastWriteTime;
+    //    protected volatile long                           lastReadTime;
+    //    protected volatile long                           lastWriteTime;
     protected final ConcurrentLinkedQueue<ByteBuffer> writeQueue =
             new ConcurrentLinkedQueue<ByteBuffer>();
     private final NIOActor                            actor;
@@ -117,6 +117,7 @@ public abstract class AbstractConnection implements NIOConnection {
         if (isClosed()) {
             return;
         }
+        this.variables.update();
         ByteBuffer buffer = this.getReadBuffer();
         // 循环处理字节信息
         int offset = readBufferOffset, length = 0, position = buffer.position();

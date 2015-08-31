@@ -27,7 +27,7 @@ public class ShowDatasource extends ShowHandler {
 
     @Override
     public String getInfo() {
-        return "show status of datasources on timo-server";
+        return "show status of datasources in timo-server";
     }
 
     @Override

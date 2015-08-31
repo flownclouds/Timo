@@ -28,6 +28,7 @@ public final class TimoStartup {
             TimoServer server = TimoServer.getInstance();
             server.startup();
         } catch (Throwable e) {
+            e.printStackTrace();
             SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
             Logger.error(sdf.format(new Date()) + " startup error", e);
             System.exit(-1);
