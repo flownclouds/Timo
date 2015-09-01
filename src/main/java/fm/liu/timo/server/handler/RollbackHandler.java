@@ -22,7 +22,7 @@ import fm.liu.timo.server.ServerConnection;
  */
 public final class RollbackHandler {
 
-    public static void handle(String stmt, ServerConnection c) {
+    public static void handle(ServerConnection c) {
         ByteBuffer buffer = c.allocate();
         c.write(c.writeToBuffer(OkPacket.OK, buffer));
     }

@@ -17,8 +17,10 @@ import org.pmw.tinylog.Logger;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.net.handler.FrontendQueryHandler;
 import fm.liu.timo.server.handler.BeginHandler;
+import fm.liu.timo.server.handler.CommitHandler;
 import fm.liu.timo.server.handler.ExplainHandler;
 import fm.liu.timo.server.handler.KillHandler;
+import fm.liu.timo.server.handler.RollbackHandler;
 import fm.liu.timo.server.handler.SavepointHandler;
 import fm.liu.timo.server.handler.SelectHandler;
 import fm.liu.timo.server.handler.SetHandler;
@@ -76,12 +78,12 @@ public class ServerQueryHandler implements FrontendQueryHandler {
             case ServerParse.USE:
                 UseHandler.handle(sql, c, rs >>> 8);
                 break;
-            // case ServerParse.COMMIT:
-            // c.commit();
-            // break;
-            // case ServerParse.ROLLBACK:
-            // c.rollback();
-            // break;
+            case ServerParse.COMMIT:
+                CommitHandler.handle(c);
+                break;
+            case ServerParse.ROLLBACK:
+                RollbackHandler.handle(c);
+                break;
             default:
                 c.execute(sql, rs);
         }

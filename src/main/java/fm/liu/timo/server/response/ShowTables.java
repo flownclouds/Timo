@@ -2,6 +2,7 @@ package fm.liu.timo.server.response;
 
 import java.util.ArrayList;
 import fm.liu.timo.TimoServer;
+import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.config.model.Database;
 import fm.liu.timo.manager.response.ResponseUtil;
 import fm.liu.timo.manager.response.ResponseUtil.Head;
@@ -13,6 +14,10 @@ import fm.liu.timo.server.ServerConnection;
 public class ShowTables {
 
     public static void response(ServerConnection c) {
+        if (c.getDB() == null) {
+            c.writeErrMessage(ErrorCode.ER_NO_DB_ERROR, "No database selected");
+            return;
+        }
         Database database =
                 TimoServer.getInstance().getConfig().getDatabases().get(c.getDB().toUpperCase());
         ArrayList<Head> heads = new ArrayList<>();

@@ -351,7 +351,7 @@ public abstract class FrontendConnection extends AbstractConnection {
         hs.threadId = id;
         hs.seed = rand1;
         hs.serverCapabilities = getServerCapabilities();
-        hs.serverCharsetIndex = (byte) (charsetIndex & 0xff);
+        hs.serverCharsetIndex = (byte) (this.getVariables().getCharsetIndex() & 0xff);
         hs.serverStatus = 2;
         hs.restOfScrambleBuff = rand2;
         hs.write(this);
