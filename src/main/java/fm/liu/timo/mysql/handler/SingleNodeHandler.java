@@ -19,9 +19,9 @@ import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.config.model.Datasource;
 import fm.liu.timo.mysql.connection.MySQLConnection;
+import fm.liu.timo.mysql.packet.ErrorPacket;
+import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.net.connection.BackendConnection;
-import fm.liu.timo.net.mysql.ErrorPacket;
-import fm.liu.timo.net.mysql.OkPacket;
 import fm.liu.timo.server.ServerConnection;
 import fm.liu.timo.server.session.Session;
 import fm.liu.timo.server.session.handler.SessionResultHandler;
@@ -32,10 +32,10 @@ import fm.liu.timo.util.TimeUtil;
 /**
  * @author Liu Huanting 2015年5月9日
  */
-public class MySQLSingleNodeHandler extends SessionResultHandler {
+public class SingleNodeHandler extends SessionResultHandler {
     private String sql;
 
-    public MySQLSingleNodeHandler(Session session) {
+    public SingleNodeHandler(Session session) {
         super.session = session;
     }
 

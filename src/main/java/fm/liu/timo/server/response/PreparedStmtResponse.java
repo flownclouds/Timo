@@ -15,10 +15,10 @@ package fm.liu.timo.server.response;
 
 import java.nio.ByteBuffer;
 import fm.liu.timo.mysql.PreparedStatement;
+import fm.liu.timo.mysql.packet.EOFPacket;
+import fm.liu.timo.mysql.packet.FieldPacket;
+import fm.liu.timo.mysql.packet.PreparedOkPacket;
 import fm.liu.timo.net.connection.FrontendConnection;
-import fm.liu.timo.net.mysql.EOFPacket;
-import fm.liu.timo.net.mysql.FieldPacket;
-import fm.liu.timo.net.mysql.PreparedOkPacket;
 
 /**
  * @author xianmao.hexm 2012-8-28

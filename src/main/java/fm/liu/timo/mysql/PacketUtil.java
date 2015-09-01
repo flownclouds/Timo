@@ -15,9 +15,9 @@ package fm.liu.timo.mysql;
 
 import java.io.UnsupportedEncodingException;
 import fm.liu.timo.config.ErrorCode;
-import fm.liu.timo.net.mysql.ErrorPacket;
-import fm.liu.timo.net.mysql.FieldPacket;
-import fm.liu.timo.net.mysql.ResultSetHeaderPacket;
+import fm.liu.timo.mysql.packet.ErrorPacket;
+import fm.liu.timo.mysql.packet.FieldPacket;
+import fm.liu.timo.mysql.packet.ResultSetHeaderPacket;
 
 /**
  * @author xianmao.hexm

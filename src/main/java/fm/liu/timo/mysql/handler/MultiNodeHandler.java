@@ -25,11 +25,11 @@ import fm.liu.timo.config.model.Datasource;
 import fm.liu.timo.merger.ColumnInfo;
 import fm.liu.timo.merger.Merger;
 import fm.liu.timo.mysql.connection.MySQLConnection;
+import fm.liu.timo.mysql.packet.ErrorPacket;
+import fm.liu.timo.mysql.packet.FieldPacket;
+import fm.liu.timo.mysql.packet.OkPacket;
+import fm.liu.timo.mysql.packet.RowDataPacket;
 import fm.liu.timo.net.connection.BackendConnection;
-import fm.liu.timo.net.mysql.ErrorPacket;
-import fm.liu.timo.net.mysql.FieldPacket;
-import fm.liu.timo.net.mysql.OkPacket;
-import fm.liu.timo.net.mysql.RowDataPacket;
 import fm.liu.timo.server.ServerConnection;
 import fm.liu.timo.server.session.Session;
 import fm.liu.timo.server.session.handler.SessionResultHandler;
@@ -40,14 +40,14 @@ import fm.liu.timo.util.TimeUtil;
 /**
  * @author Liu Huanting 2015年5月9日
  */
-public class MySQLMultiNodeHandler extends SessionResultHandler {
+public class MultiNodeHandler extends SessionResultHandler {
     protected long    affectedRows = 0;
     protected long    insertId     = 0;
     protected boolean returned     = false;
     protected Merger  merger;
     protected String  sql;
 
-    public MySQLMultiNodeHandler(Session session, Merger merger, int size) {
+    public MultiNodeHandler(Session session, Merger merger, int size) {
         super.session = session;
         super.count = new AtomicInteger(size);
         this.merger = merger;

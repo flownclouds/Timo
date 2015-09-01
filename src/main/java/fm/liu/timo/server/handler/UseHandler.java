@@ -16,8 +16,8 @@ package fm.liu.timo.server.handler;
 import java.nio.ByteBuffer;
 import java.util.Set;
 import fm.liu.timo.config.ErrorCode;
+import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.net.handler.FrontendPrivileges;
-import fm.liu.timo.net.mysql.OkPacket;
 import fm.liu.timo.server.ServerConnection;
 
 /**

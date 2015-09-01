@@ -18,7 +18,7 @@ package fm.liu.timo.manager.response;
 
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.manager.ManagerConnection;
-import fm.liu.timo.net.mysql.OkPacket;
+import fm.liu.timo.mysql.packet.OkPacket;
 
 /**
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>

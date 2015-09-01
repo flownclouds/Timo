@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import fm.liu.timo.net.mysql.RowDataPacket;
+import fm.liu.timo.mysql.packet.RowDataPacket;
 import fm.liu.timo.route.Info;
 import fm.liu.timo.route.Outlets;
 

@@ -26,8 +26,8 @@ import fm.liu.timo.manager.response.KillConnection;
 import fm.liu.timo.manager.response.Offline;
 import fm.liu.timo.manager.response.Online;
 import fm.liu.timo.manager.response.ResponseUtil;
+import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.net.handler.FrontendQueryHandler;
-import fm.liu.timo.net.mysql.OkPacket;
 
 /**
  * @author xianmao.hexm

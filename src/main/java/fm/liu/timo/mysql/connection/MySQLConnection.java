@@ -19,21 +19,21 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import org.pmw.tinylog.Logger;
+import fm.liu.timo.backend.Source;
 import fm.liu.timo.config.Capabilities;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.mysql.ByteUtil;
 import fm.liu.timo.mysql.SecurityUtil;
-import fm.liu.timo.mysql.handler.MySQLAuthenticatorHandler;
+import fm.liu.timo.mysql.handler.AuthenticatorHandler;
+import fm.liu.timo.mysql.packet.AuthPacket;
+import fm.liu.timo.mysql.packet.CommandPacket;
+import fm.liu.timo.mysql.packet.EOFPacket;
+import fm.liu.timo.mysql.packet.ErrorPacket;
+import fm.liu.timo.mysql.packet.HandshakePacket;
+import fm.liu.timo.mysql.packet.MySQLPacket;
+import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.net.NIOProcessor;
-import fm.liu.timo.net.backend.Source;
 import fm.liu.timo.net.connection.BackendConnection;
-import fm.liu.timo.net.mysql.AuthPacket;
-import fm.liu.timo.net.mysql.CommandPacket;
-import fm.liu.timo.net.mysql.EOFPacket;
-import fm.liu.timo.net.mysql.ErrorPacket;
-import fm.liu.timo.net.mysql.HandshakePacket;
-import fm.liu.timo.net.mysql.MySQLPacket;
-import fm.liu.timo.net.mysql.OkPacket;
 import fm.liu.timo.server.session.handler.ResultHandler;
 
 /**
@@ -261,8 +261,8 @@ public class MySQLConnection extends BackendConnection {
                     final ResultHandler temp = resultHandler;
                     resultHandler = null;
                     temp.close("connectionError");
-                } else if (handler instanceof MySQLAuthenticatorHandler) {
-                    MySQLAuthenticatorHandler theHandler = (MySQLAuthenticatorHandler) handler;
+                } else if (handler instanceof AuthenticatorHandler) {
+                    AuthenticatorHandler theHandler = (AuthenticatorHandler) handler;
                     theHandler.error(t);
                 }
                 break;

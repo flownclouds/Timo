@@ -19,8 +19,8 @@ import java.util.Map;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.mysql.ByteUtil;
 import fm.liu.timo.mysql.PreparedStatement;
+import fm.liu.timo.mysql.packet.ExecutePacket;
 import fm.liu.timo.net.handler.FrontendPrepareHandler;
-import fm.liu.timo.net.mysql.ExecutePacket;
 import fm.liu.timo.server.ServerConnection;
 import fm.liu.timo.server.response.PreparedStmtResponse;
 

@@ -16,23 +16,23 @@ package fm.liu.timo.mysql.handler;
 import fm.liu.timo.mysql.CharsetUtil;
 import fm.liu.timo.mysql.SecurityUtil;
 import fm.liu.timo.mysql.connection.MySQLConnection;
+import fm.liu.timo.mysql.packet.EOFPacket;
+import fm.liu.timo.mysql.packet.ErrorPacket;
+import fm.liu.timo.mysql.packet.HandshakePacket;
+import fm.liu.timo.mysql.packet.OkPacket;
+import fm.liu.timo.mysql.packet.Reply323Packet;
 import fm.liu.timo.net.NIOHandler;
 import fm.liu.timo.net.handler.BackendConnectHandler;
-import fm.liu.timo.net.mysql.EOFPacket;
-import fm.liu.timo.net.mysql.ErrorPacket;
-import fm.liu.timo.net.mysql.HandshakePacket;
-import fm.liu.timo.net.mysql.OkPacket;
-import fm.liu.timo.net.mysql.Reply323Packet;
 
 /**
  * MySQL连接认证
  * @author Liu Huanting 2015年5月9日
  */
-public class MySQLAuthenticatorHandler implements NIOHandler {
+public class AuthenticatorHandler implements NIOHandler {
     private final MySQLConnection       con;
     private final BackendConnectHandler handler;
 
-    public MySQLAuthenticatorHandler(MySQLConnection con, BackendConnectHandler handler) {
+    public AuthenticatorHandler(MySQLConnection con, BackendConnectHandler handler) {
         this.con = con;
         this.handler = handler;
     }
@@ -47,7 +47,7 @@ public class MySQLAuthenticatorHandler implements NIOHandler {
                     con.auth();
                     break;
                 }
-                con.setHandler(new MySQLConnectionHandler(con));
+                con.setHandler(new ConnectorHandler(con));
                 con.setAuthenticated(true);
                 if (handler != null) {
                     handler.acquired(con);

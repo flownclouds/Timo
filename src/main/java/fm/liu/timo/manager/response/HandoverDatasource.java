@@ -15,10 +15,10 @@ package fm.liu.timo.manager.response;
 
 import java.util.Map;
 import fm.liu.timo.TimoServer;
+import fm.liu.timo.backend.Node;
 import fm.liu.timo.manager.ManagerConnection;
 import fm.liu.timo.manager.parser.ManagerParseHandover;
-import fm.liu.timo.net.backend.Node;
-import fm.liu.timo.net.mysql.OkPacket;
+import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.parser.util.Pair;
 
 /**

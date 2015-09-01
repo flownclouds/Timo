@@ -22,15 +22,15 @@ import fm.liu.timo.config.Capabilities;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.config.Versions;
 import fm.liu.timo.mysql.MySQLMessage;
+import fm.liu.timo.mysql.packet.ErrorPacket;
+import fm.liu.timo.mysql.packet.HandshakePacket;
+import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.net.NIOHandler;
 import fm.liu.timo.net.NIOProcessor;
 import fm.liu.timo.net.handler.FrontendAuthenticator;
 import fm.liu.timo.net.handler.FrontendPrepareHandler;
 import fm.liu.timo.net.handler.FrontendPrivileges;
 import fm.liu.timo.net.handler.FrontendQueryHandler;
-import fm.liu.timo.net.mysql.ErrorPacket;
-import fm.liu.timo.net.mysql.HandshakePacket;
-import fm.liu.timo.net.mysql.OkPacket;
 import fm.liu.timo.util.RandomUtil;
 import fm.liu.timo.util.TimeUtil;
 

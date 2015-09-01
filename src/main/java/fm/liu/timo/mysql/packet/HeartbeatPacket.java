@@ -11,38 +11,47 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package fm.liu.timo.net.mysql;
+package fm.liu.timo.mysql.packet;
 
 import java.nio.ByteBuffer;
 import fm.liu.timo.mysql.BufferUtil;
 import fm.liu.timo.mysql.MySQLMessage;
 
-public class Reply323Packet extends MySQLClientPacket {
+/**
+ * From client to server when the client do heartbeat between Timo cluster.
+ * 
+ * <pre>
+ * Bytes Name ----- ---- 1 command n id
+ * 
+ */
+public class HeartbeatPacket extends CommandPacket {
 
-    public byte[] seed;
+    public HeartbeatPacket() {
+        super(CommandPacket.COM_HEARTBEAT);
+    }
+
+    public byte command;
+    public long id;
+
+    @Override
+    protected void readBody(MySQLMessage mm) {
+        command = mm.read();
+        id = mm.readLength();
+    }
 
     @Override
     public int calcPacketSize() {
-        return seed == null ? 1 : seed.length + 1;
+        return 1 + BufferUtil.getLength(id);
     }
 
     @Override
     protected String getPacketInfo() {
-        return "MySQL Auth323 Packet";
+        return "Timo Heartbeat Packet";
     }
 
     @Override
     protected void writeBody(ByteBuffer buffer) {
-        if (seed == null) {
-            buffer.put((byte) 0);
-        } else {
-            BufferUtil.writeWithNull(buffer, seed);
-        }
+        buffer.put(command);
+        BufferUtil.writeLength(buffer, id);
     }
-
-    @Override
-    protected void readBody(MySQLMessage mm) {
-        throw new RuntimeException("readBody for Reply323Packet not implement!");
-    }
-
 }

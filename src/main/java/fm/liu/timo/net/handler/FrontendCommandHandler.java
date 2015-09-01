@@ -14,9 +14,9 @@
 package fm.liu.timo.net.handler;
 
 import fm.liu.timo.config.ErrorCode;
+import fm.liu.timo.mysql.packet.CommandPacket;
 import fm.liu.timo.net.NIOHandler;
 import fm.liu.timo.net.connection.FrontendConnection;
-import fm.liu.timo.net.mysql.CommandPacket;
 import fm.liu.timo.statistic.CommandCount;
 
 /**

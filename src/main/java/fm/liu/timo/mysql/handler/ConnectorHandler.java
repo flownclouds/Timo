@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import fm.liu.timo.mysql.ByteUtil;
 import fm.liu.timo.mysql.connection.MySQLConnection;
+import fm.liu.timo.mysql.packet.EOFPacket;
+import fm.liu.timo.mysql.packet.ErrorPacket;
+import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.net.connection.AbstractConnection.State;
 import fm.liu.timo.net.handler.BackendHandler;
-import fm.liu.timo.net.mysql.EOFPacket;
-import fm.liu.timo.net.mysql.ErrorPacket;
-import fm.liu.timo.net.mysql.OkPacket;
 import fm.liu.timo.server.session.handler.ResultHandler;
 
 /**
@@ -29,7 +29,7 @@ import fm.liu.timo.server.session.handler.ResultHandler;
  * 
  * @author xianmao.hexm 2012-4-12
  */
-public class MySQLConnectionHandler extends BackendHandler {
+public class ConnectorHandler extends BackendHandler {
     private static final int RESULT_STATUS_INIT      = 0;
     private static final int RESULT_STATUS_HEADER    = 1;
     private static final int RESULT_STATUS_FIELD_EOF = 2;
@@ -39,7 +39,7 @@ public class MySQLConnectionHandler extends BackendHandler {
     private volatile byte[]       header;
     private volatile List<byte[]> fields;
 
-    public MySQLConnectionHandler(MySQLConnection source) {
+    public ConnectorHandler(MySQLConnection source) {
         this.con = source;
         this.resultStatus = RESULT_STATUS_INIT;
     }

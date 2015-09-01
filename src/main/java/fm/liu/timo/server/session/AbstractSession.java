@@ -17,10 +17,10 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import fm.liu.timo.TimoConfig;
 import fm.liu.timo.TimoServer;
+import fm.liu.timo.backend.Node;
 import fm.liu.timo.merger.Merger;
-import fm.liu.timo.mysql.handler.MySQLMultiNodeHandler;
-import fm.liu.timo.mysql.handler.MySQLSingleNodeHandler;
-import fm.liu.timo.net.backend.Node;
+import fm.liu.timo.mysql.handler.MultiNodeHandler;
+import fm.liu.timo.mysql.handler.SingleNodeHandler;
 import fm.liu.timo.net.connection.BackendConnection;
 import fm.liu.timo.net.connection.Variables;
 import fm.liu.timo.route.Outlet;
@@ -81,8 +81,8 @@ public class AbstractSession implements Session {
     private SessionResultHandler chooseHandler(Outlets outs, int type) {
         int size = outs.size();
         if (1 == size) {
-            return new MySQLSingleNodeHandler(this);
+            return new SingleNodeHandler(this);
         }
-        return new MySQLMultiNodeHandler(this, new Merger(outs), size);
+        return new MultiNodeHandler(this, new Merger(outs), size);
     }
 }

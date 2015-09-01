@@ -1,4 +1,4 @@
-package fm.liu.timo.net.mysql;
+package fm.liu.timo.mysql.packet;
 
 import java.nio.ByteBuffer;
 import fm.liu.timo.net.connection.AbstractConnection;

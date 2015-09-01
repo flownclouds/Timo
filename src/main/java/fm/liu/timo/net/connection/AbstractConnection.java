@@ -19,10 +19,10 @@ import java.nio.channels.SocketChannel;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
+import fm.liu.timo.mysql.packet.MySQLPacket;
 import fm.liu.timo.net.NIOActor;
 import fm.liu.timo.net.NIOHandler;
 import fm.liu.timo.net.NIOProcessor;
-import fm.liu.timo.net.mysql.MySQLPacket;
 import fm.liu.timo.util.TimeUtil;
 
 /**
@@ -36,8 +36,6 @@ public abstract class AbstractConnection implements NIOConnection {
     protected volatile int                            readBufferOffset;
     protected volatile ByteBuffer                     readBuffer;
     protected volatile ByteBuffer                     writeBuffer;
-    //    protected volatile long                           lastReadTime;
-    //    protected volatile long                           lastWriteTime;
     protected final ConcurrentLinkedQueue<ByteBuffer> writeQueue =
             new ConcurrentLinkedQueue<ByteBuffer>();
     private final NIOActor                            actor;

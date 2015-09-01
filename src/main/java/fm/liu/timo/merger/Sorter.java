@@ -15,7 +15,7 @@ package fm.liu.timo.merger;
 
 import java.util.ArrayDeque;
 import java.util.Collections;
-import fm.liu.timo.net.mysql.RowDataPacket;
+import fm.liu.timo.mysql.packet.RowDataPacket;
 
 /**
  * @author Liu Huanting 2015年6月4日

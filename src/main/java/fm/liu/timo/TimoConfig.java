@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.locks.ReentrantLock;
 import org.pmw.tinylog.Logger;
+import fm.liu.timo.backend.Node;
+import fm.liu.timo.backend.Source;
 import fm.liu.timo.config.loader.ServerConfigLoader;
 import fm.liu.timo.config.loader.SystemConfigLoader;
 import fm.liu.timo.config.model.Database;
@@ -27,8 +29,6 @@ import fm.liu.timo.config.model.Datanode;
 import fm.liu.timo.config.model.Datasource;
 import fm.liu.timo.config.model.SystemConfig;
 import fm.liu.timo.config.model.User;
-import fm.liu.timo.net.backend.Node;
-import fm.liu.timo.net.backend.Source;
 import fm.liu.timo.net.connection.Variables;
 import fm.liu.timo.util.TimeUtil;
 

@@ -18,10 +18,10 @@ import java.util.List;
 import org.pmw.tinylog.Logger;
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.manager.ManagerConnection;
+import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.net.NIOProcessor;
 import fm.liu.timo.net.connection.FrontendConnection;
 import fm.liu.timo.net.connection.NIOConnection;
-import fm.liu.timo.net.mysql.OkPacket;
 import fm.liu.timo.util.SplitUtil;
 
 /**

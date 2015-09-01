@@ -2,8 +2,8 @@ package fm.liu.timo.heartbeat;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import org.pmw.tinylog.Logger;
-import fm.liu.timo.net.backend.Node;
-import fm.liu.timo.net.backend.Source;
+import fm.liu.timo.backend.Node;
+import fm.liu.timo.backend.Source;
 import fm.liu.timo.net.connection.BackendConnection;
 import fm.liu.timo.server.session.handler.HeartbeatHandler;
 import fm.liu.timo.server.session.handler.HeartbeatInitHandler;

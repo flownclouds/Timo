@@ -20,11 +20,11 @@ import java.nio.ByteBuffer;
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.Fields;
 import fm.liu.timo.mysql.PacketUtil;
-import fm.liu.timo.net.mysql.EOFPacket;
-import fm.liu.timo.net.mysql.ErrorPacket;
-import fm.liu.timo.net.mysql.FieldPacket;
-import fm.liu.timo.net.mysql.ResultSetHeaderPacket;
-import fm.liu.timo.net.mysql.RowDataPacket;
+import fm.liu.timo.mysql.packet.EOFPacket;
+import fm.liu.timo.mysql.packet.ErrorPacket;
+import fm.liu.timo.mysql.packet.FieldPacket;
+import fm.liu.timo.mysql.packet.ResultSetHeaderPacket;
+import fm.liu.timo.mysql.packet.RowDataPacket;
 import fm.liu.timo.server.ServerConnection;
 
 /**

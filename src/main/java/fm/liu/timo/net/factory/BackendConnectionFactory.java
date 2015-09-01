@@ -19,11 +19,11 @@ import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.SocketChannel;
 import fm.liu.timo.TimoServer;
+import fm.liu.timo.backend.Source;
 import fm.liu.timo.config.model.Datasource;
 import fm.liu.timo.mysql.connection.MySQLConnection;
-import fm.liu.timo.mysql.handler.MySQLAuthenticatorHandler;
+import fm.liu.timo.mysql.handler.AuthenticatorHandler;
 import fm.liu.timo.net.NIOProcessor;
-import fm.liu.timo.net.backend.Source;
 import fm.liu.timo.net.connection.Variables;
 import fm.liu.timo.net.handler.BackendConnectHandler;
 
@@ -57,7 +57,7 @@ public abstract class BackendConnectionFactory {
         c.setPort(config.getPort());
         c.setUsername(config.getUsername());
         c.setPassword(config.getPassword());
-        c.setHandler(new MySQLAuthenticatorHandler(c, handler));
+        c.setHandler(new AuthenticatorHandler(c, handler));
         c.setDatasource(datasource);
         c.getVariables().setCharsetIndex(variables.getCharsetIndex());
         c.getVariables().setIsolationLevel(variables.getIsolationLevel());

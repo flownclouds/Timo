@@ -14,7 +14,7 @@
 package fm.liu.timo.server.handler;
 
 import java.nio.ByteBuffer;
-import fm.liu.timo.net.mysql.OkPacket;
+import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.server.ServerConnection;
 
 /**

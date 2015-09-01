@@ -15,9 +15,9 @@ package fm.liu.timo.server.handler;
 
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.ErrorCode;
+import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.net.NIOProcessor;
 import fm.liu.timo.net.connection.FrontendConnection;
-import fm.liu.timo.net.mysql.OkPacket;
 import fm.liu.timo.server.ServerConnection;
 import fm.liu.timo.util.StringUtil;
 

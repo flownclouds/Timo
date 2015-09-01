@@ -15,9 +15,9 @@ package fm.liu.timo.server.response;
 
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.mysql.PacketUtil;
+import fm.liu.timo.mysql.packet.ErrorPacket;
+import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.net.connection.FrontendConnection;
-import fm.liu.timo.net.mysql.ErrorPacket;
-import fm.liu.timo.net.mysql.OkPacket;
 
 /**
  * 加入了offline状态推送，用于心跳语句。

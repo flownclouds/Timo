@@ -19,11 +19,11 @@ import java.util.Set;
 import org.pmw.tinylog.Logger;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.mysql.SecurityUtil;
+import fm.liu.timo.mysql.packet.AuthPacket;
+import fm.liu.timo.mysql.packet.CommandPacket;
+import fm.liu.timo.mysql.packet.QuitPacket;
 import fm.liu.timo.net.NIOHandler;
 import fm.liu.timo.net.connection.FrontendConnection;
-import fm.liu.timo.net.mysql.AuthPacket;
-import fm.liu.timo.net.mysql.CommandPacket;
-import fm.liu.timo.net.mysql.QuitPacket;
 
 /**
  * 前端认证处理器

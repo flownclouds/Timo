@@ -11,37 +11,39 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package fm.liu.timo.net.mysql;
+package fm.liu.timo.mysql.packet;
 
 import java.nio.ByteBuffer;
 import fm.liu.timo.mysql.MySQLMessage;
 
 /**
- * @author xianmao.hexm 2012-4-28
+ * @author xianmao.hexm 2011-5-6 上午10:58:33
  */
-public class PingPacket extends MySQLPacket {
-    public static final byte[] PING = new byte[] {1, 0, 0, 0, 14};
+public class BinaryPacket extends MySQLPacket {
+    public static final byte OK         = 1;
+    public static final byte ERROR      = 2;
+    public static final byte HEADER     = 3;
+    public static final byte FIELD      = 4;
+    public static final byte FIELD_EOF  = 5;
+    public static final byte ROW        = 6;
+    public static final byte PACKET_EOF = 7;
+
+    public byte[] data;
 
     @Override
     public int calcPacketSize() {
-        return 1;
+        return data == null ? 0 : data.length;
     }
 
     @Override
     protected String getPacketInfo() {
-        return "MySQL Ping Packet";
+        return "MySQL Binary Packet";
     }
 
     @Override
-    protected void readBody(MySQLMessage mm) {
-        // TODO Auto-generated method stub
-
-    }
+    protected void readBody(MySQLMessage mm) {}
 
     @Override
-    protected void writeBody(ByteBuffer buffer) {
-        // TODO Auto-generated method stub
-
-    }
+    protected void writeBody(ByteBuffer buffer) {}
 
 }

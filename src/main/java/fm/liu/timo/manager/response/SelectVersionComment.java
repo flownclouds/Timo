@@ -17,10 +17,10 @@ import java.nio.ByteBuffer;
 import fm.liu.timo.config.Fields;
 import fm.liu.timo.manager.ManagerConnection;
 import fm.liu.timo.mysql.PacketUtil;
-import fm.liu.timo.net.mysql.EOFPacket;
-import fm.liu.timo.net.mysql.FieldPacket;
-import fm.liu.timo.net.mysql.ResultSetHeaderPacket;
-import fm.liu.timo.net.mysql.RowDataPacket;
+import fm.liu.timo.mysql.packet.EOFPacket;
+import fm.liu.timo.mysql.packet.FieldPacket;
+import fm.liu.timo.mysql.packet.ResultSetHeaderPacket;
+import fm.liu.timo.mysql.packet.RowDataPacket;
 
 /**
  * @author xianmao.hexm 2011-5-7 下午01:00:33

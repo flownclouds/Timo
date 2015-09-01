@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package fm.liu.timo.net.mysql;
+package fm.liu.timo.mysql.packet;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;

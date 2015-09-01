@@ -15,9 +15,9 @@ package fm.liu.timo.server.response;
 
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.ErrorCode;
-import fm.liu.timo.net.mysql.ErrorPacket;
-import fm.liu.timo.net.mysql.HeartbeatPacket;
-import fm.liu.timo.net.mysql.OkPacket;
+import fm.liu.timo.mysql.packet.ErrorPacket;
+import fm.liu.timo.mysql.packet.HeartbeatPacket;
+import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.server.ServerConnection;
 
 public class Heartbeat {

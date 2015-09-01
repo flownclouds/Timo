@@ -18,7 +18,7 @@ import org.pmw.tinylog.Logger;
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.manager.ManagerConnection;
-import fm.liu.timo.net.mysql.OkPacket;
+import fm.liu.timo.mysql.packet.OkPacket;
 
 /**
  * @author xianmao.hexm
