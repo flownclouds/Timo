@@ -1,6 +1,6 @@
 ##WIKI
 
-### Timo是什么
+### What is Timo
 
 - **Timo**是一个分布式[MySQL] (https://www.mysql.com)数据库中间件。^(#｀∀´)_Ψ
 - **Timo**源于[Cobar] (https://github.com/alibaba/cobar)，并在[Cobar] (https://github.com/alibaba/cobar)的基础上进行改造。Ｏ(≧▽≦)Ｏ
@@ -8,9 +8,13 @@
 
 ### Quick Start
 
-马上开始[使用Timo！] (./doc/Quick Start.md)
+[马上开始使用Timo！] (./doc/QuickStart.md)
 
-### todo list
+### Timo Architecture
+
+[Timo的代码结构介绍] (./doc/TimoArchitecture.md)
+
+### Todo List
 - [x] 后端NIO改造
 - [x] 线程池改造
 - [x] 连接池改造

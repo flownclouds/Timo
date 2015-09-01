@@ -51,7 +51,7 @@ mysql -utest -ptest -h127.0.0.1 -P3306 --default-character-set=utf8 < timo_confi
 ###情况说明
 如果按照`timo_config.sql`文件配置的话，Timo服务的拓扑结构应该如下图所示：
 
-![image](1440128274100.png)
+![image](QuickStartConfig.png)
 
 其中`timo1/2/3`是三个实际的物理数据库(`datasource`)，`timo1`和`timo3`组成分片1(`datanode1`)，`timo2`组成分片2(`datanode2`)。`timo1`和`timo3`理论上应该是一个`双主`或者`主从`的同步架构，本次测试比较简单，就没有再去部署多个实例。开启读写分离后，分片2由于只有一个数据源，因此`timo2`负责该分片的读写操作，而在分片1中，主节点（`timo1`）负责该分片的所有写和部分读操作，从节点（`timo3`）负责该分片的部分读操作。
 
