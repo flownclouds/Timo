@@ -26,6 +26,7 @@ import fm.liu.timo.config.model.Table;
 import fm.liu.timo.config.model.Table.TableType;
 import fm.liu.timo.parser.ast.expression.primary.RowExpression;
 import fm.liu.timo.parser.ast.stmt.SQLStatement;
+import fm.liu.timo.parser.ast.stmt.ddl.DDLStatement;
 import fm.liu.timo.parser.ast.stmt.dml.DMLInsertReplaceStatement;
 import fm.liu.timo.parser.recognizer.SQLParserDelegate;
 import fm.liu.timo.parser.visitor.OutputVisitor;
@@ -165,6 +166,9 @@ public class Router {
 
     private static Outlets route(SQLStatement stmt, Outlets outlets, Table table,
             ArrayList<Object> values, String sql) {
+        if (!(stmt instanceof DDLStatement)) {
+            sql = updateSQL(stmt);
+        }
         if (values.isEmpty()) {
             for (Integer id : table.getNodes()) {
                 Outlet out = new Outlet(id, sql);
@@ -173,9 +177,6 @@ public class Router {
         } else {
             Function function = table.getRule().getFunction();
             Set<Integer> result = function.calcute(values);
-            if (result.size() > 1) {
-                sql = updateSQL(stmt);
-            }
             for (int id : result) {
                 Outlet out = new Outlet(id, sql);
                 outlets.add(out);
