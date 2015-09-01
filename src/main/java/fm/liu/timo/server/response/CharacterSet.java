@@ -126,11 +126,11 @@ public class CharacterSet {
         if ("null".equalsIgnoreCase(charset)) {
             /* 忽略字符集为null的属性设置 */
             c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));
-        } else if (c.setCharset(charset)) {
+        } else if (c.getVariables().setCharset(charset)) {
             c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));
         } else {
             try {
-                if (c.setCharsetIndex(Integer.parseInt(charset))) {
+                if (c.getVariables().setCharsetIndex(Integer.parseInt(charset))) {
                     c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));
                 } else {
                     c.writeErrMessage(ErrorCode.ER_UNKNOWN_CHARACTER_SET,

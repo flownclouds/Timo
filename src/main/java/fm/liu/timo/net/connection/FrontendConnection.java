@@ -21,7 +21,6 @@ import java.util.Set;
 import fm.liu.timo.config.Capabilities;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.config.Versions;
-import fm.liu.timo.mysql.CharsetUtil;
 import fm.liu.timo.mysql.MySQLMessage;
 import fm.liu.timo.net.NIOHandler;
 import fm.liu.timo.net.NIOProcessor;
@@ -45,11 +44,6 @@ public abstract class FrontendConnection extends AbstractConnection {
     protected int    port;
     protected int    localPort;
     protected long   idleTimeout;
-
-    // 原则: 数据库编码控制使用dbCharset来处理的，设计到Java相关的字符串编码解码采用charset来表示
-    protected String dbCharset;
-    protected String charset;
-    protected int    charsetIndex;
 
     protected byte[]                 seed;
     protected String                 user;
@@ -168,36 +162,8 @@ public abstract class FrontendConnection extends AbstractConnection {
         return seed;
     }
 
-    public int getCharsetIndex() {
-        return charsetIndex;
-    }
-
-    public boolean setCharsetIndex(int ci) {
-        String charset = CharsetUtil.getDbCharset(ci);
-        if (charset != null) {
-            this.dbCharset = charset;
-            this.charset = CharsetUtil.getCharset(ci);
-            this.charsetIndex = ci;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public String getCharset() {
-        return charset;
-    }
-
-    public boolean setCharset(String charset) {
-        int ci = CharsetUtil.getDBIndex(charset);
-        if (ci > 0) {
-            this.charset = CharsetUtil.getCharset(ci);
-            this.dbCharset = charset;
-            this.charsetIndex = ci;
-            return true;
-        } else {
-            return false;
-        }
+        return this.getVariables().getCharset();
     }
 
     public void writeErrMessage(int errno, String msg) {
@@ -208,7 +174,7 @@ public abstract class FrontendConnection extends AbstractConnection {
         ErrorPacket err = new ErrorPacket();
         err.packetId = id;
         err.errno = errno;
-        err.message = encodeString(msg, charset);
+        err.message = encodeString(msg, getCharset());
         err.write(this);
     }
 
@@ -256,10 +222,10 @@ public abstract class FrontendConnection extends AbstractConnection {
             String sql = null;
             try {
                 // 使用指定的编码来读取数据
-                sql = mm.readString(charset);
+                sql = mm.readString(getCharset());
             } catch (UnsupportedEncodingException e) {
                 writeErrMessage(ErrorCode.ER_UNKNOWN_CHARACTER_SET,
-                        "Unknown charset '" + charset + "'");
+                        "Unknown charset '" + getCharset() + "'");
                 return;
             }
             if (sql == null || sql.length() == 0) {
@@ -281,10 +247,10 @@ public abstract class FrontendConnection extends AbstractConnection {
             mm.position(5);
             String sql = null;
             try {
-                sql = mm.readString(charset);
+                sql = mm.readString(getCharset());
             } catch (UnsupportedEncodingException e) {
                 writeErrMessage(ErrorCode.ER_UNKNOWN_CHARACTER_SET,
-                        "Unknown charset '" + charset + "'");
+                        "Unknown charset '" + getCharset() + "'");
                 return;
             }
             if (sql == null || sql.length() == 0) {

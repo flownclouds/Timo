@@ -54,7 +54,7 @@ public class ResponseUtil {
                     if (value == null) {
                         value = "NULL";
                     }
-                    row.add(StringUtil.encode(value.toString(), c.getCharset()));
+                    row.add(StringUtil.encode(value.toString(), c.getVariables().getCharset()));
                 }
                 row.packetId = ++packetId;
                 buffer = row.write(buffer, c);

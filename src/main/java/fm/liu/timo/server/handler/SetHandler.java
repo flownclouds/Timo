@@ -71,7 +71,7 @@ public final class SetHandler {
             // }
             case NAMES:
                 String charset = stmt.substring(rs >>> 8).trim();
-                if (c.setCharset(charset)) {
+                if (c.getVariables().setCharset(charset)) {
                     c.write(c.writeToBuffer(OkPacket.OK, c.allocate()));
                 } else {
                     c.writeErrMessage(ErrorCode.ER_UNKNOWN_CHARACTER_SET,
