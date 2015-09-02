@@ -41,6 +41,7 @@ import fm.liu.timo.parser.ast.fragment.SortOrder;
 import fm.liu.timo.parser.ast.fragment.tableref.TableRefFactor;
 import fm.liu.timo.parser.ast.stmt.ddl.DDLCreateTableStatement;
 import fm.liu.timo.parser.ast.stmt.ddl.DDLDropTableStatement;
+import fm.liu.timo.parser.ast.stmt.ddl.DDLTruncateStatement;
 import fm.liu.timo.parser.ast.stmt.dml.DMLDeleteStatement;
 import fm.liu.timo.parser.ast.stmt.dml.DMLInsertReplaceStatement;
 import fm.liu.timo.parser.ast.stmt.dml.DMLInsertStatement;
@@ -140,6 +141,11 @@ public class RouteVisitor extends Visitor {
         for (Identifier table : node.getTableNames()) {
             recordTable(table);
         }
+    }
+
+    public void visit(DDLTruncateStatement node) {
+        visitChild(node.getTable());
+        recordTable(node.getTable());
     }
 
     @Override
