@@ -41,18 +41,24 @@ public class ShowSql extends ShowHandler {
         ArrayList<Object[]> rows = new ArrayList<>();
         SQLRecorder recorder = TimoServer.getRecorder();
         List<SQLRecord> recordes = recorder.getRecords();
+        int count = 0;
         for (SQLRecord record : recordes) {
             if (record != null) {
-                Object[] row = new Object[heads.size()];
-                int i = 0;
-                row[i++] = record.datanode;
-                row[i++] = record.host;
-                row[i++] = record.schema;
-                row[i++] = FormatUtil.formatMillisTime(record.startTime);
-                row[i++] = record.executeTime + "ms";
-                row[i++] = record.statement;
-                row[i++] = record.count.get();
-                rows.add(row);
+                // TOP 100
+                if (count++ < 100) {
+                    Object[] row = new Object[heads.size()];
+                    int i = 0;
+                    row[i++] = record.datanode;
+                    row[i++] = record.host;
+                    row[i++] = record.schema;
+                    row[i++] = FormatUtil.formatMillisTime(record.startTime);
+                    row[i++] = record.executeTime + "ms";
+                    row[i++] = record.statement;
+                    row[i++] = record.count.get();
+                    rows.add(row);
+                } else {
+                    break;
+                }
             }
         }
         return rows;
