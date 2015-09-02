@@ -17,7 +17,9 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
+import fm.liu.timo.mysql.packet.ErrorPacket;
 import fm.liu.timo.server.session.Session;
+import fm.liu.timo.util.StringUtil;
 
 /**
  * @author Liu Huanting 2015年5月9日
@@ -56,6 +58,14 @@ public abstract class SessionResultHandler implements ResultHandler {
         return count.decrementAndGet() == 0;
     }
 
+    protected void onError() {
+        ErrorPacket err = new ErrorPacket();
+        err.packetId = 1;
+        err.errno = errno;
+        err.message = StringUtil.encode(errMsg, session.getFront().getCharset());
+        err.write(session.getFront());
+    }
+
     protected void setFail(int errno, String errMsg) {
         failed.set(true);
         this.errno = errno;
@@ -66,5 +76,11 @@ public abstract class SessionResultHandler implements ResultHandler {
         return failed.get();
     }
 
-    abstract public void setSQL(String sql);
+    @Override
+    public void close(String reason) {
+        this.errMsg = reason;
+        onError();
+    }
+
+    public void setSQL(String sql) {};
 }

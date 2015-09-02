@@ -23,6 +23,7 @@ import fm.liu.timo.net.NIOProcessor;
 import fm.liu.timo.net.connection.FrontendConnection;
 import fm.liu.timo.route.Outlets;
 import fm.liu.timo.route.Router;
+import fm.liu.timo.server.parser.ServerParse;
 import fm.liu.timo.server.response.Heartbeat;
 import fm.liu.timo.server.response.Ping;
 import fm.liu.timo.server.session.AutoCommitSession;
@@ -39,11 +40,14 @@ public class ServerConnection extends FrontendConnection {
     private volatile Session  nextSession;
     private final Session     autocommitSession;
     private final Session     transactionSession;
+    private final Session     autoTransactionSession;
+    private long              lastInsertID;
 
     public ServerConnection(SocketChannel channel, NIOProcessor processor) {
         super(channel, processor);
         autocommitSession = new AutoCommitSession(this);
         transactionSession = new TransactionSession(this);
+        autoTransactionSession = new AutoCommitSession(this);
         session = autocommitSession;
     }
 
@@ -92,7 +96,23 @@ public class ServerConnection extends FrontendConnection {
                     msg == null ? e.getClass().getSimpleName() : msg);
             return;
         }
+        chooseSession(type);
         session.execute(out, type);
+    }
+
+    private void chooseSession(int type) {
+        if (session instanceof TransactionSession) {
+            return;
+        }
+        if (variables.isAutocommit()) {
+            switch (type) {
+                case ServerParse.INSERT:
+                case ServerParse.DELETE:
+                case ServerParse.UPDATE:
+                case ServerParse.REPLACE:
+                    session = autoTransactionSession;
+            }
+        }
     }
 
     /**
@@ -122,9 +142,12 @@ public class ServerConnection extends FrontendConnection {
         }
     }
 
+    public void setLastInsertId(long lastInsertID) {
+        this.lastInsertID = lastInsertID;
+    }
+
     public long getLastInsertId() {
-        // TODO Auto-generated method stub
-        return 0;
+        return lastInsertID;
     }
 
     public Session getSession() {
@@ -137,6 +160,7 @@ public class ServerConnection extends FrontendConnection {
             int index = variables.getCharsetIndex();
             autocommitSession.getVariables().setCharsetIndex(index);
             transactionSession.getVariables().setCharsetIndex(index);
+            autoTransactionSession.getVariables().setCharsetIndex(index);
         }
         return result;
     }
@@ -145,6 +169,7 @@ public class ServerConnection extends FrontendConnection {
         variables.setIsolationLevel(level);
         autocommitSession.getVariables().setIsolationLevel(level);
         transactionSession.getVariables().setIsolationLevel(level);
+        autoTransactionSession.getVariables().setIsolationLevel(level);
     }
 
     public void setAutocommit(boolean autocommit) {
@@ -190,4 +215,5 @@ public class ServerConnection extends FrontendConnection {
             session = transactionSession;
         }
     }
+
 }

@@ -92,7 +92,4 @@ public class CommitHandler extends SessionResultHandler {
             error();
         }
     }
-
-    @Override
-    public void setSQL(String sql) {}
 }

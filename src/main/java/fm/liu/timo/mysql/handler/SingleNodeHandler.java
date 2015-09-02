@@ -16,7 +16,6 @@ package fm.liu.timo.mysql.handler;
 import java.util.List;
 import fm.liu.messenger.Mail;
 import fm.liu.timo.TimoServer;
-import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.config.model.Datasource;
 import fm.liu.timo.mysql.connection.MySQLConnection;
 import fm.liu.timo.mysql.packet.ErrorPacket;
@@ -26,7 +25,6 @@ import fm.liu.timo.server.ServerConnection;
 import fm.liu.timo.server.session.Session;
 import fm.liu.timo.server.session.handler.SessionResultHandler;
 import fm.liu.timo.statistic.SQLRecord;
-import fm.liu.timo.util.StringUtil;
 import fm.liu.timo.util.TimeUtil;
 
 /**
@@ -95,15 +93,6 @@ public class SingleNodeHandler extends SessionResultHandler {
                         new SQLRecord(source.getHost(), source.getDB(), sql, lastActiveTime,
                                 TimeUtil.currentTimeMillis() - lastActiveTime,
                                 source.getDatanodeID())));
-    }
-
-    @Override
-    public void close(String reason) {
-        ErrorPacket err = new ErrorPacket();
-        err.packetId = ++packetId;
-        err.errno = ErrorCode.ER_YES;
-        err.message = StringUtil.encode(reason, session.getFront().getCharset());
-        err.write(session.getFront());
     }
 
     @Override

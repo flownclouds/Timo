@@ -31,7 +31,7 @@ public class AutoCommitSession extends AbstractSession {
 
     @Override
     public void clear() {
-        this.getFront().reset();
+        front.reset();
         KeySetView<Integer, BackendConnection> keys = connections.keySet();
         for (Integer id : keys) {
             BackendConnection con = connections.remove(id);

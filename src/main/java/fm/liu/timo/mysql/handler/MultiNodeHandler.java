@@ -34,7 +34,6 @@ import fm.liu.timo.server.ServerConnection;
 import fm.liu.timo.server.session.Session;
 import fm.liu.timo.server.session.handler.SessionResultHandler;
 import fm.liu.timo.statistic.SQLRecord;
-import fm.liu.timo.util.StringUtil;
 import fm.liu.timo.util.TimeUtil;
 
 /**
@@ -93,14 +92,6 @@ public class MultiNodeHandler extends SessionResultHandler {
         if (decrement()) {
             onError();
         }
-    }
-
-    private void onError() {
-        ErrorPacket err = new ErrorPacket();
-        err.packetId = 1;
-        err.errno = errno;
-        err.message = StringUtil.encode(errMsg, session.getFront().getCharset());
-        err.write(session.getFront());
     }
 
     @Override
@@ -210,11 +201,8 @@ public class MultiNodeHandler extends SessionResultHandler {
     @Override
     public void close(String reason) {
         if (decrement()) {
-            ErrorPacket err = new ErrorPacket();
-            err.packetId = ++packetId;
-            err.errno = ErrorCode.ER_YES;
-            err.message = StringUtil.encode(reason, session.getFront().getCharset());
-            err.write(session.getFront());
+            super.errMsg = reason;
+            onError();
         }
     }
 

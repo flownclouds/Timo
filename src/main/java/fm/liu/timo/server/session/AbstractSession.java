@@ -62,6 +62,7 @@ public abstract class AbstractSession implements Session {
         return variables;
     }
 
+    @Override
     public Collection<BackendConnection> availableConnections() {
         Collection<BackendConnection> cons = new ArrayList<>();
         for (BackendConnection con : getConnections()) {
@@ -101,7 +102,7 @@ public abstract class AbstractSession implements Session {
         }
     }
 
-    private SessionResultHandler chooseHandler(Outlets outs, int type) {
+    protected SessionResultHandler chooseHandler(Outlets outs, int type) {
         int size = outs.size();
         if (1 == size) {
             return new SingleNodeHandler(this);

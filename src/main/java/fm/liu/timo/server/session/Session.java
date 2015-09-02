@@ -30,6 +30,8 @@ public interface Session {
 
     Collection<BackendConnection> getConnections();
 
+    Collection<BackendConnection> availableConnections();
+
     Variables getVariables();
 
     void offer(BackendConnection con);
