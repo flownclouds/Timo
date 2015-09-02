@@ -98,11 +98,13 @@ public class Node {
         this.heartbeatRecoveryTime = heartbeatRecoveryTime;
     }
 
-    public boolean handover(boolean manual) throws Exception {
+    public boolean handover(boolean manual) {
         boolean success = false;
         ArrayList<Source> backups = source.getBackups();
         if (backups == null || backups.isEmpty()) {
-            throw new Exception("cann't handover source without backup infomation");
+            Logger.error("can't handover datasource:{} without backup infomation",
+                    source.getConfig());
+            return false;
         }
         lock.lock();
         try {

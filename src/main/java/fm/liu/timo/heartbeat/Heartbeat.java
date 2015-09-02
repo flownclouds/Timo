@@ -77,15 +77,12 @@ public class Heartbeat {
             source.clear("clear datasource due to heartbeat error");
             return;
         }
-        try {
-            if (node.handover(false)) {
-                Logger.info("datanode {} handover datasource to '{}' due to heartbeat error!",
-                        node.getID(), node.getSource().getConfig());
-            } else {
-                Logger.warn("datanode{} handover datasource failed!", node.getID());
-            }
-        } catch (Exception e) {
-            Logger.warn(e);
+        if (node.handover(false)) {
+            Logger.info("datanode {} handover datasource{} to '{}' due to heartbeat error!",
+                    node.getID(), source.getConfig(), node.getSource().getConfig());
+        } else {
+            Logger.error("datanode {} handover datasource:{} failed!", node.getID(),
+                    source.getConfig());
         }
     }
 
@@ -95,7 +92,7 @@ public class Heartbeat {
             source.query("SET sql_log_bin=0", initHandler);
         } catch (Throwable e) {
             counter.incrementAndGet();
-            Logger.warn("datasource {} error due to {}", source.getConfig().getID(), e);
+            Logger.error("datasource {} error due to {}", source.getConfig().getID(), e);
             return;
         }
     }
