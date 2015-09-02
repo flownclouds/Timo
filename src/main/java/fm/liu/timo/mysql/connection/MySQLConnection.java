@@ -317,7 +317,7 @@ public class MySQLConnection extends BackendConnection {
     public void query(String sql, ResultHandler handler) {
         ResultHandler _handler = handler;
         if (handler instanceof SessionResultHandler) {
-            Variables var = ((SessionResultHandler) handler).session.getFront().getVariables();
+            Variables var = ((SessionResultHandler) handler).session.getVariables();
             String sync = null;
             final int charsetIndex = var.getCharsetIndex();
             sync = variables.getCharsetIndex() != charsetIndex

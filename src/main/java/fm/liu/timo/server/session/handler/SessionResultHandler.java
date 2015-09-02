@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 import fm.liu.timo.mysql.packet.ErrorPacket;
 import fm.liu.timo.server.session.Session;
+import fm.liu.timo.server.session.TransactionSession;
 import fm.liu.timo.util.StringUtil;
 
 /**
@@ -59,11 +60,16 @@ public abstract class SessionResultHandler implements ResultHandler {
     }
 
     protected void onError() {
+        if (session instanceof TransactionSession) {
+            session.rollback(false);
+            errMsg = errMsg + ". Transaction ended and have been rollbacked automaticly.";
+        }
         ErrorPacket err = new ErrorPacket();
         err.packetId = 1;
         err.errno = errno;
         err.message = StringUtil.encode(errMsg, session.getFront().getCharset());
         err.write(session.getFront());
+        recycleResources();
     }
 
     protected void setFail(int errno, String errMsg) {

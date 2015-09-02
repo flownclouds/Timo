@@ -2,6 +2,7 @@ package fm.liu.timo.server.session.handler;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.net.connection.BackendConnection;
@@ -14,8 +15,9 @@ public class AutoTransactionHandler extends SessionResultHandler {
     protected long affectedRows = 0;
     protected long insertId     = 0;
 
-    public AutoTransactionHandler(Session session) {
+    public AutoTransactionHandler(Session session, int count) {
         this.session = session;
+        this.count = new AtomicInteger(count);
     }
 
     @Override

@@ -54,7 +54,7 @@ public class MultiNodeHandler extends SessionResultHandler {
 
     @Override
     public void ok(byte[] data, BackendConnection con) {
-        con.release();
+        session.release(con);
         if (failed()) {
             if (decrement()) {
                 onError();
@@ -84,7 +84,7 @@ public class MultiNodeHandler extends SessionResultHandler {
 
     @Override
     public void error(byte[] data, BackendConnection con) {
-        con.release();
+        session.release(con);
         ErrorPacket err = new ErrorPacket();
         err.read(data);
         String errmsg = new String(err.message);
@@ -127,7 +127,7 @@ public class MultiNodeHandler extends SessionResultHandler {
             errMsg = e.getMessage();
             onError();
             setFail(ErrorCode.ER_YES, errMsg);
-            con.release();
+            session.release(con);
         } finally {
             lock.unlock();
         }
@@ -149,7 +149,7 @@ public class MultiNodeHandler extends SessionResultHandler {
     @Override
     public void eof(byte[] eof, BackendConnection con) {
         record(con);
-        con.release();
+        session.release(con);
         if (decrement()) {
             if (failed()) {
                 onError();

@@ -17,6 +17,7 @@ public class TransactionSession extends AbstractSession {
 
     public TransactionSession(ServerConnection front) {
         super(front);
+        variables.setAutocommit(false);
     }
 
     @Override
@@ -69,10 +70,12 @@ public class TransactionSession extends AbstractSession {
     }
 
     @Override
-    public void rollback() {
+    public void rollback(boolean response) {
         front.reset();
         this.clear();
-        super.rollback();
+        if (response) {
+            super.rollback(response);
+        }
     }
 
 }

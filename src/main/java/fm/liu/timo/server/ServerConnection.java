@@ -27,6 +27,7 @@ import fm.liu.timo.server.parser.ServerParse;
 import fm.liu.timo.server.response.Heartbeat;
 import fm.liu.timo.server.response.Ping;
 import fm.liu.timo.server.session.AutoCommitSession;
+import fm.liu.timo.server.session.AutoTransactionSession;
 import fm.liu.timo.server.session.Session;
 import fm.liu.timo.server.session.TransactionSession;
 import fm.liu.timo.util.TimeUtil;
@@ -47,7 +48,7 @@ public class ServerConnection extends FrontendConnection {
         super(channel, processor);
         autocommitSession = new AutoCommitSession(this);
         transactionSession = new TransactionSession(this);
-        autoTransactionSession = new AutoCommitSession(this);
+        autoTransactionSession = new AutoTransactionSession(this);
         session = autocommitSession;
     }
 
@@ -200,7 +201,7 @@ public class ServerConnection extends FrontendConnection {
     }
 
     public void rollback() {
-        session.rollback();
+        session.rollback(true);
     }
 
     public void reset() {

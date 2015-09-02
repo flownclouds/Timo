@@ -22,7 +22,7 @@ public class AutoTransactionSession extends AbstractSession {
 
     @Override
     protected SessionResultHandler chooseHandler(Outlets outs, int type) {
-        return new AutoTransactionHandler(this);
+        return new AutoTransactionHandler(this, outs.size());
     }
 
     @Override

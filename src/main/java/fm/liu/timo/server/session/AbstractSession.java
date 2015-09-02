@@ -116,7 +116,7 @@ public abstract class AbstractSession implements Session {
         front.write(buffer);
     }
 
-    public void rollback() {
+    public void rollback(boolean response) {
         ByteBuffer buffer = front.allocate();
         buffer = front.writeToBuffer(OkPacket.OK, buffer);
         front.write(buffer);

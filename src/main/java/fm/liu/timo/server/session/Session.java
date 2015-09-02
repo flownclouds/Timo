@@ -42,7 +42,7 @@ public interface Session {
 
     void commit();
 
-    void rollback();
+    void rollback(boolean response);
 
     void clear();
 

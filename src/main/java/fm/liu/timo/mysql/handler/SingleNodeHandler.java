@@ -39,7 +39,7 @@ public class SingleNodeHandler extends SessionResultHandler {
 
     @Override
     public void ok(byte[] data, BackendConnection con) {
-        con.release();
+        session.release(con);
         OkPacket ok = new OkPacket();
         ok.read(data);
         ok.packetId = ++packetId;
@@ -48,7 +48,7 @@ public class SingleNodeHandler extends SessionResultHandler {
 
     @Override
     public void error(byte[] data, BackendConnection con) {
-        con.release();
+        session.release(con);
         ErrorPacket err = new ErrorPacket();
         err.read(data);
         err.packetId = ++packetId;
@@ -78,7 +78,7 @@ public class SingleNodeHandler extends SessionResultHandler {
     @Override
     public void eof(byte[] eof, BackendConnection con) {
         record(con);
-        con.release();
+        session.release(con);
         ServerConnection front = session.getFront();
         eof[3] = ++packetId;
         buffer = front.writeToBuffer(eof, allocBuffer());
