@@ -18,14 +18,16 @@ import java.sql.SQLSyntaxErrorException;
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.config.model.Database;
+import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.net.NIOProcessor;
 import fm.liu.timo.net.connection.FrontendConnection;
 import fm.liu.timo.route.Outlets;
 import fm.liu.timo.route.Router;
 import fm.liu.timo.server.response.Heartbeat;
 import fm.liu.timo.server.response.Ping;
-import fm.liu.timo.server.session.AbstractSession;
+import fm.liu.timo.server.session.AutoCommitSession;
 import fm.liu.timo.server.session.Session;
+import fm.liu.timo.server.session.TransactionSession;
 import fm.liu.timo.util.TimeUtil;
 
 /**
@@ -33,11 +35,16 @@ import fm.liu.timo.util.TimeUtil;
  */
 public class ServerConnection extends FrontendConnection {
     private static final long AUTH_TIMEOUT = 15 * 1000L;
-    private Session           session;
+    private volatile Session  session;
+    private volatile Session  nextSession;
+    private final Session     autocommitSession;
+    private final Session     transactionSession;
 
     public ServerConnection(SocketChannel channel, NIOProcessor processor) {
         super(channel, processor);
-        session = new AbstractSession(this);
+        autocommitSession = new AutoCommitSession(this);
+        transactionSession = new TransactionSession(this);
+        session = autocommitSession;
     }
 
     @Override
@@ -105,6 +112,12 @@ public class ServerConnection extends FrontendConnection {
     @Override
     public void close(String reason) {
         if (super.closed.compareAndSet(false, true)) {
+            this.processor.remove(this);
+            if (session != null) {
+                Session tmp = session;
+                session = null;
+                tmp.clear();
+            }
             super.cleanup();
         }
     }
@@ -116,5 +129,65 @@ public class ServerConnection extends FrontendConnection {
 
     public Session getSession() {
         return session;
+    }
+
+    public boolean setCharset(String charset) {
+        boolean result = variables.setCharset(charset);
+        if (result) {
+            int index = variables.getCharsetIndex();
+            autocommitSession.getVariables().setCharsetIndex(index);
+            transactionSession.getVariables().setCharsetIndex(index);
+        }
+        return result;
+    }
+
+    public void setIsolationLevel(int level) {
+        variables.setIsolationLevel(level);
+        autocommitSession.getVariables().setIsolationLevel(level);
+        transactionSession.getVariables().setIsolationLevel(level);
+    }
+
+    public void setAutocommit(boolean autocommit) {
+        Session tmp = session;
+        variables.setAutocommit(autocommit);
+        if (autocommit) {
+            tmp.commit();
+        } else {
+            if (!(tmp instanceof TransactionSession)) {
+                session = transactionSession;
+            }
+            write(OkPacket.OK);
+        }
+    }
+
+    public void startTransaction() {
+        if (session instanceof TransactionSession && !session.getConnections().isEmpty()) {
+            nextSession = transactionSession;
+            session.commit();
+        } else {
+            session = transactionSession;
+            write(OkPacket.OK);
+        }
+    }
+
+    public void commit() {
+        session.commit();
+    }
+
+    public void rollback() {
+        session.rollback();
+    }
+
+    public void reset() {
+        if (nextSession != null) {
+            session = nextSession;
+            nextSession = null;
+            return;
+        }
+        if (this.getVariables().isAutocommit()) {
+            session = autocommitSession;
+        } else {
+            session = transactionSession;
+        }
     }
 }

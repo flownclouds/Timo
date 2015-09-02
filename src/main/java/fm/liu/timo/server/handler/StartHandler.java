@@ -13,7 +13,6 @@
  */
 package fm.liu.timo.server.handler;
 
-import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.server.ServerConnection;
 import fm.liu.timo.server.parser.ServerParse;
 import fm.liu.timo.server.parser.ServerParseStart;
@@ -26,7 +25,7 @@ public final class StartHandler {
     public static void handle(String stmt, ServerConnection c, int offset) {
         switch (ServerParseStart.parse(stmt, offset)) {
             case ServerParseStart.TRANSACTION:
-                c.writeErrMessage(ErrorCode.ER_UNKNOWN_COM_ERROR, "Unsupported statement");
+                c.startTransaction();
                 break;
             default:
                 c.execute(stmt, ServerParse.START);

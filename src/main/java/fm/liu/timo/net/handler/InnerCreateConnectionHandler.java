@@ -2,6 +2,7 @@ package fm.liu.timo.net.handler;
 
 import fm.liu.timo.net.connection.BackendConnection;
 import fm.liu.timo.server.session.handler.ResultHandler;
+import fm.liu.timo.server.session.handler.SessionResultHandler;
 
 public class InnerCreateConnectionHandler extends BackendCreateConnectionHandler {
     private String        sql;
@@ -19,6 +20,9 @@ public class InnerCreateConnectionHandler extends BackendCreateConnectionHandler
 
     @Override
     public void connectSuccess(BackendConnection con) {
+        if (handler instanceof SessionResultHandler) {
+            ((SessionResultHandler) handler).session.offer(con);
+        }
         con.query(sql, handler);
     }
 }

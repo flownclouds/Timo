@@ -13,8 +13,6 @@
  */
 package fm.liu.timo.server.handler;
 
-import java.nio.ByteBuffer;
-import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.server.ServerConnection;
 
 /**
@@ -23,8 +21,7 @@ import fm.liu.timo.server.ServerConnection;
 public final class CommitHandler {
 
     public static void handle(ServerConnection c) {
-        ByteBuffer buffer = c.allocate();
-        c.write(c.writeToBuffer(OkPacket.OK, buffer));
+        c.commit();
     }
 
 }

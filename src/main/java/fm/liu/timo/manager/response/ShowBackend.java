@@ -29,6 +29,8 @@ public class ShowBackend extends ShowHandler {
         heads.add(new Head("up_time", "uptime(s)"));
         heads.add(new Head("state", "connection state"));
         heads.add(new Head("send_queue"));
+        heads.add(new Head("isolation_level"));
+        heads.add(new Head("autocommit"));
     }
 
     @Override
@@ -62,6 +64,8 @@ public class ShowBackend extends ShowHandler {
                             / 1000;
                     row[i++] = backend.getStateDesc();
                     row[i++] = ((MySQLConnection) backend).getWriteQueue().size();
+                    row[i++] = backend.getVariables().getIsolationLevel();
+                    row[i++] = backend.getVariables().isAutocommit();
                     rows.add(row);
                 }
             }

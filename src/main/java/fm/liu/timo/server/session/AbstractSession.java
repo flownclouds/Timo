@@ -13,6 +13,8 @@
  */
 package fm.liu.timo.server.session;
 
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import fm.liu.timo.TimoConfig;
@@ -21,6 +23,7 @@ import fm.liu.timo.backend.Node;
 import fm.liu.timo.merger.Merger;
 import fm.liu.timo.mysql.handler.MultiNodeHandler;
 import fm.liu.timo.mysql.handler.SingleNodeHandler;
+import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.net.connection.BackendConnection;
 import fm.liu.timo.net.connection.Variables;
 import fm.liu.timo.route.Outlet;
@@ -32,7 +35,7 @@ import fm.liu.timo.server.session.handler.SessionResultHandler;
 /**
  * @author Liu Huanting 2015年5月9日
  */
-public class AbstractSession implements Session {
+public abstract class AbstractSession implements Session {
     protected final ServerConnection                              front;
     protected final ConcurrentHashMap<Integer, BackendConnection> connections;
     protected final Variables                                     variables;
@@ -55,6 +58,20 @@ public class AbstractSession implements Session {
         return connections.values();
     }
 
+    public Variables getVariables() {
+        return variables;
+    }
+
+    public Collection<BackendConnection> availableConnections() {
+        Collection<BackendConnection> cons = new ArrayList<>();
+        for (BackendConnection con : getConnections()) {
+            if (!con.isClosed()) {
+                cons.add(con);
+            }
+        }
+        return cons;
+    }
+
     @Override
     public final void offer(BackendConnection con) {
         connections.put(con.getDatanodeID(), con);
@@ -68,12 +85,18 @@ public class AbstractSession implements Session {
         TimoConfig config = TimoServer.getInstance().getConfig();
         for (Outlet out : outs.getResult()) {
             String sql = out.getSql();
-            Node node = config.getNodes().get(out.getID());
             handler.setSQL(sql);
-            if (usingMaster) {
-                node.getSource().query(out.getSql(), handler);
+            Node node = config.getNodes().get(out.getID());
+            BackendConnection con = connections.get(out.getID());
+            if (con != null) {
+                offer(con);
+                con.query(sql, handler);
             } else {
-                node.query(out.getSql(), handler, read);
+                if (usingMaster) {
+                    node.getSource().query(out.getSql(), handler);
+                } else {
+                    node.query(out.getSql(), handler, read);
+                }
             }
         }
     }
@@ -84,5 +107,17 @@ public class AbstractSession implements Session {
             return new SingleNodeHandler(this);
         }
         return new MultiNodeHandler(this, new Merger(outs), size);
+    }
+
+    public void commit() {
+        ByteBuffer buffer = front.allocate();
+        buffer = front.writeToBuffer(OkPacket.OK, buffer);
+        front.write(buffer);
+    }
+
+    public void rollback() {
+        ByteBuffer buffer = front.allocate();
+        buffer = front.writeToBuffer(OkPacket.OK, buffer);
+        front.write(buffer);
     }
 }

@@ -31,8 +31,8 @@ public class Variables implements Cloneable {
 
     public Variables() {
         super();
+        this.setAutocommit(true);
         this.setCharset("UTF8");
-        this.setAutocommit(false);
         this.setIsolationLevel(Isolations.REPEATED_READ);
     }
 

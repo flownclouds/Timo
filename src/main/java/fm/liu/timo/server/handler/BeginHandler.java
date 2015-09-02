@@ -13,7 +13,6 @@
  */
 package fm.liu.timo.server.handler;
 
-import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.server.ServerConnection;
 
 /**
@@ -22,7 +21,7 @@ import fm.liu.timo.server.ServerConnection;
 public final class BeginHandler {
 
     public static void handle(String stmt, ServerConnection c) {
-        c.writeErrMessage(ErrorCode.ER_UNKNOWN_COM_ERROR, "Unsupported statement");
+        c.startTransaction();
     }
 
 }

@@ -30,6 +30,7 @@ import fm.liu.timo.net.handler.BackendConnectHandler;
 import fm.liu.timo.net.handler.BackendCreateConnectionHandler;
 import fm.liu.timo.net.handler.InnerCreateConnectionHandler;
 import fm.liu.timo.server.session.handler.ResultHandler;
+import fm.liu.timo.server.session.handler.SessionResultHandler;
 import fm.liu.timo.server.session.handler.VirtualHandler;
 import fm.liu.timo.util.TimeUtil;
 
@@ -191,6 +192,9 @@ public class Source {
                     new InnerCreateConnectionHandler(sql, handler);
             this.newConnection(innerHandler);
         } else {
+            if (handler instanceof SessionResultHandler) {
+                ((SessionResultHandler) handler).session.offer(conn);
+            }
             conn.query(sql, handler);
         }
     }

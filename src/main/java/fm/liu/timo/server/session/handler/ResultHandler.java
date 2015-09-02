@@ -20,9 +20,9 @@ import fm.liu.timo.net.connection.BackendConnection;
  * @author Liu Huanting 2015年5月9日
  */
 public interface ResultHandler {
-    void ok(byte[] data, BackendConnection con);
+    void ok(byte[] ok, BackendConnection con);
 
-    void error(byte[] data, BackendConnection con);
+    void error(byte[] error, BackendConnection con);
 
     void field(byte[] header, List<byte[]> fields, byte[] eof, BackendConnection con);
 

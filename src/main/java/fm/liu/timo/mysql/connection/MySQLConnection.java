@@ -24,6 +24,7 @@ import fm.liu.timo.config.Capabilities;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.mysql.ByteUtil;
 import fm.liu.timo.mysql.SecurityUtil;
+import fm.liu.timo.mysql.Sync;
 import fm.liu.timo.mysql.handler.AuthenticatorHandler;
 import fm.liu.timo.mysql.packet.AuthPacket;
 import fm.liu.timo.mysql.packet.CommandPacket;
@@ -34,7 +35,10 @@ import fm.liu.timo.mysql.packet.MySQLPacket;
 import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.net.NIOProcessor;
 import fm.liu.timo.net.connection.BackendConnection;
+import fm.liu.timo.net.connection.Variables;
 import fm.liu.timo.server.session.handler.ResultHandler;
+import fm.liu.timo.server.session.handler.SessionResultHandler;
+import fm.liu.timo.server.session.handler.SyncHandler;
 
 /**
  * @author Liu Huanting 2015年5月9日
@@ -311,12 +315,53 @@ public class MySQLConnection extends BackendConnection {
 
     @Override
     public void query(String sql, ResultHandler handler) {
+        ResultHandler _handler = handler;
+        if (handler instanceof SessionResultHandler) {
+            Variables var = ((SessionResultHandler) handler).session.getFront().getVariables();
+            String sync = null;
+            final int charsetIndex = var.getCharsetIndex();
+            sync = variables.getCharsetIndex() != charsetIndex
+                    ? Sync.getCharsetCommandStr(charsetIndex) : null;
+            if (sync != null) {
+                _handler = new SyncHandler(_handler, sql, new Runnable() {
+                    @Override
+                    public void run() {
+                        variables.setCharsetIndex(charsetIndex);
+                    }
+                });
+                sql = sync;
+            }
+            final int isolationLevel = var.getIsolationLevel();
+            sync = variables.getIsolationLevel() != isolationLevel
+                    ? Sync.getTxIsolationCommandStr(isolationLevel) : null;
+            if (sync != null) {
+                _handler = new SyncHandler(_handler, sql, new Runnable() {
+                    @Override
+                    public void run() {
+                        variables.setIsolationLevel(isolationLevel);
+                    }
+                });
+                sql = sync;
+            }
+            final boolean autocommit = var.isAutocommit();
+            sync = variables.isAutocommit() != autocommit ? Sync.getAutoCommitCommandStr(autocommit)
+                    : null;
+            if (sync != null) {
+                _handler = new SyncHandler(_handler, sql, new Runnable() {
+                    @Override
+                    public void run() {
+                        variables.setAutocommit(autocommit);
+                    }
+                });
+                sql = sync;
+            }
+        }
         if (this.isClosed()) {
             this.setResultHandler(null);
             handler.close("backend connection already closed!");
             return;
         }
-        this.setResultHandler(handler);
+        this.setResultHandler(_handler);
         this.setState(State.running);
         CommandPacket packet = new CommandPacket(CommandPacket.COM_QUERY);
         packet.arg = sql.getBytes();

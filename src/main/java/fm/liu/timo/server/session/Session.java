@@ -15,6 +15,7 @@ package fm.liu.timo.server.session;
 
 import java.util.Collection;
 import fm.liu.timo.net.connection.BackendConnection;
+import fm.liu.timo.net.connection.Variables;
 import fm.liu.timo.route.Outlets;
 import fm.liu.timo.server.ServerConnection;
 
@@ -25,30 +26,22 @@ import fm.liu.timo.server.ServerConnection;
  */
 public interface Session {
 
-    /**
-     * 
-     * @return 前端连接
-     */
     ServerConnection getFront();
 
-    /**
-     * 
-     * @return 后端所有连接
-     */
     Collection<BackendConnection> getConnections();
 
-    /**
-     * 
-     * @param con 绑定后端连接到会话
-     */
+    Variables getVariables();
+
     void offer(BackendConnection con);
 
-    /**
-     * 执行SQL语句
-     * 
-     * @param outs 路由结果
-     * @param type SQL类型
-     */
     void execute(Outlets outs, int type);
+
+    void release(BackendConnection con);
+
+    void commit();
+
+    void rollback();
+
+    void clear();
 
 }
