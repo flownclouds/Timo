@@ -116,6 +116,7 @@ public final class NIOReactor {
             try {
                 c.read();
             } catch (Throwable e) {
+                e.printStackTrace();
                 c.close(e.getMessage());
             }
         }

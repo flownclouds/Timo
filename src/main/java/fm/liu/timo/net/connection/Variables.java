@@ -27,13 +27,15 @@ public class Variables implements Cloneable {
     private volatile int     charsetIndex;
     private volatile String  charset;
     private volatile long    upTime;
-    private long             lastActiveTime;
+    private volatile long    lastActiveTime;
+    private volatile boolean savepointChecked;
 
     public Variables() {
         super();
         this.setAutocommit(true);
         this.setCharset("UTF8");
         this.setIsolationLevel(Isolations.REPEATED_READ);
+        this.setSavepointChecked(false);
     }
 
     public boolean isAutocommit() {
@@ -105,5 +107,13 @@ public class Variables implements Cloneable {
 
     public void update() {
         this.lastActiveTime = TimeUtil.currentTimeMillis();
+    }
+
+    public boolean isSavepointChecked() {
+        return savepointChecked;
+    }
+
+    public void setSavepointChecked(boolean savepointChecked) {
+        this.savepointChecked = savepointChecked;
     }
 }

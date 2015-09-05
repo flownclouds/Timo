@@ -23,6 +23,7 @@ import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.net.connection.BackendConnection;
 import fm.liu.timo.server.ServerConnection;
 import fm.liu.timo.server.session.Session;
+import fm.liu.timo.server.session.TransactionSession;
 import fm.liu.timo.server.session.handler.SessionResultHandler;
 import fm.liu.timo.statistic.SQLRecord;
 import fm.liu.timo.util.TimeUtil;
@@ -39,11 +40,16 @@ public class SingleNodeHandler extends SessionResultHandler {
 
     @Override
     public void ok(byte[] data, BackendConnection con) {
+        record(con);
         session.release(con);
         OkPacket ok = new OkPacket();
         ok.read(data);
         ok.packetId = ++packetId;
-        ok.write(session.getFront());
+        if (session instanceof TransactionSession) {
+            ((TransactionSession) session).savepoint(ok);
+        } else {
+            ok.write(session.getFront());
+        }
     }
 
     @Override

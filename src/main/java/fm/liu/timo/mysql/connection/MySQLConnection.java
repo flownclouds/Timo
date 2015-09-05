@@ -36,6 +36,8 @@ import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.net.NIOProcessor;
 import fm.liu.timo.net.connection.BackendConnection;
 import fm.liu.timo.net.connection.Variables;
+import fm.liu.timo.server.session.Session;
+import fm.liu.timo.server.session.TransactionSession;
 import fm.liu.timo.server.session.handler.ResultHandler;
 import fm.liu.timo.server.session.handler.SessionResultHandler;
 import fm.liu.timo.server.session.handler.SyncHandler;
@@ -317,8 +319,22 @@ public class MySQLConnection extends BackendConnection {
     public void query(String sql, ResultHandler handler) {
         ResultHandler _handler = handler;
         if (handler instanceof SessionResultHandler) {
-            Variables var = ((SessionResultHandler) handler).session.getVariables();
+            Session session = ((SessionResultHandler) handler).session;
+            Variables var = session.getVariables();
             String sync = null;
+            if (session instanceof TransactionSession) {
+                sync = variables.isSavepointChecked() ? null
+                        : ((TransactionSession) session).getSavepoint();
+                if (sync != null) {
+                    _handler = new SyncHandler(_handler, sql, new Runnable() {
+                        @Override
+                        public void run() {
+                            variables.setSavepointChecked(true);
+                        }
+                    });
+                    sql = sync;
+                }
+            }
             final int charsetIndex = var.getCharsetIndex();
             sync = variables.getCharsetIndex() != charsetIndex
                     ? Sync.getCharsetCommandStr(charsetIndex) : null;
