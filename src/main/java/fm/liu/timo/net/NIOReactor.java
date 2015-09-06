@@ -116,7 +116,9 @@ public final class NIOReactor {
             try {
                 c.read();
             } catch (Throwable e) {
-                e.printStackTrace();
+                if (!(e instanceof IOException)) {
+                    e.printStackTrace();
+                }
                 c.close(e.getMessage());
             }
         }

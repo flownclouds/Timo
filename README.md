@@ -14,6 +14,10 @@
 
 [Timo的代码结构介绍] (./doc/TimoArchitecture.md)
 
+### Timo Transaction
+
+[Timo的事务模型介绍] (./doc/TimoTransaction.md)
+
 ### Todo List
 - [x] 后端NIO改造
 - [x] 线程池改造
