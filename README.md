@@ -6,6 +6,10 @@
 - **Timo**源于[Cobar] (https://github.com/alibaba/cobar)，并在[Cobar] (https://github.com/alibaba/cobar)的基础上进行改造。Ｏ(≧▽≦)Ｏ
 - **Timo**目前是实验性质，主要用于熟悉相关技术，实现个人想法，提高姿势水平。(●｀･(ｴ)･´●)
 
+### Timo Technical Terms
+
+[Timo中的术语介绍] (./doc/TimoTechnicalTerms.md)
+
 ### Quick Start
 
 [马上开始使用Timo！] (./doc/QuickStart.md)
