@@ -281,12 +281,7 @@ public class MySQLConnection extends BackendConnection {
             // 由线程池去执行关闭后的操作
             final ResultHandler handler = resultHandler;
             resultHandler = null;
-            this.processor.getExecutor().execute(new Runnable() {
-                @Override
-                public void run() {
-                    handler.close(null);// 可能会被调用多次
-                }
-            });
+            this.processor.getExecutor().execute(() -> handler.close(null));
         }
         if (!super.closed.compareAndSet(false, true)) {
             return;
@@ -326,12 +321,8 @@ public class MySQLConnection extends BackendConnection {
                 sync = variables.isSavepointChecked() ? null
                         : ((TransactionSession) session).getSavepoint();
                 if (sync != null) {
-                    _handler = new SyncHandler(_handler, sql, new Runnable() {
-                        @Override
-                        public void run() {
-                            variables.setSavepointChecked(true);
-                        }
-                    });
+                    _handler = new SyncHandler(_handler, sql,
+                            () -> variables.setSavepointChecked(true));
                     sql = sync;
                 }
             }
@@ -339,36 +330,24 @@ public class MySQLConnection extends BackendConnection {
             sync = variables.getCharsetIndex() != charsetIndex
                     ? Sync.getCharsetCommandStr(charsetIndex) : null;
             if (sync != null) {
-                _handler = new SyncHandler(_handler, sql, new Runnable() {
-                    @Override
-                    public void run() {
-                        variables.setCharsetIndex(charsetIndex);
-                    }
-                });
+                _handler = new SyncHandler(_handler, sql,
+                        () -> variables.setCharsetIndex(charsetIndex));
                 sql = sync;
             }
             final int isolationLevel = var.getIsolationLevel();
             sync = variables.getIsolationLevel() != isolationLevel
                     ? Sync.getTxIsolationCommandStr(isolationLevel) : null;
             if (sync != null) {
-                _handler = new SyncHandler(_handler, sql, new Runnable() {
-                    @Override
-                    public void run() {
-                        variables.setIsolationLevel(isolationLevel);
-                    }
-                });
+                _handler = new SyncHandler(_handler, sql,
+                        () -> variables.setIsolationLevel(isolationLevel));
                 sql = sync;
             }
             final boolean autocommit = var.isAutocommit();
             sync = variables.isAutocommit() != autocommit ? Sync.getAutoCommitCommandStr(autocommit)
                     : null;
             if (sync != null) {
-                _handler = new SyncHandler(_handler, sql, new Runnable() {
-                    @Override
-                    public void run() {
-                        variables.setAutocommit(autocommit);
-                    }
-                });
+                _handler =
+                        new SyncHandler(_handler, sql, () -> variables.setAutocommit(autocommit));
                 sql = sync;
             }
         }
@@ -383,6 +362,10 @@ public class MySQLConnection extends BackendConnection {
         packet.arg = sql.getBytes();
         packet.write(this);
         variables.update();
+        if (Logger.isDebugEnabled()) {
+            Logger.debug("connection :{}:{} {} send sql:{}", this.getHost(), this.getPort(),
+                    this.getThreadID(), sql);
+        }
     }
 
     public void setResultHandler(ResultHandler handler) {
@@ -419,6 +402,7 @@ public class MySQLConnection extends BackendConnection {
         this.password = password;
     }
 
+    @Override
     public Source getDatasource() {
         return datasource;
     }
@@ -435,6 +419,7 @@ public class MySQLConnection extends BackendConnection {
         this.handshake = handshake;
     }
 
+    @Override
     public long getThreadID() {
         return threadID;
     }

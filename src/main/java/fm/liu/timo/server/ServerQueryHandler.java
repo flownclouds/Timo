@@ -14,12 +14,12 @@
 package fm.liu.timo.server;
 
 import org.pmw.tinylog.Logger;
-import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.net.handler.FrontendQueryHandler;
 import fm.liu.timo.server.handler.BeginHandler;
 import fm.liu.timo.server.handler.CommitHandler;
 import fm.liu.timo.server.handler.ExplainHandler;
 import fm.liu.timo.server.handler.KillHandler;
+import fm.liu.timo.server.handler.KillQueryHandler;
 import fm.liu.timo.server.handler.RollbackHandler;
 import fm.liu.timo.server.handler.SavepointHandler;
 import fm.liu.timo.server.handler.SelectHandler;
@@ -73,7 +73,7 @@ public class ServerQueryHandler implements FrontendQueryHandler {
                 KillHandler.handle(sql, rs >>> 8, c);
                 break;
             case ServerParse.KILL_QUERY:
-                c.writeErrMessage(ErrorCode.ER_UNKNOWN_COM_ERROR, "Unsupported command");
+                KillQueryHandler.handle(sql, rs >>> 8, c);
                 break;
             case ServerParse.USE:
                 UseHandler.handle(sql, c, rs >>> 8);

@@ -129,9 +129,8 @@ public class TimoConfig {
             lock.unlock();
         }
         if (success) {
-            for (Node node : _nodes.values()) {
-                node.clear("clear old node due to reload config");
-            }
+            _nodes.values().parallelStream()
+                    .forEach(node -> node.clear("clear old node due to reload config"));
             lastReloadTime = TimeUtil.currentTimeMillis();
         }
         return success;
@@ -168,9 +167,8 @@ public class TimoConfig {
             lock.unlock();
         }
         if (success) {
-            for (Node node : backNodes) {
-                node.clear("clear backnodes due to rollback config");
-            }
+            backNodes.parallelStream()
+                    .forEach(node -> node.clear("clear backnodes due to rollback config"));
         }
         return success;
     }

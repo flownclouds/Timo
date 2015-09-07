@@ -138,9 +138,7 @@ public class RouteVisitor extends Visitor {
 
     @Override
     public void visit(DDLDropTableStatement node) {
-        for (Identifier table : node.getTableNames()) {
-            recordTable(table);
-        }
+        node.getTableNames().forEach(t -> recordTable(t));
     }
 
     public void visit(DDLTruncateStatement node) {
@@ -187,9 +185,7 @@ public class RouteVisitor extends Visitor {
         visitChild(node.getLimit());
         visitChild(node.getOrderBy());
         List<Identifier> tables = node.getTableNames();
-        for (Identifier table : tables) {
-            recordTable(table);
-        }
+        tables.forEach(t -> recordTable(t));
         visitChild(table);
         visitChild(node.getTableRefs());
         visitChild(node.getWhereCondition());

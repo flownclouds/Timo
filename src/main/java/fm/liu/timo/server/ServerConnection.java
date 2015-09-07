@@ -30,6 +30,8 @@ import fm.liu.timo.server.session.AutoCommitSession;
 import fm.liu.timo.server.session.AutoTransactionSession;
 import fm.liu.timo.server.session.Session;
 import fm.liu.timo.server.session.TransactionSession;
+import fm.liu.timo.server.session.handler.ResultHandler;
+import fm.liu.timo.server.session.handler.VirtualHandler;
 import fm.liu.timo.util.TimeUtil;
 
 /**
@@ -122,11 +124,11 @@ public class ServerConnection extends FrontendConnection {
      * @param sponsor 发起者为null表示是自己
      */
     public void cancel(final FrontendConnection sponsor) {
-        processor.getExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                // TODO kill query
-            }
+        processor.getExecutor().execute(() -> {
+            ResultHandler handler = new VirtualHandler();
+            session.availableConnections().parallelStream().filter(con -> con.isRunning()).forEach(
+                    con -> con.getDatasource().query("kill query " + con.getThreadID(), handler));
+            ;
         });
     }
 

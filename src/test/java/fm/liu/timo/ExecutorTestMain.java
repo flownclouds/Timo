@@ -48,13 +48,7 @@ public class ExecutorTestMain {
             @Override
             public void run() {
                 for (;;) {
-                    executor.execute(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            count.incrementAndGet();
-                        }
-                    });
+                    executor.execute(() -> count.incrementAndGet());
                 }
             }
         }.start();
@@ -63,13 +57,7 @@ public class ExecutorTestMain {
             @Override
             public void run() {
                 for (;;) {
-                    executor.execute(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            count.incrementAndGet();
-                        }
-                    });
+                    executor.execute(() -> count.incrementAndGet());
                 }
             }
         }.start();

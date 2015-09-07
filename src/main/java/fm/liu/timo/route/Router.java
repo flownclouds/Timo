@@ -115,9 +115,7 @@ public class Router {
     }
 
     private static Outlets toAllNode(Outlets outlets, Table table, String sql) {
-        for (int i : table.getNodes()) {
-            outlets.add(new Outlet(i, sql));
-        }
+        table.getNodes().forEach(i -> outlets.add(new Outlet(i, sql)));
         return outlets;
     }
 

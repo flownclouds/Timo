@@ -327,14 +327,11 @@ public abstract class FrontendConnection extends AbstractConnection {
     @Override
     public void handle(final byte[] data) {
         // 异步处理前端数据
-        processor.getExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    handler.handle(data);
-                } catch (Throwable t) {
-                    error(ErrorCode.ERR_HANDLE_DATA, t);
-                }
+        processor.getExecutor().execute(() -> {
+            try {
+                handler.handle(data);
+            } catch (Throwable t) {
+                error(ErrorCode.ERR_HANDLE_DATA, t);
             }
         });
     }

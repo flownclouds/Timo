@@ -59,27 +59,16 @@ public class Node {
     }
 
     public void idleCheck() {
-        for (Source source : sources) {
-            if (source != null && source.isAvailable()) {
-                source.idleCheck();
-            }
-        }
+        sources.parallelStream().filter(s -> s.isAvailable()).forEach(s -> s.idleCheck());
     }
 
     public void heartbeat() {
         if (TimeUtil.currentTimeMillis() < heartbeatRecoveryTime) {
-            for (Source source : sources) {
-                if (source != null && source.isAvailable()) {
-                    source.getHeartbeat().pause();
-                }
-            }
+            sources.parallelStream().filter(s -> s.isAvailable())
+                    .forEach(s -> s.getHeartbeat().pause());
             return;
         }
-        for (Source source : sources) {
-            if (source != null && source.isAvailable()) {
-                source.heartbeat(this);
-            }
-        }
+        sources.parallelStream().filter(s -> s.isAvailable()).forEach(s -> s.heartbeat(this));
     }
 
     public int getID() {

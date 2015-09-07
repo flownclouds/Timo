@@ -70,9 +70,7 @@ public class AutoTransactionHandler extends SessionResultHandler {
 
     private void commit(Collection<BackendConnection> cons) {
         ResultHandler handler = new CommitHandler(session, cons);
-        for (BackendConnection con : cons) {
-            con.query("commit", handler);
-        }
+        cons.forEach(c -> c.query("commit", handler));
     }
 
     @Override

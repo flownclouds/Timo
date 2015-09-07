@@ -150,10 +150,7 @@ public class Source {
         }
         int decrease = idleSize - config.getMaxIdle();
         if (decrease > 0) {
-            ArrayList<BackendConnection> connections = get(decrease);
-            for (BackendConnection connection : connections) {
-                connection.close("clear spare idle connection");
-            }
+            get(decrease).forEach(con -> con.close("clear spare idle connection"));
         }
         long lastActiveTime = TimeUtil.currentTimeMillis() - config.getIdleCheckPeriod();
         ArrayList<BackendConnection> connections = get(idleSize / 4);

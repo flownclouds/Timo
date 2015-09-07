@@ -54,9 +54,7 @@ public class TransactionSession extends AbstractSession {
             }
         }
         ResultHandler handler = new RollbackHandler();
-        for (BackendConnection con : rollbacks) {
-            con.query("rollback", handler);
-        }
+        rollbacks.forEach(con -> con.query("rollback", handler));
     }
 
     @Override
@@ -68,9 +66,7 @@ public class TransactionSession extends AbstractSession {
         Collection<BackendConnection> cons = availableConnections();
         if (cons.size() == getConnections().size()) {
             ResultHandler handler = new CommitHandler(this, cons);
-            for (BackendConnection con : cons) {
-                con.query("commit", handler);
-            }
+            cons.forEach(con -> con.query("commit", handler));
         } else {
             onError();
         }
@@ -89,9 +85,7 @@ public class TransactionSession extends AbstractSession {
         Collection<BackendConnection> cons = availableConnections();
         if (cons.size() == getConnections().size()) {
             ResultHandler handler = new SavepointHandler(this, cons.size(), ok);
-            for (BackendConnection con : cons) {
-                con.query(savepoint, handler);
-            }
+            cons.forEach(con -> con.query(savepoint, handler));
         } else {
             onError();
         }
@@ -101,9 +95,7 @@ public class TransactionSession extends AbstractSession {
         Collection<BackendConnection> cons = availableConnections();
         if (cons.size() == getConnections().size()) {
             ResultHandler handler = new RollbackToSavepointHandler(this, cons.size(), err);
-            for (BackendConnection con : cons) {
-                con.query(rollbackToSavepoint, handler);
-            }
+            cons.forEach(con -> con.query(rollbackToSavepoint, handler));
         } else {
             onError();
         }

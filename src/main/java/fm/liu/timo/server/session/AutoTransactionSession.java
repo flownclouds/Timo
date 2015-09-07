@@ -46,9 +46,7 @@ public class AutoTransactionSession extends AbstractSession {
             }
         }
         ResultHandler handler = new RollbackHandler();
-        for (BackendConnection con : rollbacks) {
-            con.query("rollback", handler);
-        }
+        rollbacks.forEach(con -> con.query("rollback", handler));
     }
 
 }

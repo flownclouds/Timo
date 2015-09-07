@@ -198,15 +198,8 @@ public class TimoServer {
         return new TimerTask() {
             @Override
             public void run() {
-                timerExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Map<Integer, Node> nodes = config.getNodes();
-                        for (Node node : nodes.values()) {
-                            node.idleCheck();
-                        }
-                    }
-                });
+                timerExecutor.execute(
+                        () -> config.getNodes().values().forEach(node -> node.idleCheck()));
             }
         };
     }
@@ -216,15 +209,8 @@ public class TimoServer {
         return new TimerTask() {
             @Override
             public void run() {
-                timerExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Map<Integer, Node> nodes = config.getNodes();
-                        for (Node node : nodes.values()) {
-                            node.heartbeat();
-                        }
-                    }
-                });
+                timerExecutor.execute(
+                        () -> config.getNodes().values().forEach(node -> node.heartbeat()));
             }
         };
     }

@@ -14,9 +14,9 @@
 package fm.liu.timo.server.session;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import fm.liu.timo.TimoConfig;
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.backend.Node;
@@ -64,13 +64,8 @@ public abstract class AbstractSession implements Session {
 
     @Override
     public Collection<BackendConnection> availableConnections() {
-        Collection<BackendConnection> cons = new ArrayList<>();
-        for (BackendConnection con : getConnections()) {
-            if (!con.isClosed()) {
-                cons.add(con);
-            }
-        }
-        return cons;
+        return getConnections().parallelStream().filter(con -> !con.isClosed())
+                .collect(Collectors.toList());
     }
 
     @Override

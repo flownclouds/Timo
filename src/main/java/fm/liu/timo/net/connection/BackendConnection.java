@@ -16,6 +16,7 @@ package fm.liu.timo.net.connection;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
+import fm.liu.timo.backend.Source;
 import fm.liu.timo.net.NIOProcessor;
 import fm.liu.timo.server.session.handler.ResultHandler;
 
@@ -45,5 +46,9 @@ public abstract class BackendConnection extends AbstractConnection {
         localPort = ((InetSocketAddress) channel.getLocalAddress()).getPort();
         return true;
     }
+
+    public abstract Source getDatasource();
+
+    public abstract long getThreadID();
 
 }
