@@ -16,7 +16,37 @@
  */
 package fm.liu.timo.parser.recognizer.mysql.syntax;
 
-import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.*;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.EOF;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.IDENTIFIER;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_AS;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_BINARY;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_CHARACTER;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_COLLATE;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_COLUMN;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_DEFAULT;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_EXISTS;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_IF;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_IGNORE;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_INDEX;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_KEY;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_KEYS;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_NOT;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_ON;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_PRECISION;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_SET;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_SIGNED;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_TABLE;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_TO;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_UNSIGNED;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_UPDATE;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_USING;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.KW_ZEROFILL;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.LITERAL_NULL;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.LITERAL_NUM_PURE_DIGIT;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.OP_EQUALS;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_COMMA;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_LEFT_PAREN;
+import static fm.liu.timo.parser.recognizer.mysql.MySQLToken.PUNC_RIGHT_PAREN;
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,8 +71,10 @@ import fm.liu.timo.parser.ast.stmt.ddl.DDLRenameTableStatement;
 import fm.liu.timo.parser.ast.stmt.ddl.DDLStatement;
 import fm.liu.timo.parser.ast.stmt.ddl.DDLTruncateStatement;
 import fm.liu.timo.parser.ast.stmt.dml.DMLSelectStatement;
+import fm.liu.timo.parser.ast.stmt.extension.DropPrepareStatement;
 import fm.liu.timo.parser.ast.stmt.extension.ExtDDLCreatePolicy;
 import fm.liu.timo.parser.ast.stmt.extension.ExtDDLDropPolicy;
+import fm.liu.timo.parser.recognizer.mysql.MySQLToken;
 import fm.liu.timo.parser.recognizer.mysql.lexer.MySQLLexer;
 import fm.liu.timo.parser.util.Pair;
 
@@ -202,6 +234,10 @@ public class MySQLDDLParser extends MySQLParser {
                     case KW_TABLE:
                         lexer.nextToken();
                         return dropTable(false);
+                    case KW_PREPARE:
+                        lexer.nextToken();
+                        idTemp1 = identifier();
+                        return new DropPrepareStatement(idTemp1.getIdTextUpUnescape());
                     case IDENTIFIER:
                         siTemp = specialIdentifiers.get(lexer.stringValueUppercase());
                         if (siTemp != null) {
@@ -221,6 +257,11 @@ public class MySQLDDLParser extends MySQLParser {
                     default:
                         throw err("unsupported DDL for DROP");
                 }
+            case KW_DEALLOCATE:
+                lexer.nextToken();
+                match(MySQLToken.KW_PREPARE);
+                idTemp1 = identifier();
+                return new DropPrepareStatement(idTemp1.getIdTextUpUnescape());
             case KW_RENAME:
                 lexer.nextToken();
                 match(KW_TABLE);

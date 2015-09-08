@@ -28,9 +28,9 @@ import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.net.NIOHandler;
 import fm.liu.timo.net.NIOProcessor;
 import fm.liu.timo.net.handler.FrontendAuthenticator;
-import fm.liu.timo.net.handler.FrontendPrepareHandler;
 import fm.liu.timo.net.handler.FrontendPrivileges;
 import fm.liu.timo.net.handler.FrontendQueryHandler;
+import fm.liu.timo.server.handler.ServerPrepareHandler;
 import fm.liu.timo.util.RandomUtil;
 import fm.liu.timo.util.TimeUtil;
 
@@ -45,15 +45,15 @@ public abstract class FrontendConnection extends AbstractConnection {
     protected int    localPort;
     protected long   idleTimeout;
 
-    protected byte[]                 seed;
-    protected String                 user;
-    protected String                 db;
-    protected NIOHandler             handler;
-    protected FrontendPrivileges     privileges;
-    protected FrontendQueryHandler   queryHandler;
-    protected FrontendPrepareHandler prepareHandler;
-    protected boolean                isAccepted;
-    protected boolean                isAuthenticated;
+    protected byte[]               seed;
+    protected String               user;
+    protected String               db;
+    protected NIOHandler           handler;
+    protected FrontendPrivileges   privileges;
+    protected FrontendQueryHandler queryHandler;
+    protected ServerPrepareHandler prepareHandler;
+    protected boolean              isAccepted;
+    protected boolean              isAuthenticated;
 
     public FrontendConnection(SocketChannel channel, NIOProcessor processor) {
         super(channel, processor);
@@ -126,7 +126,7 @@ public abstract class FrontendConnection extends AbstractConnection {
         this.queryHandler = queryHandler;
     }
 
-    public void setPrepareHandler(FrontendPrepareHandler prepareHandler) {
+    public void setPrepareHandler(ServerPrepareHandler prepareHandler) {
         this.prepareHandler = prepareHandler;
     }
 
@@ -240,6 +240,14 @@ public abstract class FrontendConnection extends AbstractConnection {
         }
     }
 
+    public void query(String sql) {
+        if (queryHandler != null) {
+            queryHandler.query(sql);
+        } else {
+            writeErrMessage(ErrorCode.ER_UNKNOWN_COM_ERROR, "Query unsupported!");
+        }
+    }
+
     public void stmtPrepare(byte[] data) {
         if (prepareHandler != null) {
             // 取得语句
@@ -257,7 +265,6 @@ public abstract class FrontendConnection extends AbstractConnection {
                 writeErrMessage(ErrorCode.ER_NOT_ALLOWED_COMMAND, "Empty SQL");
                 return;
             }
-
             // 执行预处理
             prepareHandler.prepare(sql);
         } else {
@@ -275,7 +282,7 @@ public abstract class FrontendConnection extends AbstractConnection {
 
     public void stmtClose(byte[] data) {
         if (prepareHandler != null) {
-            prepareHandler.close();
+            prepareHandler.close(data);
         } else {
             writeErrMessage(ErrorCode.ER_UNKNOWN_COM_ERROR, "Prepare unsupported!");
         }

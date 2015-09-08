@@ -15,6 +15,7 @@ package fm.liu.timo.mysql.packet;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import fm.liu.timo.config.Fields;
 import fm.liu.timo.mysql.BindValue;
 import fm.liu.timo.mysql.BindValueUtil;
 import fm.liu.timo.mysql.MySQLMessage;
@@ -121,6 +122,62 @@ public class ExecutePacket extends MySQLPacket {
                 BindValueUtil.read(mm, bv, charset);
             }
             values[i] = bv;
+        }
+    }
+
+    public String getSQL() {
+        StringBuilder sb = new StringBuilder();
+        String[] stmts = pstmt.getStatements();
+        int length = stmts.length;
+        if (pstmt.isEndsWithQuestionMark()) {
+            for (int i = 0; i < length; i++) {
+                sb.append(stmts[i]).append(getValue(values[i]));
+            }
+        } else {
+            for (int i = 0; i < length - 1; i++) {
+                sb.append(stmts[i]).append(getValue(values[i]));
+            }
+            sb.append(stmts[length - 1]);
+        }
+        return sb.toString();
+    }
+
+    private Object getValue(BindValue bv) {
+        if (bv.isNull) {
+            return "NULL";
+        } else {
+            switch (bv.type & 0xff) {
+                case Fields.FIELD_TYPE_BIT:
+                    return bv.value;
+                case Fields.FIELD_TYPE_TINY:
+                    return bv.byteBinding;
+                case Fields.FIELD_TYPE_SHORT:
+                    return bv.shortBinding;
+                case Fields.FIELD_TYPE_LONG:
+                    return bv.intBinding;
+                case Fields.FIELD_TYPE_LONGLONG:
+                    return bv.longBinding;
+                case Fields.FIELD_TYPE_FLOAT:
+                    return bv.floatBinding;
+                case Fields.FIELD_TYPE_DOUBLE:
+                    return bv.doubleBinding;
+                case Fields.FIELD_TYPE_TIME:
+                case Fields.FIELD_TYPE_DATE:
+                case Fields.FIELD_TYPE_DATETIME:
+                case Fields.FIELD_TYPE_TIMESTAMP:
+                case Fields.FIELD_TYPE_VAR_STRING:
+                case Fields.FIELD_TYPE_STRING:
+                case Fields.FIELD_TYPE_VARCHAR:
+                case Fields.FIELD_TYPE_DECIMAL:
+                case Fields.FIELD_TYPE_NEW_DECIMAL:
+                    if (bv.value == null) {
+                        return "NULL";
+                    }
+                    return "'" + bv.value + "'";
+                default:
+                    throw new IllegalArgumentException(
+                            "bindValue error,unsupported type:" + bv.type);
+            }
         }
     }
 

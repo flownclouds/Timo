@@ -19,6 +19,7 @@ import fm.liu.timo.net.NIOProcessor;
 import fm.liu.timo.net.connection.FrontendConnection;
 import fm.liu.timo.net.connection.Variables;
 import fm.liu.timo.net.factory.FrontendConnectionFactory;
+import fm.liu.timo.server.handler.ServerPrepareHandler;
 
 /**
  * @author xianmao.hexm
@@ -34,6 +35,7 @@ public class ServerConnectionFactory extends FrontendConnectionFactory {
         ServerConnection c = new ServerConnection(channel, processor);
         c.setPrivileges(new TimoPrivileges());
         c.setQueryHandler(new ServerQueryHandler(c));
+        c.setPrepareHandler(new ServerPrepareHandler(c));
         return c;
     }
 

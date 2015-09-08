@@ -31,6 +31,7 @@ public final class ServerParseSet {
     public static final int CHARACTER_SET_CLIENT     = 8;
     public static final int CHARACTER_SET_CONNECTION = 9;
     public static final int CHARACTER_SET_RESULTS    = 10;
+    public static final int USER_VAR                 = 11;
 
     public static int parse(String stmt, int offset) {
         int i = offset;
@@ -60,6 +61,10 @@ public final class ServerParseSet {
                 case 'T':
                 case 't':
                     return transaction(stmt, i);
+                case '@':
+                    if (stmt.charAt(i + 1) != '@') {
+                        return USER_VAR;
+                    }
                 default:
                     return OTHER;
             }

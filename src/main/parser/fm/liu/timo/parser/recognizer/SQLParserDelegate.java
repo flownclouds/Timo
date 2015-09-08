@@ -35,6 +35,7 @@ import fm.liu.timo.parser.recognizer.mysql.syntax.MySQLDMLUpdateParser;
 import fm.liu.timo.parser.recognizer.mysql.syntax.MySQLExprParser;
 import fm.liu.timo.parser.recognizer.mysql.syntax.MySQLMTSParser;
 import fm.liu.timo.parser.recognizer.mysql.syntax.MySQLParser;
+import fm.liu.timo.parser.recognizer.mysql.syntax.MySQLPrepareParser;
 
 /**
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
@@ -116,11 +117,18 @@ public final class SQLParserDelegate {
                 case KW_CREATE:
                 case KW_DROP:
                 case KW_RENAME:
+                case KW_DEALLOCATE:
                     stmt = new MySQLDDLParser(lexer, exprParser).ddlStmt();
                     isEOF = isEOFedDDL(stmt);
                     break stmtSwitch;
                 case KW_RELEASE:
                     stmt = new MySQLMTSParser(lexer).release();
+                    break stmtSwitch;
+                case KW_PREPARE:
+                    stmt = new MySQLPrepareParser(lexer, exprParser).prepare();
+                    break stmtSwitch;
+                case KW_EXECUTE:
+                    stmt = new MySQLPrepareParser(lexer, exprParser).execute();
                     break stmtSwitch;
                 case IDENTIFIER:
                     SpecialIdentifier si = null;

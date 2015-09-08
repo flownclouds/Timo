@@ -15,12 +15,17 @@ package fm.liu.timo.server;
 
 import java.nio.channels.SocketChannel;
 import java.sql.SQLSyntaxErrorException;
+import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicLong;
 import fm.liu.timo.TimoServer;
 import fm.liu.timo.config.ErrorCode;
 import fm.liu.timo.config.model.Database;
+import fm.liu.timo.mysql.PreparedStatement;
 import fm.liu.timo.mysql.packet.OkPacket;
 import fm.liu.timo.net.NIOProcessor;
 import fm.liu.timo.net.connection.FrontendConnection;
+import fm.liu.timo.parser.ast.expression.Expression;
+import fm.liu.timo.parser.ast.stmt.extension.PrepareStatement;
 import fm.liu.timo.route.Outlets;
 import fm.liu.timo.route.Router;
 import fm.liu.timo.server.parser.ServerParse;
@@ -38,13 +43,16 @@ import fm.liu.timo.util.TimeUtil;
  * @author xianmao.hexm 2011-4-21 上午11:22:57
  */
 public class ServerConnection extends FrontendConnection {
-    private static final long AUTH_TIMEOUT = 15 * 1000L;
-    private volatile Session  session;
-    private volatile Session  nextSession;
-    private final Session     autocommitSession;
-    private final Session     transactionSession;
-    private final Session     autoTransactionSession;
-    private long              lastInsertID;
+    private static final long                  AUTH_TIMEOUT = 15 * 1000L;
+    private volatile Session                   session;
+    private volatile Session                   nextSession;
+    private final Session                      autocommitSession;
+    private final Session                      transactionSession;
+    private final Session                      autoTransactionSession;
+    private long                               lastInsertID;
+    private HashMap<String, Expression>        userVariables;
+    private static final AtomicLong            PREPARED_ID  = new AtomicLong();
+    private HashMap<String, PreparedStatement> preparedStatements;
 
     public ServerConnection(SocketChannel channel, NIOProcessor processor) {
         super(channel, processor);
@@ -99,15 +107,15 @@ public class ServerConnection extends FrontendConnection {
                     msg == null ? e.getClass().getSimpleName() : msg);
             return;
         }
-        chooseSession(type);
+        chooseSession(out, type);
         session.execute(out, type);
     }
 
-    private void chooseSession(int type) {
+    private void chooseSession(Outlets out, int type) {
         if (session instanceof TransactionSession) {
             return;
         }
-        if (variables.isAutocommit()) {
+        if (variables.isAutocommit() && out.size() > 1) {
             switch (type) {
                 case ServerParse.INSERT:
                 case ServerParse.DELETE:
@@ -217,6 +225,27 @@ public class ServerConnection extends FrontendConnection {
         } else {
             session = transactionSession;
         }
+    }
+
+    public void setUserVariable(String name, Expression value) {
+        this.userVariables.put(name, value);
+    }
+
+    public Expression getUserVariable(String name) {
+        return this.userVariables.get(name);
+    }
+
+    public void prepare(PrepareStatement stmt) {
+        this.preparedStatements.put(stmt.getName(),
+                new PreparedStatement(PREPARED_ID.incrementAndGet(), stmt.getStatement()));
+    }
+
+    public PreparedStatement getPreparedStatement(String name) {
+        return this.preparedStatements.get(name);
+    }
+
+    public void dropPreparedStatement(String name) {
+        this.preparedStatements.remove(name);
     }
 
 }

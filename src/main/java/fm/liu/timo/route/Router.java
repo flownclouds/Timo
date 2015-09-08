@@ -73,6 +73,7 @@ public class Router {
                 }
             }
         }
+        sql = removeDB(sql, database.getName());
         SQLStatement stmt = SQLParserDelegate.parse(sql, charset);
         RouteVisitor visitor = new RouteVisitor(database);
         stmt.accept(visitor);
@@ -181,5 +182,36 @@ public class Router {
             }
         }
         return outlets;
+    }
+
+    /**
+     * 数据库前缀移除
+     */
+    private static String removeDB(String sql, String database) {
+        final String upSQL = sql.toUpperCase();
+        final String upDB = database.toUpperCase() + ".";
+        int strtPos = 0;
+        int indx = 0;
+        boolean flag = false;
+        indx = upSQL.indexOf(upDB, strtPos);
+        if (indx < 0) {
+            StringBuilder sb = new StringBuilder("`").append(database.toUpperCase()).append("`.");
+            indx = upSQL.indexOf(sb.toString(), strtPos);
+            flag = true;
+            if (indx < 0) {
+                return sql;
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        while (indx > 0) {
+            sb.append(sql.substring(strtPos, indx));
+            strtPos = indx + upDB.length();
+            if (flag) {
+                strtPos += 2;
+            }
+            indx = upSQL.indexOf(upDB, strtPos);
+        }
+        sb.append(sql.substring(strtPos));
+        return sb.toString();
     }
 }

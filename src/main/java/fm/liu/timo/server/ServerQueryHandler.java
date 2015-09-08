@@ -23,6 +23,7 @@ import fm.liu.timo.server.handler.KillQueryHandler;
 import fm.liu.timo.server.handler.RollbackHandler;
 import fm.liu.timo.server.handler.SavepointHandler;
 import fm.liu.timo.server.handler.SelectHandler;
+import fm.liu.timo.server.handler.ServerPrepareHandler;
 import fm.liu.timo.server.handler.SetHandler;
 import fm.liu.timo.server.handler.ShowHandler;
 import fm.liu.timo.server.handler.StartHandler;
@@ -83,6 +84,15 @@ public class ServerQueryHandler implements FrontendQueryHandler {
                 break;
             case ServerParse.ROLLBACK:
                 RollbackHandler.handle(c);
+                break;
+            case ServerParse.PREPARE:
+                ServerPrepareHandler.prepare(sql, c);
+                break;
+            case ServerParse.EXECUTE:
+                ServerPrepareHandler.execute(sql, c);
+                break;
+            case ServerParse.DROP_PREPARE:
+                ServerPrepareHandler.close(sql, c);
                 break;
             default:
                 c.execute(sql, rs);

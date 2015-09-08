@@ -18,26 +18,28 @@ package fm.liu.timo.mysql;
  */
 public class PreparedStatement {
 
-    private long   id;
-    private String statement;
-    private int    columnsNumber;
-    private int    parametersNumber;
-    private int[]  parametersType;
+    private long     id;
+    private int      columnsNumber;
+    private int      parametersNumber;
+    private int[]    parametersType;
+    private String[] statements;
+    private boolean  endsWithQuestionMark;
 
-    public PreparedStatement(long id, String statement, int columnsNumber, int parametersNumber) {
+    public PreparedStatement(long id, String statement) {
         this.id = id;
-        this.statement = statement;
-        this.columnsNumber = columnsNumber;
-        this.parametersNumber = parametersNumber;
+        if (statement.endsWith("?")) {
+            endsWithQuestionMark = true;
+        }
+        this.statements = statement.split("\\?");
+        this.parametersNumber = endsWithQuestionMark ? statements.length : statements.length + 1;
+        if (!statement.contains("?")) {
+            this.parametersNumber = 0;
+        }
         this.parametersType = new int[parametersNumber];
     }
 
     public long getId() {
         return id;
-    }
-
-    public String getStatement() {
-        return statement;
     }
 
     public int getColumnsNumber() {
@@ -50,6 +52,14 @@ public class PreparedStatement {
 
     public int[] getParametersType() {
         return parametersType;
+    }
+
+    public String[] getStatements() {
+        return statements;
+    }
+
+    public boolean isEndsWithQuestionMark() {
+        return endsWithQuestionMark;
     }
 
 }

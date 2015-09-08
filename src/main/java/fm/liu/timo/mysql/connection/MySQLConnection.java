@@ -362,10 +362,6 @@ public class MySQLConnection extends BackendConnection {
         packet.arg = sql.getBytes();
         packet.write(this);
         variables.update();
-        if (Logger.isDebugEnabled()) {
-            Logger.debug("connection :{}:{} {} send sql:{}", this.getHost(), this.getPort(),
-                    this.getThreadID(), sql);
-        }
     }
 
     public void setResultHandler(ResultHandler handler) {
