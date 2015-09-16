@@ -10,8 +10,8 @@
         <property name="url">jdbc:mysql://127.0.0.1:3306/timo_config</property> <!-- 配置库连接信息 -->
         <property name="username">test</property> <!-- 配置库用户名 -->
         <property name="password">test</property> <!-- 配置库密码 -->
-        <property name="heartbeatPeriod">30000</property> <!-- 心跳检测周期（ms） -->
-        <property name="heartbeatTimeout">3000</property> <!-- 心跳超时时间 （ms）-->
+        <property name="heartbeatPeriod">3000</property> <!-- 心跳检测周期（ms） -->
+        <property name="heartbeatTimeout">300</property> <!-- 心跳超时时间 （ms）-->
         <property name="queryTimeout">300</property> <!-- 查询超时时间（s） -->
         <property name="enableXA">false</property> <!-- 启用XA事务[true/false] -->
     </system>
