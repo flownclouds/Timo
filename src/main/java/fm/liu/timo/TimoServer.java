@@ -13,11 +13,19 @@
  */
 package fm.liu.timo;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import org.pmw.tinylog.Logger;
 import fm.liu.messenger.Mail;
 import fm.liu.messenger.User;
@@ -25,12 +33,16 @@ import fm.liu.timo.backend.Node;
 import fm.liu.timo.config.Versions;
 import fm.liu.timo.config.model.SystemConfig;
 import fm.liu.timo.manager.ManagerConnectionFactory;
+import fm.liu.timo.mysql.connection.MySQLConnection;
+import fm.liu.timo.mysql.handler.xa.XARecoverHandler;
+import fm.liu.timo.mysql.packet.CommandPacket;
 import fm.liu.timo.net.NIOAcceptor;
 import fm.liu.timo.net.NIOConnector;
 import fm.liu.timo.net.NIOProcessor;
 import fm.liu.timo.net.connection.Variables;
 import fm.liu.timo.parser.recognizer.mysql.lexer.MySQLLexer;
 import fm.liu.timo.server.ServerConnectionFactory;
+import fm.liu.timo.server.session.handler.ResultHandler;
 import fm.liu.timo.statistic.SQLRecorder;
 import fm.liu.timo.util.ExecutorUtil;
 import fm.liu.timo.util.NameableExecutor;
@@ -47,12 +59,14 @@ public class TimoServer {
         @Override
         public void receive(Mail<?> mail) {}
     };
-    private static final TimoServer  INSTANCE           = new TimoServer();
+
+    private static final TimoServer INSTANCE = new TimoServer();
 
     public static final TimoServer getInstance() {
         return INSTANCE;
     }
 
+    private final AtomicLong       xid = new AtomicLong();
     private final TimoConfig       config;
     private final Timer            timer;
     private final NameableExecutor timerExecutor;
@@ -62,6 +76,10 @@ public class TimoServer {
     private NIOConnector           connector;
     private NIOAcceptor            manager;
     private NIOAcceptor            server;
+    private User                   starter;
+    private Set<File>              xaLogs;
+    private volatile boolean       xaCommiting;
+    private volatile boolean       xaStarting;
 
     private TimoServer() {
         this.config = new TimoConfig();
@@ -82,8 +100,25 @@ public class TimoServer {
         return RECORDER;
     }
 
+    public User getStarter() {
+        return starter;
+    }
+
     public TimoConfig getConfig() {
         return config;
+    }
+
+    public String nextXID() {
+        long id = this.xid.incrementAndGet();
+        if (id < 0) {
+            synchronized (xid) {
+                if (xid.get() < 0) {
+                    xid.set(0);
+                }
+                id = xid.incrementAndGet();
+            }
+        }
+        return "'TimoXA" + id + "'";
     }
 
     public void startup() throws IOException {
@@ -111,11 +146,65 @@ public class TimoServer {
         Logger.info("Initialize dataNodes ...");
         for (Node node : nodes.values()) {
             if (!node.init()) {
-                Logger.error("Node init failed, check your config");
+                Logger.error("Node:{} init failed, check your config", node);
                 System.exit(-1);
             }
         }
 
+        starter = new User() {
+            @Override
+            public void receive(Mail<?> mail) {
+                try {
+                    xaLogs.forEach(log -> log.delete());
+                    TimoServer.getInstance().lisen(system);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        starter.register();
+
+        // XA恢复
+        Logger.info("Checking XA transaction recover ...");
+        xaRecover(nodes);
+    }
+
+    private void xaRecover(Map<Integer, Node> nodes) {
+        HashMap<String, ConcurrentHashMap<Integer, Boolean>> recoveryLog = new HashMap<>();
+        File dir = new File(".");
+        if (dir.isDirectory()) {
+            this.xaLogs = new HashSet<>();
+            File[] files = dir.listFiles();
+            for (File f : files) {
+                String name = f.getName();
+                if (name.startsWith("TimoXA")) {
+                    try {
+                        FileInputStream in = new FileInputStream(f);
+                        ObjectInputStream stream = new ObjectInputStream(in);
+                        @SuppressWarnings("unchecked")
+                        ConcurrentHashMap<Integer, Boolean> result =
+                                (ConcurrentHashMap<Integer, Boolean>) stream.readObject();
+                        stream.close();
+                        in.close();
+                        recoveryLog.put(name, result);
+                        this.xaLogs.add(f);
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        ResultHandler handler = new XARecoverHandler(recoveryLog, nodes);
+        nodes.values().parallelStream().forEach(n -> {
+            MySQLConnection con = (MySQLConnection) n.getSource().notNullGet();
+            con.setResultHandler(handler);
+            CommandPacket packet = new CommandPacket(CommandPacket.COM_QUERY);
+            packet.arg = "XA RECOVER".getBytes();
+            packet.write(con);
+        });
+    }
+
+    private void lisen(SystemConfig system) throws IOException {
         // 初始化定时任务
         timer.schedule(updateTime(), 0L, TIME_UPDATE_PERIOD);
         timer.schedule(processorCheck(), 0L, system.getProcessorCheckPeriod());
@@ -223,6 +312,22 @@ public class TimoServer {
         } else {
             return processors[(++processorIndex) % processors.length];
         }
+    }
+
+    public boolean isXACommiting() {
+        return xaCommiting;
+    }
+
+    public void setXACommiting(boolean xaCommiting) {
+        this.xaCommiting = xaCommiting;
+    }
+
+    public boolean isXAStarting() {
+        return xaStarting;
+    }
+
+    public void setXAStarting(boolean xaStarting) {
+        this.xaStarting = xaStarting;
     }
 
 }

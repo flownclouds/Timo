@@ -137,6 +137,17 @@ public class Source {
         return con;
     }
 
+    public BackendConnection notNullGet() {
+        BackendConnection con = idle.poll();
+        if (con == null) {
+            BackendCreateConnectionHandler handler = new BackendCreateConnectionHandler();
+            handler.setDB(config.getDB());
+            con = this.newConnection(handler);
+        }
+        con.setState(State.borrowed);
+        return con;
+    }
+
     public void idleCheck() {
         int idleSize = this.idle.size();
         int increase = config.getMinIdle() - idleSize;

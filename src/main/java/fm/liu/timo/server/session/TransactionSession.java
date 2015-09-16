@@ -18,8 +18,8 @@ import fm.liu.timo.server.session.handler.SavepointHandler;
  * @author liuhuanting
  */
 public class TransactionSession extends AbstractSession {
-    private final String savepoint;
-    private final String rollbackToSavepoint;
+    protected final String savepoint;
+    protected final String rollbackToSavepoint;
 
     public TransactionSession(ServerConnection front) {
         super(front);
@@ -74,8 +74,7 @@ public class TransactionSession extends AbstractSession {
 
     @Override
     public void rollback(boolean response) {
-        front.reset();
-        this.clear();
+        clear();
         if (response) {
             super.rollback(response);
         }
@@ -101,7 +100,7 @@ public class TransactionSession extends AbstractSession {
         }
     }
 
-    private void onError() {
+    protected void onError() {
         front.reset();
         this.clear();
         front.writeErrMessage(ErrorCode.ER_YES,

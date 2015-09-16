@@ -20,41 +20,43 @@ import fm.liu.timo.config.Isolations;
  * 系统级参数配置信息
  */
 public class SystemConfig {
-    private static final int    DEFAULT_PORT                       = 8066;
-    private static final int    DEFAULT_MANAGER_PORT               = 9066;
-    private static final String DEFAULT_CHARSET                    = "UTF-8";
-    private static final int    DEFAULT_PROCESSORS                 =
+    private static final int     DEFAULT_PORT                       = 8066;
+    private static final int     DEFAULT_MANAGER_PORT               = 9066;
+    private static final String  DEFAULT_CHARSET                    = "UTF-8";
+    private static final int     DEFAULT_PROCESSORS                 =
             Runtime.getRuntime().availableProcessors();
-    private static final long   DEFAULT_IDLE_TIMEOUT               = 8 * 3600 * 1000L;
-    private static final long   DEFAULT_PROCESSOR_CHECK_PERIOD     = 10 * 1000L;
-    private static final long   DEFAULT_DATANODE_IDLE_CHECK_PERIOD = 60 * 1000L;
-    private static final int    DEFAULT_PARSER_COMMENT_VERSION     = 50148;
-    private static final int    DEFAULT_HEARTBEAT_PERIOD           = 1000;
-    private static final int    DEFAULT_HEARTBEAT_TIMEOUT          = 300;
-    private static final int    DEFAULT_QUERY_TIMEOUT              = 300;
-    private static final int    DEFAULT_SQL_RECORD_COUNT           = 10;
+    private static final long    DEFAULT_IDLE_TIMEOUT               = 8 * 3600 * 1000L;
+    private static final long    DEFAULT_PROCESSOR_CHECK_PERIOD     = 10 * 1000L;
+    private static final long    DEFAULT_DATANODE_IDLE_CHECK_PERIOD = 60 * 1000L;
+    private static final int     DEFAULT_PARSER_COMMENT_VERSION     = 50148;
+    private static final int     DEFAULT_HEARTBEAT_PERIOD           = 1000;
+    private static final int     DEFAULT_HEARTBEAT_TIMEOUT          = 300;
+    private static final int     DEFAULT_QUERY_TIMEOUT              = 300;
+    private static final int     DEFAULT_SQL_RECORD_COUNT           = 10;
+    private static final boolean DEFAULT_ENABLE_XA                  = false;
 
-    private int    serverPort;
-    private int    managerPort;
-    private String charset;
-    private int    processors;
-    private int    processorHandler;
-    private int    processorExecutor;
-    private int    initExecutor;
-    private int    timerExecutor;
-    private int    managerExecutor;
-    private long   idleTimeout;
-    private long   processorCheckPeriod;
-    private long   dataNodeIdleCheckPeriod;
-    private int    txIsolation;
-    private int    parserCommentVersion;
-    private String url;
-    private String username;
-    private String password;
-    private int    heartbeatPeriod;
-    private int    heartbeatTimeout;
-    private int    queryTimeout;
-    private int    sqlRecordCount;
+    private int     serverPort;
+    private int     managerPort;
+    private String  charset;
+    private int     processors;
+    private int     processorHandler;
+    private int     processorExecutor;
+    private int     initExecutor;
+    private int     timerExecutor;
+    private int     managerExecutor;
+    private long    idleTimeout;
+    private long    processorCheckPeriod;
+    private long    dataNodeIdleCheckPeriod;
+    private int     txIsolation;
+    private int     parserCommentVersion;
+    private String  url;
+    private String  username;
+    private String  password;
+    private int     heartbeatPeriod;
+    private int     heartbeatTimeout;
+    private int     queryTimeout;
+    private int     sqlRecordCount;
+    private boolean enableXA;
 
     public SystemConfig() {
         this.serverPort = DEFAULT_PORT;
@@ -75,6 +77,7 @@ public class SystemConfig {
         this.heartbeatTimeout = DEFAULT_HEARTBEAT_TIMEOUT;
         this.queryTimeout = DEFAULT_QUERY_TIMEOUT;
         this.sqlRecordCount = DEFAULT_SQL_RECORD_COUNT;
+        this.setEnableXA(DEFAULT_ENABLE_XA);
     }
 
     public String getCharset() {
@@ -244,4 +247,13 @@ public class SystemConfig {
     public void setSqlRecordCount(int sqlRecordCount) {
         this.sqlRecordCount = sqlRecordCount;
     }
+
+    public boolean isEnableXA() {
+        return enableXA;
+    }
+
+    public void setEnableXA(boolean enableXA) {
+        this.enableXA = enableXA;
+    }
+
 }

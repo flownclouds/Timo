@@ -35,6 +35,7 @@ import fm.liu.timo.server.session.AutoCommitSession;
 import fm.liu.timo.server.session.AutoTransactionSession;
 import fm.liu.timo.server.session.Session;
 import fm.liu.timo.server.session.TransactionSession;
+import fm.liu.timo.server.session.XATransactionSession;
 import fm.liu.timo.server.session.handler.ResultHandler;
 import fm.liu.timo.server.session.handler.VirtualHandler;
 import fm.liu.timo.util.TimeUtil;
@@ -57,7 +58,11 @@ public class ServerConnection extends FrontendConnection {
     public ServerConnection(SocketChannel channel, NIOProcessor processor) {
         super(channel, processor);
         autocommitSession = new AutoCommitSession(this);
-        transactionSession = new TransactionSession(this);
+        if (TimoServer.getInstance().getConfig().getSystem().isEnableXA()) {
+            transactionSession = new XATransactionSession(this);
+        } else {
+            transactionSession = new TransactionSession(this);
+        }
         autoTransactionSession = new AutoTransactionSession(this);
         session = autocommitSession;
     }
@@ -86,16 +91,8 @@ public class ServerConnection extends FrontendConnection {
             writeErrMessage(ErrorCode.ER_ACCESS_DENIED_ERROR, "Timo-server is offline");
             return;
         }
-        // 检查当前使用的DB
-        String db = this.db;
-        if (db == null) {
-            writeErrMessage(ErrorCode.ER_NO_DB_ERROR, "No database selected");
-            return;
-        }
-        Database database =
-                TimoServer.getInstance().getConfig().getDatabases().get(db.toUpperCase());
+        Database database = checkDB();
         if (database == null) {
-            writeErrMessage(ErrorCode.ER_BAD_DB_ERROR, "Unknown database '" + db + "'");
             return;
         }
         Outlets out = null;
@@ -109,6 +106,20 @@ public class ServerConnection extends FrontendConnection {
         }
         chooseSession(out, type);
         session.execute(out, type);
+    }
+
+    private Database checkDB() {
+        String db = this.db;
+        if (db == null) {
+            writeErrMessage(ErrorCode.ER_NO_DB_ERROR, "No database selected");
+            return null;
+        }
+        Database database =
+                TimoServer.getInstance().getConfig().getDatabases().get(db.toUpperCase());
+        if (database == null) {
+            writeErrMessage(ErrorCode.ER_BAD_DB_ERROR, "Unknown database '" + db + "'");
+        }
+        return database;
     }
 
     private void chooseSession(Outlets out, int type) {
@@ -179,7 +190,9 @@ public class ServerConnection extends FrontendConnection {
     public void setIsolationLevel(int level) {
         variables.setIsolationLevel(level);
         autocommitSession.getVariables().setIsolationLevel(level);
-        transactionSession.getVariables().setIsolationLevel(level);
+        if (!(transactionSession instanceof XATransactionSession)) {
+            transactionSession.getVariables().setIsolationLevel(level);
+        }
         autoTransactionSession.getVariables().setIsolationLevel(level);
     }
 
@@ -199,10 +212,19 @@ public class ServerConnection extends FrontendConnection {
     public void startTransaction() {
         if (session instanceof TransactionSession && !session.getConnections().isEmpty()) {
             nextSession = transactionSession;
-            session.commit();
+            if (session instanceof XATransactionSession) {
+                ((XATransactionSession) session).start(checkDB());
+                session.commit();
+            } else {
+                session.commit();
+            }
         } else {
             session = transactionSession;
-            write(OkPacket.OK);
+            if (session instanceof XATransactionSession) {
+                ((XATransactionSession) session).start(checkDB());
+            } else {
+                write(OkPacket.OK);
+            }
         }
     }
 
