@@ -18,7 +18,7 @@ package fm.liu.timo.config;
  */
 public interface Versions {
 
-    String version = "1.1.0";
+    String version = "1.1.1";
 
     /** 协议版本 */
     byte PROTOCOL_VERSION = 10;
